@@ -3,10 +3,12 @@ app/
 client/
 tool/
 swagger/
+schema/
 js/
 
 ### config ###
 db.yml
+env.yam
 
 # Created by https://www.gitignore.io/api/go,osx,vim,macos,windows,intellij,jetbrains,sublimetext,visualstudiocode
 
@@ -17,6 +19,7 @@ db.yml
 *.so
 *.dylib
 vendor/
+datastore
 
 # Test binary, build with `go test -c`
 *.test
