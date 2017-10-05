@@ -1,10 +1,11 @@
-### goa ###
-app/
-client/
-tool/
-swagger/
-schema/
-js/
+### server ###
+go/src/app/app
+go/src/app/server/dist
+go/src/app/client
+go/src/app/tool/
+go/src/app/server/swagger/
+go/src/app/schema/
+go/src/app/js/
 
 ### go ###
 go/*
@@ -13,6 +14,11 @@ go/src/*
 !go/src/app/
 go/src/app/goapp
 tmp/
+
+
+### client ###
+
+node_modules
 
 ### config ###
 db.yml

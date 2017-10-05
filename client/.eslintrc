@@ -1,0 +1,36 @@
+{
+  "extends": [
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
+  ],
+  "plugins": [
+    "flowtype",
+    "react",
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "rules": {
+    "prettier/prettier": ["error", {
+      "printWidth": 76,
+      "singleQuote": true,
+      "trailingComma": "all",
+      "bracketSpacing": true,
+      "jsxBracketSameLine": false,
+      "parser": "flow"
+    }],
+    "curly": ["error", "all"],
+    "max-len": ["error", {"code": 80, "ignoreUrls": true}],
+    "no-confusing-arrow": "error"
+  }
+}
