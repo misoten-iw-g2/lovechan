@@ -1,0 +1,1 @@
+export const COURSES_READ_ALL = 'COURSES_READ_ALL';
