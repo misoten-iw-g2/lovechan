@@ -6,6 +6,14 @@ swagger/
 schema/
 js/
 
+### go ###
+go/*
+!go/src/
+go/src/*
+!go/src/app/
+go/src/app/goapp
+tmp/
+
 ### config ###
 db.yml
 env.yam
