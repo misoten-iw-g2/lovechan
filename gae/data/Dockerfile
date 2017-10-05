@@ -11,6 +11,7 @@ RUN gcloud components install app-engine-go
 # install git
 RUN apk add --update --no-cache \
 		sudo \
+		mercurial \
 		git
 
 # create docker user
@@ -29,5 +30,3 @@ ENV GOPATH /data/go
 ENV PATH $PATH:/usr/local/go/bin:/data/go/bin
 
 USER 1000
-
-CMD ["dev_appserver.py","--host","0.0.0.0","--admin_host","0.0.0.0","./server"]
