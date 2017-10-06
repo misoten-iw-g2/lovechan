@@ -1,20 +1,83 @@
-box: golang
+box: pei0804/gae-go-deploy
 build:
-    steps:
-        - setup-go-workspace
-
-        - script:
-            name: dependencies
-            code: make depend
-
-        - script:
-            name: goa gen
-            code: make generate
-
-        - script:
-            name: lint
-            code: make lint
-
-        - script:
-            name: build
-            code: make build
+#  after-steps:
+#      - slack-notifier:
+#          url: $SLACK_WEBHOOK_URL
+#          channel: notification
+#          username: github
+  steps:
+  - script:
+      name: ソースの場所を保存する
+      code: |-
+        : ${SERVER:="./go/src/app"}
+        : ${CLIENT:="./client"}
+        : ${GAE:="./gae"}
+  - setup-go-workspace
+  - script:
+      name: set env
+      code: |
+        export Op="staging"
+  - script:
+      name: GOROOTのパッケージに一般ユーザーからの書き込みの許可
+      code: |
+        sudo chmod -R a+w `goapp env GOROOT`/pkg
+  - script:
+      name: versionをチェックする
+      code: |
+        goapp version
+        go version
+  - script:
+      name: depで依存パッケージをインストールする
+      code: |
+        GOROOT=/usr/local/go go get -u github.com/golang/dep/...
+        /usr/local/go_appengine/gopath/bin/dep ensure
+        /usr/local/go_appengine/gopath/bin/dep status
+  - script:
+      name: goagenでコード生成する
+      code: |
+        (cd vendor/github.com/goadesign/goa/goagen && GOROOT=/usr/local/go go get && GOROOT=/usr/local/go go build)
+        ./vendor/github.com/goadesign/goa/goagen/goagen version
+        export repo="${PWD#`goapp env GOPATH`/src/}"
+        ./vendor/github.com/goadesign/goa/goagen/goagen app -d ${repo}/design
+        ./vendor/github.com/goadesign/goa/goagen/goagen client -d ${repo}/design
+        ./vendor/github.com/goadesign/goa/goagen/goagen swagger -d ${repo}/design -o server
+  - script:
+      name: GOPATHを設定する
+      code: |
+        export GOPATH="$GOPATH:$WERCKER_SOURCE_DIR"
+        goapp env GOPATH
+  - script:
+      name: lint
+      code: |
+        GOROOT=/usr/local/go go get -u github.com/alecthomas/gometalinter
+        /usr/local/go_appengine/gopath/bin/gometalinter --install --update --force
+        /usr/local/go_appengine/gopath/bin/gometalinter ./... --config=lint_config.json
+  - script:
+      name: フロントエンドのinstall build
+      cwd: ${CLIENT}
+      code: |
+        npm install
+        npm run staging-build
+  - script:
+      name: envを本番用のものを設定する
+      code: |
+        cp -f ${SERVER}/env.yaml.staging ${SERVER}/env.yaml
+  - script:
+      name: goapp build
+      code: |
+        goapp build ${SERVER}
+  - script:
+      name: goapp test
+      code: |
+        goapp test ${SERVER}
+  - script:
+      name: サーバーサイドのコードを$WERCKER_OUTPUT_DIRへ
+      code: |-
+        rsync -avz ${GOPATH%%:*}/ $WERCKER_OUTPUT_DIR
+#deploy:
+#  steps:
+#  - script:
+#    name: deploy info
+#    code: find .
+#  - michilu/go-appengine-deploy:
+#    token: $APP_ENGINE_TOKEN
