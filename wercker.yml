@@ -17,7 +17,7 @@ build:
       cwd: ${CLIENT}
       code: |
         npm install --no-optional
-        npm run build
+        NODE_REPO=app npm run build
   - script:
       name: client lint
       cwd: ${CLIENT}
