@@ -17,7 +17,8 @@ build:
       cwd: ${CLIENT}
       code: |
         npm install -g yarn
-        NODE_PATH=$(which node) REPO=app yarn build
+        npm install -g webpack
+        REPO=app yarn build
   - script:
       name: client lint
       cwd: ${CLIENT}
