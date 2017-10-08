@@ -16,7 +16,5 @@ var _ = Resource("swagger", func() {
 })
 
 var _ = Resource("front", func() {
-	Files("js/*filepath", "dist/js")
-	Files("*", "dist/js")
-	Files("/", "dist/index.html")
+	Files("/*filepath", "dist/")
 })
