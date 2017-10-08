@@ -39,8 +39,8 @@ clean:
 
 generate:
 	goagen app     -d $(REPO)/design
-	goagen swagger -d $(REPO)/design
-	goagen client -d $(REPO)/design -o ./server
+	goagen swagger -d $(REPO)/design -o ./server
+	goagen client -d $(REPO)/design
 	goagen schema -d $(REPO)/design
 
 models:
