@@ -27,7 +27,7 @@ build:
       name: client install build
       cwd: ${CLIENT}
       code: |
-        yarn  --ignore-optional
+        yarn --ignore-optional
         NODE_PATH=$(which node) REPO=app yarn build
   - script:
       name: client lint
