@@ -16,8 +16,8 @@ build:
       name: client install build
       cwd: ${CLIENT}
       code: |
-        npm install --no-optional
-        NODE_REPO=app npm run build
+        npm install -g yarn
+        NODE_PATH=$(which node) REPO=app yarn build
   - script:
       name: client lint
       cwd: ${CLIENT}
