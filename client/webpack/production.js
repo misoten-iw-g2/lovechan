@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const {
   appIndexJsx,
   appBuild,
@@ -152,6 +153,9 @@ module.exports = {
     }),
     new ExtractTextPlugin({
       filename: 'static/css/[name].[contenthash:8].css',
+    }),
+    new ManifestPlugin({
+      fileName: 'asset-manifest.json',
     }),
     new CompressionPlugin({
       asset: '[path].gz[query]',
