@@ -1,3 +1,6 @@
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
+
 require('babel-polyfill');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
@@ -29,8 +32,8 @@ module.exports = {
   output: {
     path: appBuild,
     pathinfo: false,
-    filename: '[name]-[chunkhash].js',
-    chunkFilename: 'static/js/[name].chunk.js',
+    filename: 'static/js/[name].[chunkhash:8].js',
+    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     publicPath,
     // here css files
     // example:

@@ -1,3 +1,6 @@
+process.env.BABEL_ENV = 'development';
+process.env.NODE_ENV = 'development';
+
 require('babel-polyfill');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
