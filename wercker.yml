@@ -13,43 +13,50 @@ build:
         : ${CLIENT:="./client"}
         : ${GAE:="./gae"}
   - script:
-      name: GOROOTのパッケージに一般ユーザーからの書き込みの許可
+      name: front install build
+      cwd: ${CLIENT}
+      code: |
+        npm install --no-optional
+        npm run build
+  - script:
+      name: front lint
+      cwd: ${CLIENT}
+      code: |
+        ./node_modules/.bin/eslint src
+  - script:
+      name: backend GOROOTのパッケージに一般ユーザーからの書き込みの許可
       code: |
         sudo chmod -R a+w `goapp env GOROOT`/pkg
   - script:
-      name: versionをチェックする
+      name: backend versionをチェックする
       code: |
         goapp version
         go version
   - script:
-      name: install command
+      name: backend install command
       code: |
         GOROOT=/usr/local/go go get -u github.com/golang/dep/...
         GOROOT=/usr/local/go go get -u github.com/alecthomas/gometalinter/...
         gometalinter --install --update --force
   - script:
-      name: set env
+      name: backend set env
       code: |
         export GOPATH="$(pwd)/go:$WERCKER_SOURCE_DIR"
         goapp env GOPATH
         export repo="app"
   - script:
-      name: check env
-      code: |
-        env
-  - script:
       cwd: ${SERVER}
-      name: depで依存パッケージをインストールする
+      name: backend depで依存パッケージをインストールする
       code: |
         dep ensure
         dep status
   - script:
-      name: check command
+      name: backend check command
       code: |
         ls /usr/local/go_appengine/gopath/bin
   - script:
       cwd: ${SERVER}
-      name: goagenでコード生成する
+      name: backend goagenでコード生成する
       code: |
         (cd vendor/github.com/goadesign/goa/goagen && GOROOT=/usr/local/go go get && GOROOT=/usr/local/go go build)
         ./vendor/github.com/goadesign/goa/goagen/goagen version
@@ -58,32 +65,26 @@ build:
         ./vendor/github.com/goadesign/goa/goagen/goagen swagger -d ${repo}/design -o server
   - script:
       cwd: ${SERVER}
-      name: lint
+      name: backend lint
       code: |
         gometalinter ./... --config=lint_config.json
   - script:
-      name: フロントエンドのinstall build
-      cwd: ${CLIENT}
-      code: |
-        npm install --no-optional
-        npm run build
-  - script:
-      name: envを本番用のものを設定する
+      name: backend envを本番用のものを設定する
       code: |
         cp -f ${SERVER}/server/env.yaml.production ${SERVER}/server/env.yaml
   - script:
       cwd: ${SERVER}/server
-      name: goapp build
+      name: backend goapp build
       code: |
         goapp build
   - script:
       cwd: ${SERVER}
-      name: goapp test
+      name: backend goapp test
       code: |
         goapp test .
   - script:
       cwd: ${SERVER}
-      name: サーバーサイドのコードを$WERCKER_OUTPUT_DIRへ
+      name: backend コードを$WERCKER_OUTPUT_DIRへ
       code: |-
         rsync -avz ${GOPATH%%:*}/ $WERCKER_OUTPUT_DIR
 deploy:
