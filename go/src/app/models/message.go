@@ -14,9 +14,10 @@ import (
 	"context"
 	"time"
 
+	"app/app"
+
 	"github.com/goadesign/goa"
 	"github.com/jinzhu/gorm"
-	"app/app"
 )
 
 // Message model
