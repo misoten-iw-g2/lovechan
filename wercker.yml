@@ -13,13 +13,13 @@ build:
         : ${CLIENT:="./client"}
         : ${GAE:="./gae"}
   - script:
-      name: front install build
+      name: client install build
       cwd: ${CLIENT}
       code: |
         npm install --no-optional
         npm run build
   - script:
-      name: front lint
+      name: client lint
       cwd: ${CLIENT}
       code: |
         ./node_modules/.bin/eslint src
