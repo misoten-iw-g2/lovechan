@@ -9,7 +9,7 @@ const resolvePath = relativePath => path.resolve(
 module.exports = {
   appNodeModules: resolvePath('node_modules'),
   appIndexJsx: resolvePath('src/index.js'),
-  contentBase: resolvePath('../../../go/src/app/server/dist'),
+  contentBase: resolvePath('../../go/src/app/server/dist'),
   appHtml: resolvePath('public/index.html'),
   publicPath: '/',
   appSrc: resolvePath('src'),
