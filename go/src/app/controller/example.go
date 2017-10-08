@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/goadesign/goa"
 	"app/app"
+
+	"github.com/goadesign/goa"
 )
 
 // ExampleController implements the example resource.
