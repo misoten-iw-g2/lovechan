@@ -13,10 +13,21 @@ build:
         : ${CLIENT:="./client"}
         : ${GAE:="./gae"}
   - script:
+      name: client install
+      cwd: ${CLIENT}
+      code: |
+        npm install -g yarn webpack
+  - script:
+      name: client versionをチェックする
+      code: |
+        node -v
+        npm -v
+        yarn -v
+  - script:
       name: client install build
       cwd: ${CLIENT}
       code: |
-        npm install -g yarn
+        yarn  --ignore-optional
         NODE_PATH=$(which node) REPO=app yarn build
   - script:
       name: client lint
