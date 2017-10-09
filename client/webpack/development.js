@@ -12,6 +12,7 @@ const {
   publicPath,
   appNodeModules,
   appSrc,
+  appCss,
   appHtml,
 } = require('./paths');
 const {
@@ -30,14 +31,12 @@ module.exports = {
     'webpack/hot/only-dev-server',
     'babel-polyfill',
     require.resolve('./polyfills'),
-    // here css files
-    // example:
-    // 'semantic-ui-css/semantic.min.css'
-    // require.resolve('./stylesheets/gc-common.css')
+    appCss,
     appIndex,
   ],
   devtool: 'cheap-module-source-map',
   devServer: {
+    stats: 'errors-only',
     clientLogLevel: 'none',
     compress: true,
     contentBase: appSrc,
@@ -100,19 +99,13 @@ module.exports = {
               require.resolve('style-loader'),
               {
                 loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
-                },
+                options: { importLoaders: 1 },
               },
               {
                 loader: require.resolve('postcss-loader'),
                 options: {
-                  exec: true,
                   plugins: loader => [
-                    require('postcss-import')({
-                      root: loader.resourcePath,
-                      addDependencyTo: webpack,
-                    }),
+                    require('postcss-import')({ root: loader.resourcePath }),
                     require('postcss-flexbugs-fixes'),
                     require('postcss-cssnext')({
                       browsers: [

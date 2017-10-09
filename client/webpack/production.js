@@ -13,6 +13,7 @@ const {
   publicPath,
   appNodeModules,
   appSrc,
+  appCss,
   appHtml,
   appPublic,
 } = require('./paths');
@@ -26,6 +27,7 @@ module.exports = {
   entry: [
     'babel-polyfill',
     require.resolve('./polyfills'),
+    appCss,
     appIndex,
   ],
   output: {
@@ -34,10 +36,6 @@ module.exports = {
     filename: 'static/js/[name].[chunkhash:8].js',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     publicPath,
-    // here css files
-    // example:
-    // 'semantic-ui-css/semantic.min.css'
-    // require.resolve('./stylesheets/gc-common.css')
   },
   resolve: {
     modules: ['node_modules', appNodeModules].concat(
@@ -87,12 +85,8 @@ module.exports = {
                     {
                       loader: require.resolve('postcss-loader'),
                       options: {
-                        exec: true,
                         plugins: loader => [
-                          require('postcss-import')({
-                            root: loader.resourcePath,
-                            addDependencyTo: webpack,
-                          }),
+                          require('postcss-import')({ root: loader.resourcePath }),
                           require('postcss-flexbugs-fixes'),
                           require('postcss-cssnext')({
                             browsers: [
