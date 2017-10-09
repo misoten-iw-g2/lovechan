@@ -4,6 +4,7 @@ process.env.NODE_ENV = 'production';
 require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -18,6 +19,7 @@ const {
   appPublic,
 } = require('./paths');
 const {
+  raw,
   stringified,
 } = require('./env');
 
@@ -49,6 +51,10 @@ module.exports = {
     rules: [
       {
         oneOf: [
+          {
+            test: /\.html/,
+            loader: require.resolve('html-loader'),
+          },
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
@@ -117,6 +123,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new InterpolateHtmlPlugin(raw),
     new HtmlWebpackPlugin({
       inject: true,
       template: appHtml,

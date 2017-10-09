@@ -4,6 +4,7 @@ process.env.NODE_ENV = 'development';
 require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
@@ -18,6 +19,7 @@ const {
 const {
   devServerHost,
   devServerPort,
+  raw,
   stringified,
 } = require('./env');
 
@@ -75,6 +77,10 @@ module.exports = {
     rules: [
       {
         oneOf: [
+          {
+            test: /\.html/,
+            loader: require.resolve('html-loader'),
+          },
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
@@ -134,6 +140,7 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
+    new InterpolateHtmlPlugin(raw),
     new HtmlWebpackPlugin({
       inject: true,
       template: appHtml,
