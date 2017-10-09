@@ -1,3 +1,6 @@
+process.env.BABEL_ENV = 'production';
+process.env.NODE_ENV = 'production';
+
 require('babel-polyfill');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
@@ -5,13 +8,15 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const {
-  appIndexJsx,
+  appIndex,
   appBuild,
   publicPath,
   appNodeModules,
   appSrc,
   appHtml,
+  appPublic
 } = require('./paths');
 const {
   stringified,
@@ -23,13 +28,13 @@ module.exports = {
   entry: [
     'babel-polyfill',
     require.resolve('./polyfills'),
-    appIndexJsx,
+    appIndex,
   ],
   output: {
-    path: appBuild,
+    path: appPublic,
     pathinfo: false,
-    filename: '[name]-[chunkhash].js',
-    chunkFilename: 'static/js/[name].chunk.js',
+    filename: 'static/js/[name].[chunkhash:8].js',
+    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     publicPath,
     // here css files
     // example:
@@ -152,6 +157,9 @@ module.exports = {
     }),
     new ExtractTextPlugin({
       filename: 'static/css/[name].[contenthash:8].css',
+    }),
+    new ManifestPlugin({
+      fileName: 'asset-manifest.json',
     }),
     new CompressionPlugin({
       asset: '[path].gz[query]',

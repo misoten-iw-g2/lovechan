@@ -1,3 +1,6 @@
+process.env.BABEL_ENV = 'development';
+process.env.NODE_ENV = 'development';
+
 require('babel-polyfill');
 const path = require('path');
 const autoprefixer = require('autoprefixer');
@@ -5,7 +8,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
-  appIndexJsx,
+  appIndex,
   appBuild,
   publicPath,
   appNodeModules,
@@ -32,7 +35,7 @@ module.exports = {
     // example:
     // 'semantic-ui-css/semantic.min.css'
     // require.resolve('./stylesheets/gc-common.css')
-    appIndexJsx,
+    appIndex,
   ],
   devtool: 'cheap-module-source-map',
   devServer: {
