@@ -1,5 +1,12 @@
 const { Map } = require('immutable');
 
+delete require.cache[require.resolve('./paths')];
+
+const devServerHost = '0.0.0.0';
+const devServerPort = '3355';
+
+const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+
 const rawSeq = Map(process.env).keySeq();
 const raw = rawSeq.reduce(
   (env, key) => {
@@ -7,23 +14,23 @@ const raw = rawSeq.reduce(
     return newEnv.toJSON();
   }, {
     NODE_ENV: process.env.NODE_ENV || 'development',
-    PUBLIC_URL: '',
+    PUBLIC_URL: process.env.PUBLIC_URL || `${protocol}://${devServerHost}:${devServerPort}`,
   },
 );
 
 const stringifiedSeq = Map(raw).keySeq();
-const stringified = stringifiedSeq.reduce(
-  (env, key) => {
-    const envSeq = Map(env[key]).keySeq();
-    const newEnv = envSeq.reduce(prevEnv => prevEnv, JSON.stringify(raw[key]));
-    return newEnv;
-  }, {},
-);
+const stringified = {
+  'process.env': stringifiedSeq.reduce(
+    (env, key) => {
+      const newEnv = Map(env).set(key, JSON.stringify(raw[key]));
+      return newEnv.toJSON();
+    }, {},
+  ),
+};
 
 module.exports = {
-  devServerHost: '0.0.0.0',
-  devServerPort: 3355,
-  stringified: {
-    'process.env': stringified,
-  },
+  devServerHost,
+  devServerPort,
+  raw,
+  stringified,
 };

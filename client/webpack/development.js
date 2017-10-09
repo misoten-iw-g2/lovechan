@@ -4,6 +4,7 @@ process.env.NODE_ENV = 'development';
 require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const {
@@ -12,11 +13,13 @@ const {
   publicPath,
   appNodeModules,
   appSrc,
+  appCss,
   appHtml,
 } = require('./paths');
 const {
   devServerHost,
   devServerPort,
+  raw,
   stringified,
 } = require('./env');
 
@@ -30,14 +33,12 @@ module.exports = {
     'webpack/hot/only-dev-server',
     'babel-polyfill',
     require.resolve('./polyfills'),
-    // here css files
-    // example:
-    // 'semantic-ui-css/semantic.min.css'
-    // require.resolve('./stylesheets/gc-common.css')
+    appCss,
     appIndex,
   ],
   devtool: 'cheap-module-source-map',
   devServer: {
+    stats: 'errors-only',
     clientLogLevel: 'none',
     compress: true,
     contentBase: appSrc,
@@ -77,6 +78,10 @@ module.exports = {
       {
         oneOf: [
           {
+            test: /\.html/,
+            loader: require.resolve('html-loader'),
+          },
+          {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
             options: {
@@ -100,19 +105,13 @@ module.exports = {
               require.resolve('style-loader'),
               {
                 loader: require.resolve('css-loader'),
-                options: {
-                  importLoaders: 1,
-                },
+                options: { importLoaders: 1 },
               },
               {
                 loader: require.resolve('postcss-loader'),
                 options: {
-                  exec: true,
                   plugins: loader => [
-                    require('postcss-import')({
-                      root: loader.resourcePath,
-                      addDependencyTo: webpack,
-                    }),
+                    require('postcss-import')({ root: loader.resourcePath }),
                     require('postcss-flexbugs-fixes'),
                     require('postcss-cssnext')({
                       browsers: [
@@ -141,6 +140,7 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
+    new InterpolateHtmlPlugin(raw),
     new HtmlWebpackPlugin({
       inject: true,
       template: appHtml,

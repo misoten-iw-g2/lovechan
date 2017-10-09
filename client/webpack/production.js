@@ -4,6 +4,7 @@ process.env.NODE_ENV = 'production';
 require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -13,10 +14,12 @@ const {
   publicPath,
   appNodeModules,
   appSrc,
+  appCss,
   appHtml,
   appPublic,
 } = require('./paths');
 const {
+  raw,
   stringified,
 } = require('./env');
 
@@ -26,6 +29,7 @@ module.exports = {
   entry: [
     'babel-polyfill',
     require.resolve('./polyfills'),
+    appCss,
     appIndex,
   ],
   output: {
@@ -34,10 +38,6 @@ module.exports = {
     filename: 'static/js/[name].[chunkhash:8].js',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     publicPath,
-    // here css files
-    // example:
-    // 'semantic-ui-css/semantic.min.css'
-    // require.resolve('./stylesheets/gc-common.css')
   },
   resolve: {
     modules: ['node_modules', appNodeModules].concat(
@@ -51,6 +51,10 @@ module.exports = {
     rules: [
       {
         oneOf: [
+          {
+            test: /\.html/,
+            loader: require.resolve('html-loader'),
+          },
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
@@ -87,12 +91,8 @@ module.exports = {
                     {
                       loader: require.resolve('postcss-loader'),
                       options: {
-                        exec: true,
                         plugins: loader => [
-                          require('postcss-import')({
-                            root: loader.resourcePath,
-                            addDependencyTo: webpack,
-                          }),
+                          require('postcss-import')({ root: loader.resourcePath }),
                           require('postcss-flexbugs-fixes'),
                           require('postcss-cssnext')({
                             browsers: [
@@ -123,6 +123,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new InterpolateHtmlPlugin(raw),
     new HtmlWebpackPlugin({
       inject: true,
       template: appHtml,
