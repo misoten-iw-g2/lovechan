@@ -3,7 +3,6 @@ process.env.NODE_ENV = 'production';
 
 require('babel-polyfill');
 const path = require('path');
-const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
@@ -11,12 +10,11 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const {
   appIndex,
-  appBuild,
   publicPath,
   appNodeModules,
   appSrc,
   appHtml,
-  appPublic
+  appPublic,
 } = require('./paths');
 const {
   stringified,
@@ -89,18 +87,22 @@ module.exports = {
                     {
                       loader: require.resolve('postcss-loader'),
                       options: {
-                        ident: 'postcss',
-                        plugins: () => [
+                        exec: true,
+                        plugins: loader => [
+                          require('postcss-import')({
+                            root: loader.resourcePath,
+                            addDependencyTo: webpack,
+                          }),
                           require('postcss-flexbugs-fixes'),
-                          autoprefixer({
+                          require('postcss-cssnext')({
                             browsers: [
                               '>1%',
                               'last 4 versions',
                               'Firefox ESR',
                               'not ie < 9', // React doesn't support IE8 anyway
                             ],
-                            flexbox: 'no-2009',
                           }),
+                          require('cssnano')(),
                         ],
                       },
                     },
