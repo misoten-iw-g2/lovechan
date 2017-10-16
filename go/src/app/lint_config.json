@@ -9,7 +9,6 @@
     "goconst",
     "golint",
     "gosimple",
-    "aligncheck",
     "goimports",
     "misspell",
     "unconvert",
