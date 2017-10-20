@@ -1,7 +1,7 @@
 const routes = {
   landing: '/',
   table: '/table',
-  tableDetail: '/table/detail'
+  tableDetail: '/table/detail',
 };
 
 export default routes;

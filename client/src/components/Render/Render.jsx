@@ -1,4 +1,3 @@
-/* @flow */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -17,7 +16,7 @@ const render = () => {
           </BrowserRouter>
         </Provider>
       </AppContainer>,
-      document.querySelector('main')
+      document.querySelector('main'),
     );
   } catch (e) {
     console.error(e);
