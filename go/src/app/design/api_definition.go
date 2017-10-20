@@ -30,10 +30,8 @@ var _ = API("pei0804/goa-stater", func() {
 		switch os.Getenv("Op") {
 		case "develop":
 			return "localhost:8080"
-		case "staging":
-			return "staging.com"
 		case "production":
-			return "production.com"
+			return "misoten-lovechan.appspot.com"
 		}
 		return "localhost:8080"
 	}())
@@ -41,8 +39,6 @@ var _ = API("pei0804/goa-stater", func() {
 		switch os.Getenv("Op") {
 		case "develop":
 			return "http"
-		case "staging":
-			return "https"
 		case "production":
 			return "https"
 		}

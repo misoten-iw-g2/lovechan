@@ -55,6 +55,7 @@ build:
         export GOPATH="$(pwd)/go:$WERCKER_SOURCE_DIR"
         goapp env GOPATH
         export repo="app"
+        export Op="production"
   - script:
       cwd: ${SERVER}
       name: backend depで依存パッケージをインストールする
