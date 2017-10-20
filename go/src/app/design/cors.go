@@ -12,7 +12,7 @@ var devCORS = &goacors.GoaCORSConfig{
 }
 
 var stagingCORS = &goacors.GoaCORSConfig{
-	AllowOrigins:     []string{"https://staging.com"},
+	AllowOrigins:     []string{"*"},
 	AllowMethods:     []string{goacors.GET, goacors.HEAD, goacors.PUT, goacors.POST, goacors.DELETE, goacors.OPTIONS},
 	AllowHeaders:     []string{"Content-Type", "X-Authorization"},
 	ExposeHeaders:    []string{"Link"},
