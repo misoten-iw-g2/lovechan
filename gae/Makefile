@@ -15,7 +15,7 @@ docker_build:
 	docker-compose build
 
 docker_up:
-	docker-compose up $(background_option)
+	docker-compose up
 
 docker_stop:
 	docker-compose stop
