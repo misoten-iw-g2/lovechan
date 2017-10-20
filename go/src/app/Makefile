@@ -60,6 +60,9 @@ PORT:=:8080
 run:
 	$(MAKE) -C $(GAE) docker_server
 
+local:
+	goapp serve ./server
+
 build:
 	go build -o goapp .
 
