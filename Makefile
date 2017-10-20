@@ -11,3 +11,5 @@ win-install:
 	@echo bashrcに　eval "$(direnv hook bash)"  の記述を追加してください
 	@echo 参考URL:https://qiita.com/ngyuki/items/fda1bbf29384bef7a805
 
+direnv:
+	direnv allow
