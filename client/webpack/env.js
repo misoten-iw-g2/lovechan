@@ -15,6 +15,9 @@ const raw = rawSeq.reduce(
   }, {
     NODE_ENV: process.env.NODE_ENV || 'development',
     PUBLIC_URL: process.env.PUBLIC_URL || `${protocol}://${devServerHost}:${devServerPort}`,
+    SEMANTIC_UI_CSS: 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css',
+    BOOTSTRAP_CSS: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css',
+    REACT_BOOTSTRAP_TABLE_CSS: 'https://npmcdn.com/react-bootstrap-table/dist/react-bootstrap-table-all.min.css'
   },
 );
 

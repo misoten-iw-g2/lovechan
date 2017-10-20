@@ -89,27 +89,19 @@ module.exports = {
                       },
                     },
                     {
-                      loader: require.resolve('postcss-loader'),
-                      options: {
-                        plugins: loader => [
-                          require('postcss-import')({ root: loader.resourcePath }),
-                          require('postcss-flexbugs-fixes'),
-                          require('postcss-cssnext')({
-                            browsers: [
-                              '>1%',
-                              'last 4 versions',
-                              'Firefox ESR',
-                              'not ie < 9', // React doesn't support IE8 anyway
-                            ],
-                          }),
-                          require('cssnano')(),
-                        ],
-                      },
+                      loader: require.resolve('resolve-url-loader')
                     },
+                    {
+                      loader: require.resolve('sass-loader'),
+                      options: {
+                        indentedSyntax: true,
+                        sourceMap: true
+                      }
+                    }
                   ],
-                }, {},
-              ),
-            ),
+                }, {}
+              )
+            )
           },
           {
             exclude: [/\.js$/, /\.html$/, /\.json$/],
