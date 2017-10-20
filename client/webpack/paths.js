@@ -13,6 +13,6 @@ module.exports = {
   appHtml: resolvePath('public/index.html'),
   publicPath: '/',
   appSrc: resolvePath('src'),
-  appCss: resolvePath('src/styles/index.css'),
+  appCss: resolvePath('src/styles/index.scss'),
   appPublic: resolvePath('public'),
 };
