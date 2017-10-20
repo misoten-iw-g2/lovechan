@@ -15,13 +15,13 @@ const {
   appSrc,
   appCss,
   appHtml,
-} = require('./paths');
+} = require('./config/paths');
 const {
   devServerHost,
   devServerPort,
   raw,
   stringified,
-} = require('./env');
+} = require('./config/env');
 
 const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 
