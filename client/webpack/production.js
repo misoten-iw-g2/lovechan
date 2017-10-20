@@ -17,18 +17,18 @@ const {
   appCss,
   appHtml,
   appPublic,
-} = require('./paths');
+} = require('./config/paths');
 const {
   raw,
   stringified,
-} = require('./env');
+} = require('./config/env');
 
 module.exports = {
   bail: true,
   devtool: false,
   entry: [
     'babel-polyfill',
-    require.resolve('./polyfills'),
+    require.resolve('./config/polyfills'),
     appCss,
     appIndex,
   ],
