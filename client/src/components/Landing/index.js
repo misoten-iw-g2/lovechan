@@ -6,4 +6,6 @@
  *
  * @emails Gemcook, Inc.
  */
-import './components/Render';
+import Landing from './Landing';
+
+export default Landing;

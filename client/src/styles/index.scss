@@ -1,0 +1,16 @@
+// lib file
+@import "~semantic-ui-sass/semantic-ui";
+@import "./lib/gc-common.css";
+
+// value file
+@import "./values";
+
+// app file
+@import "./override_semantic";
+@import "./application";
+
+// components file
+@import "./components/common/sidebar";
+@import "./components/common/table";
+@import "./components/landing";
+@import "./components/table";

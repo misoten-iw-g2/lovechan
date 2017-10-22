@@ -18,7 +18,6 @@ tmp/
 
 ### client ###
 
-client/public
 node_modules
 
 ### config ###

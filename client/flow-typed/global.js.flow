@@ -1,0 +1,45 @@
+/* @flow */
+
+// async () => { await foo(); }
+declare function $await<T>(p: Promise<T> | T): T;
+
+/* Promises
+   cf. https://github.com/borisyankov/DefinitelyTyped/blob/master/es6-promises/es6-promises.d.ts
+*/
+declare class Promise<+R> {
+    constructor(callback: (
+      resolve: (result: Promise<R> | R) => void,
+      reject: (error: any) => void
+    ) => mixed): void;
+
+    then<U>(
+      onFulfill?: (value: R) => Promise<U> | U,
+      onReject?: (error: any) => Promise<U> | U
+    ): Promise<U>;
+
+    catch<U>(
+      onReject?: (error: any) => Promise<U> | U
+    ): Promise<R | U>;
+
+    static resolve<T>(object: Promise<T> | T): Promise<T>;
+    static reject<T>(error?: any): Promise<T>;
+    static all<T: Iterable<mixed>>(promises: T): Promise<$TupleMap<T, typeof $await>>;
+    static race<T, Elem: Promise<T> | T>(promises: Array<Elem>): Promise<T>;
+}
+
+// 関数の型を与えるとその返り値を取り出す型を定義する
+type __ReturnType<B, F: (...any) => Promise<B> | B> = B // eslint-disable-line no-unused-vars
+export type $ReturnType<F> = __ReturnType<*, F>
+
+export type Dispatch<Action, State = *> = (
+    | Action // normal, dispatch
+    | Promise<Action> // redux-promise
+    | (((Action) => any, () => State) => any) // redux-thunk
+) => Action
+
+// react-hot-loaderを読み込んでHot感知するときに使う
+declare var module : {
+  hot: {
+    accept(path: string, callback: () => void): void;
+  };
+};

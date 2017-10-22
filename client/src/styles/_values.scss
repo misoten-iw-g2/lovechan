@@ -1,0 +1,41 @@
+$app-color-main: #fa6681;
+$app-color-white: #fbfbfb;
+$app-color-black: #848484;
+$app-color-disabled: #808080;
+$app-color-header: #909090;
+$app-color-page: #f7f8f9;
+$app-color-pure-white: #fff;
+$app-color-pure-black: #595959;
+
+// font-size
+$app-font-size-main: 14; //px
+
+// text-align
+$app-line-height-main: 1.52947;
+
+// font-family
+$app-font-family-main: "Noto Sans JP";
+$app-font-family-header: "Mplus 1p";
+
+// Components Styles
+
+// table
+$table-font-size-main: 13; // px
+$table-font-size-header: 16; // px
+$table-filter-input-size: 350; // px
+$table-font-color-hover: $app-color-main;
+$table-color-main: $app-color-main;
+$table-bg-color-main: #fff;
+$table-font-color: #7d7d7d;
+$table-color-main-striped: #fbfbfb;
+$table-color-main-striped-hover: #c7c7c7;
+
+// sidebar
+$sidebar-width-main: 200;
+$sidebar-font-size-main: $app-font-size-main;
+$sidebar-font-size-name: 12;
+$sidebar-font-size-header: 16;
+$sidebar-bg-color-main: $app-color-main;
+$sidebar-bg-color-user: darken($app-color-main, 5%);
+$sidebar-bg-color-hover: lighten($app-color-main, 10%);
+$sidebar-color-main: $app-color-white;

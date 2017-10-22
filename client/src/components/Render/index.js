@@ -6,6 +6,6 @@
  *
  * @emails Gemcook, Inc.
  */
-import App from './App';
+import './Render';
 
-export default App;
+export default {};
