@@ -4,6 +4,7 @@ package constant
 // UserTrait
 //---------------------------------------------
 const (
-	AdminUserTrait   = "AdminUserTrait"
 	GeneralUserTrait = "GeneralUserTrait"
 )
+
+const REPO = "lovechan"

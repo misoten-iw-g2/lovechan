@@ -39,7 +39,7 @@ clean:
 
 generate:
 	goagen app     -d $(REPO)/design
-	goagen swagger -d $(REPO)/design -o ./server
+	goagen swagger -d $(REPO)/design -o ./public
 	goagen client -d $(REPO)/design
 	goagen schema -d $(REPO)/design
 
@@ -59,9 +59,6 @@ PORT:=:8080
 
 run:
 	$(MAKE) -C $(GAE) docker_server
-
-local:
-	goapp serve ./server
 
 build:
 	go build -o goapp .

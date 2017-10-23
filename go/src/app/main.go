@@ -1,25 +1,31 @@
 //go:generate goagen bootstrap -d github.com/pei0804/goa-stater/design
 
-package server
+package main
 
 import (
-	"net/http"
-
+	"flag"
+	"log"
 	"os"
 
 	"app/app"
+	"app/config"
 	"app/controller"
 	"app/design"
-	"app/mymiddleware"
+
+	"path/filepath"
+
+	"app/design/constant"
 
 	"github.com/deadcheat/goacors"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
+	"github.com/jmoiron/sqlx"
 )
 
 // Server 実行に必要な値を保持している
 type Server struct {
 	service *goa.Service
+	mysql   *sqlx.DB
 }
 
 // NewServer Server構造体を作成する
@@ -50,22 +56,42 @@ func (s *Server) mountMiddleware() {
 	s.service.Use(middleware.ErrorHandler(s.service, true))
 	s.service.Use(middleware.Recover())
 	s.service.Use(goacors.WithConfig(s.service, design.CorsConfig[os.Getenv("Op")]))
+}
 
-	if os.Getenv("NoSecure") == "true" {
-		app.UseAdminAuthMiddleware(s.service, mymiddleware.NewTestModeMiddleware())
-		app.UseGeneralAuthMiddleware(s.service, mymiddleware.NewTestModeMiddleware())
-	} else {
-		app.UseAdminAuthMiddleware(s.service, mymiddleware.NewAdminUserAuthMiddleware())
-		app.UseGeneralAuthMiddleware(s.service, mymiddleware.NewGeneralUserAuthMiddleware())
+func (s *Server) loadConfig(settingFolder string, env string) {
+	mc, err := config.NewMysqlConfigsFromFile(filepath.Join(settingFolder, "mysql.yml"))
+	if err != nil {
+		log.Fatalf("cannot open database configuration. exit. %s", err)
+	}
+	var hostname string
+	if hostname != "" {
+		hostname = os.Getenv("HOSTNAME")
+	}
+	s.mysql, err = mc.Open(env, hostname)
+	if err != nil {
+		log.Fatalf("database initialization failed: %s", err)
+	}
+	if err != nil {
+		log.Fatalf("database ping failed: %s", err)
 	}
 }
 
-func init() {
-	service := goa.New("pei0804/goa-stater")
+func main() {
+	var (
+		port    = flag.String("port", ":8080", "addr to bind")
+		confDir = flag.String("conf", "config", "configファイルのディレクトリパス")
+		env     = flag.String("env", "develop", "実行環境 (production, staging, develop)")
+	)
+	flag.Parse()
+
+	service := goa.New(constant.REPO)
 	s := NewServer(service)
 	s.mountMiddleware()
+	s.loadConfig(*confDir, *env)
 	s.mountController()
 
 	// Start service
-	http.HandleFunc("/", service.Mux.ServeHTTP)
+	if err := service.ListenAndServe(*port); err != nil {
+		service.LogError("startup", "err", err)
+	}
 }
