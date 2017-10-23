@@ -10,22 +10,7 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = API("pei0804/goa-stater", func() {
-	Title("pei0804/goa-stater")
-	Description("pei0804/goa-stater")
-	Contact(func() {
-		Name("pei")
-		Email("peeeei0804@gmail.com")
-		URL("https://github.com/pei0804/goa-stater/issues")
-	})
-	License(func() {
-		Name("MIT")
-		URL("")
-	})
-	Docs(func() {
-		Description("wiki")
-		URL("")
-	})
+var _ = API(REPO, func() {
 	Host(func() string {
 		switch os.Getenv("Op") {
 		case "develop":
@@ -45,15 +30,7 @@ var _ = API("pei0804/goa-stater", func() {
 		return "http"
 	}())
 	BasePath("/")
-	Trait(AdminUserTrait, func() {
-		Security(AdminAuth)
-		Response(Unauthorized, ErrorMedia)
-		Response(NotFound)
-		Response(BadRequest, ErrorMedia)
-		Response(InternalServerError, ErrorMedia)
-	})
 	Trait(GeneralUserTrait, func() {
-		Security(GeneralAuth)
 		Response(Unauthorized, ErrorMedia)
 		Response(NotFound)
 		Response(BadRequest, ErrorMedia)

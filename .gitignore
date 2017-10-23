@@ -6,6 +6,8 @@ go/src/app/tool/
 go/src/app/server/swagger/
 go/src/app/schema/
 go/src/app/js/
+go/src/app/public/dist/
+go/src/app/public/swagger/
 
 ### go ###
 go/*
@@ -18,11 +20,11 @@ tmp/
 
 ### client ###
 
-node_modules
+.node_modules/
+client/public/
 
 ### config ###
-db.yml
-env.yam
+mysql.yml
 
 # Created by https://www.gitignore.io/api/go,osx,vim,macos,windows,intellij,jetbrains,sublimetext,visualstudiocode
 

@@ -1,4 +1,4 @@
-box: pei0804/gae-go-deploy
+box: pei0804/go-node-docker
 build:
   after-steps:
       - slack-notifier:
@@ -11,12 +11,11 @@ build:
       code: |-
         : ${SERVER:="./go/src/app"}
         : ${CLIENT:="./client"}
-        : ${GAE:="./gae"}
   - script:
       name: client install
       cwd: ${CLIENT}
       code: |
-        npm install -g yarn webpack
+        npm install -g webpack
   - script:
       name: client versionをチェックする
       code: |
@@ -33,27 +32,22 @@ build:
       name: client lint
       cwd: ${CLIENT}
       code: |
-        ./node_modules/.bin/eslint src
-  - script:
-      name: backend GOROOTのパッケージに一般ユーザーからの書き込みの許可
-      code: |
-        sudo chmod -R a+w `goapp env GOROOT`/pkg
+        make lint
   - script:
       name: backend versionをチェックする
       code: |
-        goapp version
         go version
   - script:
       name: backend install command
+      cwd: ${SERVER}
       code: |
-        GOROOT=/usr/local/go go get -u github.com/golang/dep/...
-        GOROOT=/usr/local/go go get -u github.com/alecthomas/gometalinter/...
+        go get -u github.com/golang/dep/...
+        go get -u github.com/alecthomas/gometalinter/...
         gometalinter --install --update --force
   - script:
       name: backend set env
       code: |
         export GOPATH="$(pwd)/go:$WERCKER_SOURCE_DIR"
-        goapp env GOPATH
         export repo="app"
         export Op="production"
   - script:
@@ -62,10 +56,6 @@ build:
       code: |
         dep ensure
         dep status
-  - script:
-      name: backend check command
-      code: |
-        ls /usr/local/go_appengine/gopath/bin
   - script:
       cwd: ${SERVER}
       name: backend goagenでコード生成する
@@ -79,40 +69,9 @@ build:
       cwd: ${SERVER}
       name: backend lint
       code: |
-        gometalinter ./... --config=lint_config.json
-  - script:
-      name: backend envを本番用のものを設定する
-      code: |
-        cp -f ${SERVER}/server/env.yaml.production ${SERVER}/server/env.yaml
-  - script:
-      cwd: ${SERVER}/server
-      name: backend goapp build
-      code: |
-        goapp build
+        make lint
   - script:
       cwd: ${SERVER}
-      name: backend goapp test
+      name: backend go build
       code: |
-        goapp test .
-  - script:
-      cwd: ${SERVER}
-      name: backend コードを$WERCKER_OUTPUT_DIRへ
-      code: |-
-        rsync -avz ${GOPATH%%:*}/ $WERCKER_OUTPUT_DIR
-deploy:
-  steps:
-  - script:
-      name: set env(deployツールの仕様対応)
-      code: |
-        export WERCKER_GIT_DOMAIN=""
-        export WERCKER_GIT_OWNER=""
-        export WERCKER_GIT_REPOSITORY="app"
-  - script:
-      name: check env
-      code: |
-        env
-  - script:
-    name: deploy info
-    code: find .
-  - michilu/go-appengine-deploy:
-    token: $APP_ENGINE_TOKEN
+        make build

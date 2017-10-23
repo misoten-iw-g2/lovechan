@@ -22,20 +22,20 @@
 [[projects]]
   name = "github.com/dimfeld/httptreemux"
   packages = ["."]
-  revision = "f8d6d78a3e093c21a8b12df8e498df5458024086"
-  version = "v4.1.0"
+  revision = "8cc36ee10f84b82d0742ffcab770815c7d3f9ad7"
+  version = "v5.0.0"
+
+[[projects]]
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  revision = "a0583e0143b1624142adab07e0e97fe106d99561"
+  version = "v1.3"
 
 [[projects]]
   branch = "master"
   name = "github.com/goadesign/goa"
   packages = [".","client","cors","design","design/apidsl","dslengine","goatest","middleware","uuid"]
   revision = "4cfe9e5eb207f854100aac4a3e8eaf9c0aada4b1"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/golang/protobuf"
-  packages = ["proto"]
-  revision = "130e6b02ab059e7b717a096f397c5b60111cae74"
 
 [[projects]]
   branch = "master"
@@ -56,16 +56,10 @@
   version = "v1.0"
 
 [[projects]]
-  name = "github.com/jinzhu/gorm"
-  packages = ["."]
-  revision = "5174cc5c242a728b435ea2be8a2f7f998e15429b"
-  version = "v1.0"
-
-[[projects]]
   branch = "master"
-  name = "github.com/jinzhu/inflection"
-  packages = ["."]
-  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
+  name = "github.com/jmoiron/sqlx"
+  packages = [".","reflectx"]
+  revision = "3379e5993990b1f927fc8db926485e6f6becf2d2"
 
 [[projects]]
   branch = "master"
@@ -83,7 +77,7 @@
   branch = "master"
   name = "github.com/spf13/cobra"
   packages = ["."]
-  revision = "83b1f039622680cde7a373eb1f85e10db8506673"
+  revision = "7b2c5ac9fc04fc5efafb60700713d4fa609b777b"
 
 [[projects]]
   name = "github.com/spf13/pflag"
@@ -107,17 +101,17 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","websocket"]
-  revision = "a04bdaca5b32abe1c069418fb7088ae607de5bd0"
+  revision = "cd69bc3fc700721b709c3a59e16e24c67b58f6ff"
 
 [[projects]]
-  name = "google.golang.org/appengine"
-  packages = [".","internal","internal/app_identity","internal/base","internal/datastore","internal/log","internal/modules","internal/remote_api","log"]
-  revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
-  version = "v1.0.0"
+  branch = "v1"
+  name = "gopkg.in/yaml.v1"
+  packages = ["."]
+  revision = "9f9df34309c04878acc86042b16630b0f696e1de"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "af5c2ad8af698f3fa0f2934c149e951c739134e327a4dd4a51ab7615317cb04d"
+  inputs-digest = "71e5cc37bdbfc39b19dd3f85c91ce6bcbe96812a7ce5f654bf3b6b3e8d5d0177"
   solver-name = "gps-cdcl"
   solver-version = 1

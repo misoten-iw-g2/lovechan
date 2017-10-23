@@ -8,16 +8,16 @@ var _ = Resource("swaggerui", func() {
 	Origin("*", func() {
 		Methods("GET")
 	})
-	Files("/swaggerui/*filepath", "swaggerui/")
+	Files("/swaggerui/*filepath", "public/swaggerui/")
 })
 
 var _ = Resource("swagger", func() {
-	Files("/swagger.json", "swagger/swagger.json")
+	Files("/swagger.json", "public/swagger/swagger.json")
 })
 
 var _ = Resource("front", func() {
-	Files("static/js/*filepath", "dist/static/js")
-	Files("/", "dist/index.html")
-	Files("*", "dist/index.html")
-	Files("/manifest.json", "dist/manifest.json")
+	Files("static/js/*filepath", "public/dist/static/js")
+	Files("/", "public/dist/index.html")
+	Files("*", "public/dist/index.html")
+	Files("/manifest.json", "public/dist/manifest.json")
 })

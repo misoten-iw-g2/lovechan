@@ -1,8 +1,17 @@
 #!/bin/sh
 
-go get -u github.com/golang/dep/cmd/dep
-if [ ! -e Gopkg.toml ]; then
-    /data/go/bin/dep init
+if [ "$GO_DEP" = true ]; then
+  go get -u github.com/golang/dep/cmd/dep
+  dep init
+  dep ensure -update
+else
+  go-wrapper download
+  go-wrapper install
 fi
-/data/go/bin/dep ensure -v
-dev_appserver.py --host 0.0.0.0 --admin_host 0.0.0.0 ./server
+
+if [ "$WATCH" = true ] ; then
+  go get -u github.com/pilu/fresh
+  fresh
+else
+  go build -o goapp . && ./goapp
+fi
