@@ -71,6 +71,8 @@ lint:
     		echo "^ - lint err" && echo && exit 1; \
     fi
 
+config-set:
+	cp -f ./config/mysql.yml.tmpl ./config/mysql.yml
 
 ##### client #####
 
