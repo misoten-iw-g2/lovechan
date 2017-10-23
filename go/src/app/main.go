@@ -71,6 +71,7 @@ func (s *Server) loadConfig(settingFolder string, env string) {
 	if err != nil {
 		log.Fatalf("database initialization failed: %s", err)
 	}
+	err = s.mysql.Ping()
 	if err != nil {
 		log.Fatalf("database ping failed: %s", err)
 	}
