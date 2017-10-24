@@ -40,7 +40,7 @@ docker_rm:
 	docker-compose rm
 
 docker_ssh_mysql:
-	docker exec -it lovechan_mysql /bin/bash
+	docker exec -it lovechan_mysql_1 /bin/bash
 
 docker_ssh_api:
-	docker exec -it lovechan_api /bin/bash
+	docker exec -it lovechan_golang_1 /bin/bash

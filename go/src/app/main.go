@@ -12,14 +12,14 @@ import (
 	"app/controller"
 	"app/design"
 
-	"path/filepath"
-
 	"app/design/constant"
+	"path/filepath"
 
 	"github.com/deadcheat/goacors"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
 	"github.com/jmoiron/sqlx"
+	migrate "github.com/rubenv/sql-migrate"
 )
 
 // Server 実行に必要な値を保持している
@@ -63,11 +63,7 @@ func (s *Server) loadConfig(settingFolder string, env string) {
 	if err != nil {
 		log.Fatalf("cannot open database configuration. exit. %s", err)
 	}
-	var hostname string
-	if hostname != "" {
-		hostname = os.Getenv("HOSTNAME")
-	}
-	s.mysql, err = mc.Open(env, hostname)
+	s.mysql, err = mc.Open(env)
 	if err != nil {
 		log.Fatalf("database initialization failed: %s", err)
 	}
@@ -75,6 +71,17 @@ func (s *Server) loadConfig(settingFolder string, env string) {
 	if err != nil {
 		log.Fatalf("database ping failed: %s", err)
 	}
+}
+
+func (s *Server) migrations() {
+	migrations := &migrate.FileMigrationSource{
+		Dir: "migrations",
+	}
+	n, err := migrate.Exec(s.mysql.DB, "mysql", migrations, migrate.Up)
+	if err != nil {
+		log.Fatalf("database migrate failed: %s", err)
+	}
+	log.Printf("Applied %d migrations!\n", n)
 }
 
 func main() {
@@ -89,6 +96,7 @@ func main() {
 	s := NewServer(service)
 	s.mountMiddleware()
 	s.loadConfig(*confDir, *env)
+	s.migrations()
 	s.mountController()
 
 	// Start service

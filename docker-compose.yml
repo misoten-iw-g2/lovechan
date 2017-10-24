@@ -14,9 +14,9 @@ services:
       - .env
     ports:
       - 8080:8080
-    links:
+    depends_on:
       - mysql
-    container_name: lovechan_api
+      - phpmyadmin
   mysql:
     image: mysql:5.7
     environment:
@@ -26,9 +26,21 @@ services:
         - MYSQL_PASSWORD=password
     ports:
         - 3306:3306
+    volumes:
+        - "./mysql:/var/lib/mysql"
     env_file:
       - .env_mysql
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
-    container_name: lovechan_mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+        - PMA_ARBITRARY=1
+        - PMA_HOST=mysql
+        - PMA_USER=root
+        - PMA_PASSWORD=password
+    ports:
+        - 8000:80
+    volumes:
+        - /sessions
 
 

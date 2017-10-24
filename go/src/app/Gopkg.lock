@@ -68,6 +68,12 @@
   revision = "717f7cf83fb78669bfab612749c2e8ff63d5be11"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/rubenv/sql-migrate"
+  packages = [".","sqlparse"]
+  revision = "79fe99e24311fa42469fb2ca23eb3f8f065e6155"
+
+[[projects]]
   name = "github.com/satori/go.uuid"
   packages = ["."]
   revision = "879c5887cd475cd7864858769793b2ceb0d44feb"
@@ -101,7 +107,13 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","websocket"]
-  revision = "cd69bc3fc700721b709c3a59e16e24c67b58f6ff"
+  revision = "4b14673ba32bee7f5ac0f990a48f033919fd418b"
+
+[[projects]]
+  name = "gopkg.in/gorp.v1"
+  packages = ["."]
+  revision = "c87af80f3cc5036b55b83d77171e156791085e2e"
+  version = "v1.7.1"
 
 [[projects]]
   branch = "v1"
@@ -112,6 +124,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "71e5cc37bdbfc39b19dd3f85c91ce6bcbe96812a7ce5f654bf3b6b3e8d5d0177"
+  inputs-digest = "e6c305293ede5103c763a13fa9ad1845334c8813a488c11ad4d4b0b97bf13bea"
   solver-name = "gps-cdcl"
   solver-version = 1
