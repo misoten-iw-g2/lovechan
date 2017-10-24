@@ -16,12 +16,12 @@ import (
 type MysqlConfigs map[string]*MysqlConfig
 
 // Open creates connection between database for each environment.
-func (cs MysqlConfigs) Open(env string, dockerHost string) (*sqlx.DB, error) {
+func (cs MysqlConfigs) Open(env string) (*sqlx.DB, error) {
 	config, ok := cs[env]
 	if !ok {
 		return nil, nil
 	}
-	return config.Open(dockerHost)
+	return config.Open()
 }
 
 // MysqlConfig is a database configuration.
@@ -41,11 +41,7 @@ type MysqlConfig struct {
 
 // Open connets database.
 // NOTE: supports mysql only.
-func (c *MysqlConfig) Open(dockerHost string) (*sqlx.DB, error) {
-	// docker base is random host name, So I made it possible to correspond.
-	if dockerHost != "" {
-		c.Host = dockerHost
-	}
+func (c *MysqlConfig) Open() (*sqlx.DB, error) {
 	return sqlx.Open("mysql",
 		fmt.Sprintf("%s:%s@%s(%s:%s)/%s?%s",
 			c.User,
