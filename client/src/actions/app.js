@@ -1,6 +1,6 @@
 /* @flow */
-import { createAction } from 'redux-actions';
-import { MYAPP_TEST, READ } from './actionNames/app';
+import {createAction} from 'redux-actions';
+import {MYAPP_TEST, READ} from './actionNames/app';
 
 export const myappTest = createAction(MYAPP_TEST, async () => {
   try {

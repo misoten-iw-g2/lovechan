@@ -2,6 +2,7 @@ parser: 'babel-eslint'
 
 plugins:
   - react
+  - prettier
   - flowtype
 
 extends:
@@ -9,6 +10,9 @@ extends:
   - plugin:react/recommended
   - plugin:flowtype/recommended
   - plugin:import/errors
+  - prettier
+  - prettier/flowtype
+  - prettier/react
 
 env:
   browser: true
@@ -30,3 +34,17 @@ rules:
   import/no-extraneous-dependencies: 0
   global-require: 0
   class-methods-use-this: 0
+  prettier/prettier:
+    - 2
+    -
+      trailingComma: all
+      singleQuote: true
+      semi: true
+      bracketSpacing: false
+      jsxBracketSameLine: true
+      parser: flow
+      max-len:
+        - 2
+        -
+          code: 120
+          ignoreUrls: true
