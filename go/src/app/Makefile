@@ -25,6 +25,8 @@ depend:
 
 bootstrap:
 	goagen bootstrap -d $(REPO)/design
+	rm -rf swagger
+	rm -rf tool
 
 main:
 	goagen main -d $(REPO)/design

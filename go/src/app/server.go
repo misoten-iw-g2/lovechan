@@ -5,7 +5,6 @@ package main
 import (
 	"flag"
 	"log"
-	"os"
 
 	"app/app"
 	"app/config"
@@ -39,6 +38,9 @@ func (s *Server) mountController() {
 	// Mount "talk" controller
 	talks := controller.NewTalksController(s.service)
 	app.MountTalksController(s.service, talks)
+	// Mount "questions" controller
+	questions := controller.NewQuestionsController(s.service, s.mysql)
+	app.MountQuestionsController(s.service, questions)
 	// Mount "front" controller
 	front := controller.NewFrontController(s.service)
 	app.MountFrontController(s.service, front)
@@ -50,12 +52,12 @@ func (s *Server) mountController() {
 	app.MountSwaggeruiController(s.service, swaggerui)
 }
 
-func (s *Server) mountMiddleware() {
+func (s *Server) mountMiddleware(env string) {
 	s.service.Use(middleware.RequestID())
 	s.service.Use(middleware.LogRequest(true))
 	s.service.Use(middleware.ErrorHandler(s.service, true))
 	s.service.Use(middleware.Recover())
-	s.service.Use(goacors.WithConfig(s.service, design.CorsConfig[os.Getenv("Op")]))
+	s.service.Use(goacors.WithConfig(s.service, design.CorsConfig[env]))
 }
 
 func (s *Server) loadConfig(settingFolder string, env string) {
@@ -94,7 +96,7 @@ func main() {
 
 	service := goa.New(constant.REPO)
 	s := NewServer(service)
-	s.mountMiddleware()
+	s.mountMiddleware(*env)
 	s.loadConfig(*confDir, *env)
 	s.migrations()
 	s.mountController()

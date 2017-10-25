@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/Masterminds/squirrel"
+  packages = ["."]
+  revision = "a6b93000bd219143c56c16e6cb1c4b91da3f224b"
+  version = "v1.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/armon/go-metrics"
   packages = ["."]
@@ -63,6 +69,18 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/lann/builder"
+  packages = ["."]
+  revision = "f22ce00fd9394014049dad11c244859432bd6820"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/lann/ps"
+  packages = ["."]
+  revision = "62de8c46ede02a7675c4c79c84883eb164cb71e3"
+
+[[projects]]
+  branch = "master"
   name = "github.com/manveru/faker"
   packages = ["."]
   revision = "717f7cf83fb78669bfab612749c2e8ff63d5be11"
@@ -80,10 +98,10 @@
   version = "v1.1.0"
 
 [[projects]]
-  branch = "master"
   name = "github.com/spf13/cobra"
   packages = ["."]
   revision = "7b2c5ac9fc04fc5efafb60700713d4fa609b777b"
+  version = "v0.0.1"
 
 [[projects]]
   name = "github.com/spf13/pflag"
@@ -124,6 +142,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e6c305293ede5103c763a13fa9ad1845334c8813a488c11ad4d4b0b97bf13bea"
+  inputs-digest = "9a5af1cec9ecf51b1b642ca6b59a675b10cc1e7aee19d450d2aecc2ffff31218"
   solver-name = "gps-cdcl"
   solver-version = 1
