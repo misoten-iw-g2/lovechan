@@ -1,12 +1,12 @@
 /* @flow */
-import { Record } from 'immutable';
+import {Record} from 'immutable';
 
-const AppState = Record({
+const TalksState = Record({
   myapp_test: undefined,
   datas: undefined,
 });
 
-class App extends AppState {
+class Talks extends TalksState {
   static myappTest(state, payload) {
     const newState = state.update('myapp_test', () => payload.myapp_test);
     return newState;
@@ -17,4 +17,4 @@ class App extends AppState {
   }
 }
 
-export default App;
+export default Talks;

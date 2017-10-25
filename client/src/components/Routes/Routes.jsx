@@ -1,22 +1,22 @@
 /* @flow */
 import * as React from 'react';
-import { Route } from 'react-router-dom';
-import { Switch, withRouter } from 'react-router';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import {Route} from 'react-router-dom';
+import {Switch, withRouter} from 'react-router';
+import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import classNames from 'classnames';
 
 // components
 // import Sidebar from '../Common/Sidebar';
 // import Landing from '../Landing';
 // import Table from '../Table';
-// import TableDetail from '../Table/Detail';
+import Media from '../../container/media';
 
 import routes from '../../config/routes';
 
 export type Props = {
   // getLoginUser(): void,
   // checkSession(): void
-}
+};
 
 class Routes extends React.Component<Props> {
   async componentWillMount<T>(): $await<T> {
@@ -34,15 +34,12 @@ class Routes extends React.Component<Props> {
       <div>
         <div>sidebar</div>
         <div
-          className={
-            classNames({
-              'gc-routes': true,
-            })
-          }
-        >
+          className={classNames({
+            'gc-routes': true,
+          })}>
           <Route
             path="/"
-            render={({ location }) => (
+            render={({location}) => (
               <TransitionGroup appear>
                 <CSSTransition
                   classNames="fade"
@@ -51,15 +48,11 @@ class Routes extends React.Component<Props> {
                     appear: 600,
                     enter: 600,
                     exit: 600,
-                  }}
-                >
+                  }}>
                   <Switch location={location} key={location.key}>
-                    {/* Landing */}
-                    <Route
-                      exact
-                      path={routes.landing}
-                      render={() => <div>sample</div>}
-                    />
+                    <Route exact path="/" render={() => <div>aa</div>} />
+                    {/* media */}
+                    <Route exact path={routes.media} render={() => <Media />} />
                   </Switch>
                 </CSSTransition>
               </TransitionGroup>

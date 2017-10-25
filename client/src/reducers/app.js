@@ -1,7 +1,7 @@
 /* @flow */
-import { handleActions } from 'redux-actions';
+import {handleActions} from 'redux-actions';
 import * as actions from '../actions/app';
-import AppState from '../models/App.model';
+import AppState from '../models/app';
 
 export default handleActions(
   {
