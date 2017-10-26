@@ -3,9 +3,13 @@ package controller
 import (
 	"app/app"
 	"app/model"
+	"app/util"
+	"fmt"
+	"strconv"
 
 	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
+	languagepb "google.golang.org/genproto/googleapis/cloud/language/v1"
 )
 
 // QuestionsController implements the questions resource.
@@ -27,9 +31,22 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	// QuestionsController_Answers: start_implement
 
 	// Put your logic here
-
+	s, err := util.GetNLPAnalyze(c.Context, util.Sentiment, ctx.Payload.UserAnswer)
+	if err != nil {
+		return goa.ErrInternal(err)
+	}
+	v, ok := s.(*languagepb.AnalyzeSentimentResponse)
+	if !ok {
+		return goa.ErrInternal(err)
+	}
+	score := v.DocumentSentiment.GetScore()
+	scoref64, err := strconv.ParseFloat(fmt.Sprint(score), 64)
+	if err != nil {
+		return goa.ErrInternal(err)
+	}
 	// QuestionsController_Answers: end_implement
 	res := &app.Answertype{}
+	res.Score = scoref64
 	return ctx.OK(res)
 }
 

@@ -2,8 +2,8 @@
 
 if [ "$GO_DEP" = true ]; then
   go get -u github.com/golang/dep/cmd/dep
-  dep init
-  dep ensure -update
+  dep init -v
+  dep ensure -update -v
 else
   go-wrapper download
   go-wrapper install

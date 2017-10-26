@@ -30,9 +30,10 @@ var _ = Resource("questions", func() {
 		})
 		Payload(func() {
 			Attribute("user_answer", String, "ユーザーからの回答", func() {
-				Default("")
+				MinLength(1)
 				Example("今日はしんどい")
 			})
+			Required("user_answer")
 		})
 		Response(OK, media.AnswerType)
 		UseTrait(GeneralUserTrait)
