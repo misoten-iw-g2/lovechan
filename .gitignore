@@ -19,12 +19,12 @@ tmp/
 
 
 ### client ###
-
 .node_modules/
 client/public/
 
 ### config ###
 mysql.yml
+application_default_credentials.json
 
 # Created by https://www.gitignore.io/api/go,osx,vim,macos,windows,intellij,jetbrains,sublimetext,visualstudiocode
 

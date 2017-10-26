@@ -75,6 +75,7 @@ lint:
 
 config-set:
 	cp -f ./config/mysql.yml.tmpl ./config/mysql.yml
+	cp -f ./config/applicatioson.tmpl.tmpl ./config/application_default_credentials.json
 
 ##### client #####
 
