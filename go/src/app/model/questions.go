@@ -1,15 +1,19 @@
 package model
 
 import (
+	"context"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 )
 
 // Questions DBカラム
 type Questions struct {
-	ID       int    `db:"id"`
-	Question string `db:"question"`
-	Count    int    `db:"count"`
+	ID         int      `db:"id"`
+	Question   string   `db:"question"`
+	Count      int      `db:"count"`
+	AnswerType int      `db:"answer_type"`
+	Choice     []string `db:"-"`
 }
 
 // QuestionsDB DB
@@ -22,13 +26,20 @@ func NewQuestions(db *sqlx.DB) *QuestionsDB {
 	return &QuestionsDB{DB: db}
 }
 
+const (
+	// TypeFree 判定用定数
+	TypeFree = 1
+	// TypeChoice 判定用定数
+	TypeChoice = 2
+)
+
 // GetRandomQuestion 質問をランダムに取得する 取得した質問のカウントはインクリメントする
-func (db *QuestionsDB) GetRandomQuestion() (Questions, error) {
-	b := sq.Select("*").
+func (db *QuestionsDB) GetRandomQuestion(ctx context.Context) (Questions, error) {
+	sql, _, err := sq.Select("*").
 		From("questions").
 		OrderBy("count").
-		Limit(1)
-	sql, _, err := b.ToSql()
+		Limit(1).
+		ToSql()
 	if err != nil {
 		return Questions{}, err
 	}
@@ -36,6 +47,17 @@ func (db *QuestionsDB) GetRandomQuestion() (Questions, error) {
 	err = db.DB.Get(&q, sql)
 	if err != nil {
 		return Questions{}, err
+	}
+	q.Choice = []string{}
+	if q.AnswerType == TypeChoice {
+		caDB := NewChoiceAnswersDB(db.DB)
+		ca, err := caDB.GetList(ctx, q.ID)
+		if err != nil {
+			return Questions{}, err
+		}
+		for _, v := range ca {
+			q.Choice = append(q.Choice, v.ChoiceDisplay)
+		}
 	}
 	u := sq.Update("questions").
 		Set("count", sq.Expr("count + 1")).
@@ -45,5 +67,23 @@ func (db *QuestionsDB) GetRandomQuestion() (Questions, error) {
 		return Questions{}, err
 	}
 	db.DB.MustExec(sql, prepare...)
+	return q, nil
+}
+
+// Get 質問を取得する
+func (db *QuestionsDB) Get(ctx context.Context, id int) (Questions, error) {
+	sql, prepare, err := sq.Select("*").
+		From("questions").
+		Where("id = ?", id).
+		Limit(1).
+		ToSql()
+	if err != nil {
+		return Questions{}, err
+	}
+	q := Questions{}
+	err = db.DB.Get(&q, sql, prepare...)
+	if err != nil {
+		return Questions{}, err
+	}
 	return q, nil
 }

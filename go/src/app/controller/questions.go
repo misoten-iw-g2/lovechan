@@ -3,9 +3,6 @@ package controller
 import (
 	"app/app"
 	"app/model"
-	"app/util"
-	"fmt"
-	"strconv"
 
 	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
@@ -30,19 +27,29 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	// QuestionsController_Answers: start_implement
 
 	// Put your logic here
-	s, err := util.AnalyzeSentiment(c.Context, ctx.Payload.UserAnswer)
+	qDB := model.NewQuestions(c.db)
+	q, err := qDB.Get(ctx, ctx.ID)
 	if err != nil {
-		return goa.ErrInternal(err)
+		return goa.ErrInternal("answer 1", err)
 	}
-	score := s.DocumentSentiment.GetScore()
-	scoref64, err := strconv.ParseFloat(fmt.Sprint(score), 64)
-	if err != nil {
-		return goa.ErrInternal(err)
+
+	res := app.Answertype{}
+	if q.AnswerType == model.FreeAnswerType {
+		faDB := model.NewFreeAnswersDB(c.db)
+		res, err = faDB.GetFreeAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
+		if err != nil {
+			return goa.ErrInternal("answer 3", err)
+		}
+	} else if q.AnswerType == model.ChoiceAnswerType {
+		goa.LogInfo(ctx, "%d", q.AnswerType)
+		caDB := model.NewChoiceAnswersDB(c.db)
+		res, err = caDB.GetChoiceAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
+		if err != nil {
+			return goa.ErrInternal("answer 2", err)
+		}
 	}
 	// QuestionsController_Answers: end_implement
-	res := &app.Answertype{}
-	res.Score = scoref64
-	return ctx.OK(res)
+	return ctx.OK(&res)
 }
 
 // Questions runs the questions action.
@@ -51,7 +58,7 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 
 	// Put your logic here
 	qDB := model.NewQuestions(c.db)
-	q, err := qDB.GetRandomQuestion()
+	q, err := qDB.GetRandomQuestion(ctx)
 	if err != nil {
 		return goa.ErrInternal(err)
 	}
@@ -59,5 +66,7 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 	res := &app.Questiontype{}
 	res.Question = q.Question
 	res.ID = q.ID
+	res.Choices = q.Choice
+	res.AnswerType = q.AnswerType
 	return ctx.OK(res)
 }
