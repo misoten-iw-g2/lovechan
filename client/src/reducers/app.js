@@ -1,15 +1,12 @@
 /* @flow */
-import {handleActions} from 'redux-actions';
-import * as actions from '../actions/app';
+import {handleActions, combineActions} from 'redux-actions';
+import actions from '../actions/app';
 import AppState from '../models/app';
 
 export default handleActions(
   {
-    [actions.myappTest](state, action) {
-      return state.myappTest(state, action.payload);
-    },
-    [actions.read](state, action) {
-      return state.read(state, action.payload);
+    [combineActions(actions.dammy)](state, action) {
+      return {...state, ...action};
     },
   },
   new AppState(),
