@@ -53,7 +53,7 @@
   branch = "master"
   name = "github.com/goadesign/goa"
   packages = [".","client","cors","design","design/apidsl","dslengine","goatest","middleware","uuid"]
-  revision = "4cfe9e5eb207f854100aac4a3e8eaf9c0aada4b1"
+  revision = "948c35808c713f7557fe2be38f09a628c6398c2d"
 
 [[projects]]
   branch = "master"
@@ -167,7 +167,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","context/ctxhttp","http2","http2/hpack","idna","internal/timeseries","lex/httplex","trace","websocket"]
-  revision = "4b14673ba32bee7f5ac0f990a48f033919fd418b"
+  revision = "c73622c77280266305273cb545f54516ced95b93"
 
 [[projects]]
   branch = "master"
@@ -185,7 +185,7 @@
   branch = "master"
   name = "google.golang.org/api"
   packages = ["googleapi/transport","internal","option","transport","transport/grpc","transport/http"]
-  revision = "c5d94a018003dc535877ebf36b0ed720c690202a"
+  revision = "6f1bb5bc3019b5a6c3bd4e9812215dc36dcdb350"
 
 [[projects]]
   name = "google.golang.org/appengine"
