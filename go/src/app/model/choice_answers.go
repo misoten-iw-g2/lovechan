@@ -43,11 +43,13 @@ func (db *ChoiceAnswersDB) GetList(ctx context.Context, id int) ([]ChoiceAnswers
 		Where("question_id = ?", id).
 		ToSql()
 	if err != nil {
+		goa.LogError(ctx, "ChoiceAnswersDB GetList Error 1: err", "err", err)
 		return []ChoiceAnswers{}, err
 	}
 	q := []ChoiceAnswers{}
 	err = db.DB.Select(&q, sql, prepare...)
 	if err != nil {
+		goa.LogError(ctx, "ChoiceAnswersDB GetList Error 2: err", "err", err)
 		return []ChoiceAnswers{}, err
 	}
 	return q, nil
@@ -57,6 +59,7 @@ func (db *ChoiceAnswersDB) GetList(ctx context.Context, id int) ([]ChoiceAnswers
 func (db *ChoiceAnswersDB) GetChoiceAnswerReplay(ctx context.Context, id int, userAnswer string) (app.Answertype, error) {
 	ca, err := db.GetList(ctx, id)
 	if err != nil {
+		goa.LogError(ctx, "ChoiceAnswersDB GetChoiceAnswerReplay Error 1: err", "err", err)
 		return app.Answertype{}, err
 	}
 	topRateIndex := 0
@@ -78,6 +81,7 @@ func (db *ChoiceAnswersDB) GetChoiceAnswerReplay(ctx context.Context, id int, us
 	if len(ca) != 0 {
 		return ca[topRateIndex].ChoiceAnswerToAnswertype(), nil
 	}
+	goa.LogInfo(ctx, "ChoiceAnswersDB GetChoiceAnswerReplay NoHit 2: ca", "ca", ca)
 	return app.Answertype{}, nil
 }
 

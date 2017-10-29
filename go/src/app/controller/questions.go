@@ -30,22 +30,29 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	qDB := model.NewQuestions(c.db)
 	q, err := qDB.Get(ctx, ctx.ID)
 	if err != nil {
-		return goa.ErrInternal("answer 1", err)
+		return goa.ErrInternal(err)
 	}
+
+	uaDB := model.NewUserAnswersDB(c.db)
+	ua := model.UserAnswers{
+		Question:   q.Question,
+		Answer:     ctx.Payload.UserAnswer,
+		QuestionID: ctx.ID,
+	}
+	go uaDB.AddAnalysis(ctx, ua)
 
 	res := app.Answertype{}
 	if q.AnswerType == model.FreeAnswerType {
 		faDB := model.NewFreeAnswersDB(c.db)
 		res, err = faDB.GetFreeAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
 		if err != nil {
-			return goa.ErrInternal("answer 3", err)
+			return goa.ErrInternal(err)
 		}
 	} else if q.AnswerType == model.ChoiceAnswerType {
-		goa.LogInfo(ctx, "%d", q.AnswerType)
 		caDB := model.NewChoiceAnswersDB(c.db)
 		res, err = caDB.GetChoiceAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
 		if err != nil {
-			return goa.ErrInternal("answer 2", err)
+			return goa.ErrInternal(err)
 		}
 	}
 	// QuestionsController_Answers: end_implement

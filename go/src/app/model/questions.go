@@ -4,6 +4,7 @@ import (
 	"context"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -41,11 +42,13 @@ func (db *QuestionsDB) GetRandomQuestion(ctx context.Context) (Questions, error)
 		Limit(1).
 		ToSql()
 	if err != nil {
+		goa.LogError(ctx, "QuestionsDB GetRandomQuestion Error 1: err", "err", err)
 		return Questions{}, err
 	}
 	q := Questions{}
 	err = db.DB.Get(&q, sql)
 	if err != nil {
+		goa.LogError(ctx, "QuestionsDB GetRandomQuestion Error 2: err", "err", err)
 		return Questions{}, err
 	}
 	q.Choice = []string{}
@@ -53,6 +56,7 @@ func (db *QuestionsDB) GetRandomQuestion(ctx context.Context) (Questions, error)
 		caDB := NewChoiceAnswersDB(db.DB)
 		ca, err := caDB.GetList(ctx, q.ID)
 		if err != nil {
+			goa.LogError(ctx, "QuestionsDB GetRandomQuestion Error 3: err", "err", err)
 			return Questions{}, err
 		}
 		for _, v := range ca {
@@ -64,6 +68,7 @@ func (db *QuestionsDB) GetRandomQuestion(ctx context.Context) (Questions, error)
 		Where("id = ?", q.ID)
 	sql, prepare, err := u.ToSql()
 	if err != nil {
+		goa.LogError(ctx, "QuestionsDB GetRandomQuestion Error 4: err", "err", err)
 		return Questions{}, err
 	}
 	db.DB.MustExec(sql, prepare...)
@@ -78,11 +83,13 @@ func (db *QuestionsDB) Get(ctx context.Context, id int) (Questions, error) {
 		Limit(1).
 		ToSql()
 	if err != nil {
+		goa.LogError(ctx, "QuestionsDB Get Error 1: err", "err", err)
 		return Questions{}, err
 	}
 	q := Questions{}
 	err = db.DB.Get(&q, sql, prepare...)
 	if err != nil {
+		goa.LogError(ctx, "QuestionsDB Get Error 1: err", "err", err)
 		return Questions{}, err
 	}
 	return q, nil
