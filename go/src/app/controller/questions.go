@@ -44,16 +44,18 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	res := app.Answertype{}
 	if q.AnswerType == model.FreeAnswerType {
 		faDB := model.NewFreeAnswersDB(c.db)
-		res, err = faDB.GetFreeAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
+		r, err := faDB.GetFreeAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
 		if err != nil {
 			return goa.ErrInternal(err)
 		}
+		res = r.FreeAnswerToAnswertype()
 	} else if q.AnswerType == model.ChoiceAnswerType {
 		caDB := model.NewChoiceAnswersDB(c.db)
-		res, err = caDB.GetChoiceAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
+		r, err := caDB.GetChoiceAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
 		if err != nil {
 			return goa.ErrInternal(err)
 		}
+		res = r.ChoiceAnswerToAnswertype()
 	}
 	// QuestionsController_Answers: end_implement
 	return ctx.OK(&res)

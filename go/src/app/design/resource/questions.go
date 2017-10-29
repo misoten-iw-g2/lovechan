@@ -13,7 +13,7 @@ var _ = Resource("questions", func() {
 	Action("questions", func() {
 		Description("ラブちゃんから質問をする")
 		Routing(
-			POST(""),
+			GET(""),
 		)
 		Response(OK, media.QuestionType)
 		UseTrait(GeneralUserTrait)

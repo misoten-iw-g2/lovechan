@@ -56,11 +56,11 @@ func (db *ChoiceAnswersDB) GetList(ctx context.Context, id int) ([]ChoiceAnswers
 }
 
 // GetChoiceAnswerReplay 与えられた選択肢からユーザーが何を選んだかを判定する
-func (db *ChoiceAnswersDB) GetChoiceAnswerReplay(ctx context.Context, id int, userAnswer string) (app.Answertype, error) {
+func (db *ChoiceAnswersDB) GetChoiceAnswerReplay(ctx context.Context, id int, userAnswer string) (ChoiceAnswers, error) {
 	ca, err := db.GetList(ctx, id)
 	if err != nil {
 		goa.LogError(ctx, "ChoiceAnswersDB GetChoiceAnswerReplay Error 1: err", "err", err)
-		return app.Answertype{}, err
+		return ChoiceAnswers{}, err
 	}
 	topRateIndex := 0
 	var topRate float64
@@ -73,16 +73,14 @@ func (db *ChoiceAnswersDB) GetChoiceAnswerReplay(ctx context.Context, id int, us
 			if rate > topRate {
 				topRateIndex = k
 				topRate = rate
-				goa.LogInfo(ctx, "%d", k)
-				goa.LogInfo(ctx, "%v", v)
 			}
 		}
 	}
 	if len(ca) != 0 {
-		return ca[topRateIndex].ChoiceAnswerToAnswertype(), nil
+		return ca[topRateIndex], nil
 	}
 	goa.LogInfo(ctx, "ChoiceAnswersDB GetChoiceAnswerReplay NoHit 2: ca", "ca", ca)
-	return app.Answertype{}, nil
+	return ChoiceAnswers{}, nil
 }
 
 // ChoiceAnswerToAnswertype レスポンス構造体へ入れ直す

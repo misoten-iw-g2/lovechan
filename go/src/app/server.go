@@ -35,12 +35,15 @@ func NewServer(s *goa.Service) *Server {
 }
 
 func (s *Server) mountController() {
-	// Mount "talk" controller
+	// Mount "talks" controller
 	talks := controller.NewTalksController(s.service)
 	app.MountTalksController(s.service, talks)
 	// Mount "questions" controller
 	questions := controller.NewQuestionsController(s.service, s.mysql)
 	app.MountQuestionsController(s.service, questions)
+	// Mount "requests" controller
+	requests := controller.NewRequestsController(s.service, s.mysql)
+	app.MountRequestsController(s.service, requests)
 	// Mount "front" controller
 	front := controller.NewFrontController(s.service)
 	app.MountFrontController(s.service, front)
