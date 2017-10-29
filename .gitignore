@@ -8,6 +8,7 @@ go/src/app/schema/
 go/src/app/js/
 go/src/app/public/dist/
 go/src/app/public/swagger/
+mysql/
 
 ### go ###
 go/*

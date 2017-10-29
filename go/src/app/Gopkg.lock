@@ -185,7 +185,7 @@
   branch = "master"
   name = "google.golang.org/api"
   packages = ["googleapi/transport","internal","option","transport","transport/grpc","transport/http"]
-  revision = "6f1bb5bc3019b5a6c3bd4e9812215dc36dcdb350"
+  revision = "672d215daf0631fcae4c08c2a4324a763aaaf789"
 
 [[projects]]
   name = "google.golang.org/appengine"
