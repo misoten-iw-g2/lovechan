@@ -6,6 +6,7 @@ import (
 	"context"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -40,37 +41,42 @@ func (db *FreeAnswersDB) GetList(ctx context.Context, id int) ([]FreeAnswers, er
 		Where("question_id = ?", id).
 		ToSql()
 	if err != nil {
+		goa.LogInfo(ctx, "FreeAnswersDB GetList Error 1: err", "err", err)
 		return []FreeAnswers{}, err
 	}
 	q := []FreeAnswers{}
 	err = db.DB.Select(&q, sql, prepare...)
 	if err != nil {
+		goa.LogInfo(ctx, "FreeAnswersDB GetList Error 2: err", "err", err)
 		return []FreeAnswers{}, err
 	}
 	return q, nil
 }
 
 // GetFreeAnswerReplay scoreからユーザーに返すべき返答を取得する
-func (db *FreeAnswersDB) GetFreeAnswerReplay(ctx context.Context, questionID int, userAnswer string) (app.Answertype, error) {
+func (db *FreeAnswersDB) GetFreeAnswerReplay(ctx context.Context, questionID int, userAnswer string) (FreeAnswers, error) {
 	as, err := db.GetList(ctx, questionID)
 	if err != nil {
-		return app.Answertype{}, err
+		goa.LogInfo(ctx, "FreeAnswersDB GetFreeAnswerReplay Error 1: err", "err", err)
+		return FreeAnswers{}, err
 	}
 	s, err := util.AnalyzeSentiment(ctx, userAnswer)
 	if err != nil {
-		return app.Answertype{}, err
+		goa.LogInfo(ctx, "FreeAnswersDB GetFreeAnswerReplay Error 2: err", "err", err)
+		return FreeAnswers{}, err
 	}
 	score := s.DocumentSentiment.GetScore()
 	if err != nil {
-		return app.Answertype{}, err
+		goa.LogInfo(ctx, "FreeAnswersDB GetFreeAnswerReplay Error 3: err", "err", err)
+		return FreeAnswers{}, err
 	}
 	emotion := getEmotion(ctx, score)
 	for _, v := range as {
 		if v.Emotion == emotion {
-			return v.FreeAnswerToAnswertype(), nil
+			return v, nil
 		}
 	}
-	return app.Answertype{}, nil
+	return FreeAnswers{}, nil
 }
 
 const (

@@ -13,4 +13,8 @@ INSERT INTO `choice_answers` (`id`, `answer`, `filename`, `choice_display` ,`cho
 INSERT INTO `choice_answers` (`id`, `answer`, `filename`, `choice_display` ,`choice`, `question_id`) VALUES ('2', '！？でもでも私のブース楽しかったですよね・・・？', '2.wav', '普通', '普通,ふつう', '2');
 INSERT INTO `choice_answers` (`id`, `answer`, `filename`, `choice_display` ,`choice`, `question_id`) VALUES ('3', 'もっと楽しんでいきましょー！', '3.wav', '面白くない', '面白くない,おもしろくない', '2');
 
+-- requests
+INSERT INTO `requests` (`request_display`, `request`, `filename`) VALUES ('踊って', '踊って,おどって', 'dance.wav');
+INSERT INTO `requests` (`request_display`, `request`, `filename`) VALUES ('歌って', '歌って,うたって', 'music.wav');
+
 -- +migrate Down
