@@ -12,7 +12,7 @@ var _ = Resource("requests", func() {
 	BasePath("/requests")
 	DefaultMedia(media.RequestType)
 	Action("list", func() {
-		Description("ラブちゃんが出来る動作一覧を取得する")
+		Description("ラヴちゃんが出来る動作一覧を取得する")
 		Routing(
 			GET(""),
 		)
@@ -20,7 +20,7 @@ var _ = Resource("requests", func() {
 		UseTrait(GeneralUserTrait)
 	})
 	Action("request", func() {
-		Description("ラブちゃんに動作をリクエストする")
+		Description("ラヴちゃんに動作をリクエストする")
 		Routing(
 			POST(""),
 		)

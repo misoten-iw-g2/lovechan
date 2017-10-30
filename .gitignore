@@ -9,6 +9,7 @@ go/src/app/js/
 go/src/app/public/dist/
 go/src/app/public/swagger/
 mysql/
+Gopkg.lock
 
 ### go ###
 go/*
