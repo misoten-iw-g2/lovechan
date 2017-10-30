@@ -1,16 +1,28 @@
 /* @flow */
-import {handleActions, combineActions} from 'redux-actions';
-import actions from '../actions/talks';
+import {createActions, handleActions} from 'redux-actions';
 import TalksState from '../models/talks';
 
-export default handleActions(
+const actionCreators = createActions({
+  talks: {
+    recordStart: undefined,
+    recordSave: undefined,
+    dammy: undefined,
+  },
+});
+
+const reducer = handleActions(
   {
-    [combineActions(actions.recordStart, actions.recordSave, actions.dammy)](
-      state,
-      action,
-    ) {
-      return {...state, ...action};
+    [actionCreators.talks.recordStart](state, action) {
+      return state.recordStart(state, action);
+    },
+    [actionCreators.talks.recordSave](state, action) {
+      return state.recordSave(state, action);
+    },
+    [actionCreators.talks.dammy](state, action) {
+      return state.dammy(state, action);
     },
   },
   new TalksState(),
 );
+
+export {actionCreators, reducer};
