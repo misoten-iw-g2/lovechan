@@ -1,9 +1,6 @@
 /* @flow */
 import * as React from 'react';
 
-// import HeaderGrid from '../Common/HeaderGrid';
-// import FirstGrid from './FirstGrid';
-// import SecondGrid from './SecondGrid';
 import _words from '../../config/words';
 
 export type Props = {
