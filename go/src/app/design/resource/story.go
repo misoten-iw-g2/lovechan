@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Resource("story", func() {
-	BasePath("/story")
+	BasePath("/api/story")
 	DefaultMedia(media.StoryType)
 	Action("story", func() {
 		Description("ストーリー")

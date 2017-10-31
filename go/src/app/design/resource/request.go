@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Resource("requests", func() {
-	BasePath("/requests")
+	BasePath("/api/requests")
 	DefaultMedia(media.RequestType)
 	Action("list", func() {
 		Description("ラヴちゃんが出来る動作一覧を取得する")
