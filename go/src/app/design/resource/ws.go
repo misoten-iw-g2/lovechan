@@ -10,7 +10,7 @@ import (
 var _ = Resource("websocket", func() {
 	Action("websocket", func() {
 		Description("websocket配信")
-		Routing(GET("/ws"))
+		Routing(GET("/api/ws"))
 		UseTrait(GeneralUserTrait)
 		Response(SwitchingProtocols)
 	})

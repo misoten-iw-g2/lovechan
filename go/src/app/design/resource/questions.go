@@ -9,7 +9,7 @@ import (
 )
 
 var _ = Resource("questions", func() {
-	BasePath("/questions")
+	BasePath("/api/questions")
 	Action("questions", func() {
 		Description("ラヴちゃんから質問をする")
 		Routing(

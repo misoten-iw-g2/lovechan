@@ -10,7 +10,7 @@ import (
 
 var _ = Resource("talks", func() {
 	DefaultMedia(media.SelectType)
-	BasePath("/talks")
+	BasePath("/api/talks")
 	Action("select", func() {
 		Description("与えられた選択肢の中で、ユーザーが選択したと思われる選択肢を返す")
 		Routing(
