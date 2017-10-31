@@ -42,7 +42,7 @@ var QuestionType = MediaType("application/vnd.questionType+json", func() {
 })
 
 var AnswerType = MediaType("application/vnd.answerType+json", func() {
-	Description("ラブちゃんからの回答")
+	Description("ラヴちゃんからの回答")
 	Attributes(func() {
 		Attribute("id", Integer, "id", func() {
 			Example(1)

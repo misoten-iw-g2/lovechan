@@ -38,6 +38,9 @@ func (s *Server) mountController() {
 	// Mount "talks" controller
 	talks := controller.NewTalksController(s.service)
 	app.MountTalksController(s.service, talks)
+	// Mount "story" controller
+	story := controller.NewStoryController(s.service)
+	app.MountStoryController(s.service, story)
 	// Mount "questions" controller
 	questions := controller.NewQuestionsController(s.service, s.mysql)
 	app.MountQuestionsController(s.service, questions)

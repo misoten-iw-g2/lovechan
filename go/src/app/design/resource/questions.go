@@ -11,7 +11,7 @@ import (
 var _ = Resource("questions", func() {
 	BasePath("/questions")
 	Action("questions", func() {
-		Description("ラブちゃんから質問をする")
+		Description("ラヴちゃんから質問をする")
 		Routing(
 			GET(""),
 		)
@@ -19,7 +19,7 @@ var _ = Resource("questions", func() {
 		UseTrait(GeneralUserTrait)
 	})
 	Action("answers", func() {
-		Description("ラブちゃんからの質問に回答する")
+		Description("ラヴちゃんからの質問に回答する")
 		Routing(
 			POST("/:id/answers"),
 		)
