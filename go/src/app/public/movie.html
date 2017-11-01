@@ -2,7 +2,7 @@
     <body>
         <script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
         <script>
-        var c = new WebSocket('ws://localhost:8080:3000/ws');
+        var c = new WebSocket('ws://localhost:8080/api/ws');
         c.onopen = function(){
             c.onmessage = function(response){
                 console.log(response.data);
