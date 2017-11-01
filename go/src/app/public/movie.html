@@ -1,0 +1,25 @@
+<html>
+    <body>
+        <script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+        <script>
+        var c = new WebSocket('ws://localhost:8080:3000/ws');
+        c.onopen = function(){
+            c.onmessage = function(response){
+                console.log(response.data);
+                var newMessage = $('<li>').text(response.data);
+                $('#messages').append(newMessage);
+                $('#message').val('');
+            };
+            $('form').submit(function(){
+                c.send($('#message').val());
+                return false;
+            });
+        }
+        </script>
+        <ul id=messages></ul>
+        <form>
+            <input id=message>
+            <input type="submit" id=send value=Send>
+        </form>
+    </body>
+</html>
