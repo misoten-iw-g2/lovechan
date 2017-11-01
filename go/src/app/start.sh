@@ -2,7 +2,11 @@
 
 go get -u github.com/golang/dep/cmd/dep
 dep init -v
-dep ensure -update -v
+if [ -e vendor ]; then
+  dep ensure -update -v
+else
+  dep ensure -v
+fi
 
 (cd vendor/github.com/goadesign/goa/goagen && GOROOT=/usr/local/go go get && GOROOT=/usr/local/go go build)
 ./vendor/github.com/goadesign/goa/goagen/goagen version
