@@ -10,6 +10,7 @@ import (
 	"app/config"
 	"app/controller"
 	"app/design"
+	"app/mywebsocket"
 
 	"app/design/constant"
 	"path/filepath"
@@ -25,12 +26,16 @@ import (
 type Server struct {
 	service *goa.Service
 	mysql   *sqlx.DB
+	ws      *mywebsocket.Server
 }
 
 // NewServer Server構造体を作成する
 func NewServer(s *goa.Service) *Server {
+	ws := mywebsocket.NewServer()
+	go ws.Start()
 	return &Server{
 		service: s,
+		ws:      ws,
 	}
 }
 
@@ -56,6 +61,9 @@ func (s *Server) mountController() {
 	// Mount "swaggerui" controller
 	swaggerui := controller.NewSwaggeruiController(s.service)
 	app.MountSwaggeruiController(s.service, swaggerui)
+	// Mount "ws" controller
+	ws := controller.NewWsController(s.service, s.ws)
+	app.MountWsController(s.service, ws)
 }
 
 func (s *Server) mountMiddleware(env string) {

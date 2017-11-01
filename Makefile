@@ -44,3 +44,9 @@ docker_ssh_mysql:
 
 docker_ssh_api:
 	docker exec -it lovechan_golang_1 /bin/bash
+
+ws-install:
+	go get -u github.com/raphael/wsc
+
+ws:
+	wsc ws://localhost:8080/api/ws

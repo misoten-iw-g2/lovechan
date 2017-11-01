@@ -7,10 +7,11 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = Resource("websocket", func() {
-	Action("websocket", func() {
+var _ = Resource("ws", func() {
+	BasePath("/api/ws")
+	Action("ws", func() {
 		Description("websocket配信")
-		Routing(GET("/api/ws"))
+		Routing(GET(""))
 		UseTrait(GeneralUserTrait)
 		Response(SwitchingProtocols)
 	})
