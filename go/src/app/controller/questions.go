@@ -76,6 +76,7 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 	}
 	v := mywebsocket.VideoChange{
 		VideoFileName: "filename.mp4",
+		VoiceFileName: "filename.mp3",
 	}
 	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 	// QuestionsController_Questions: end_implement
