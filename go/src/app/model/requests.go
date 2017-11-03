@@ -16,7 +16,8 @@ type Requests struct {
 	ID             int    `db:"id"`
 	RequestDisplay string `db:"request_display"`
 	Request        string `db:"request"`
-	Filename       string `db:"filename"`
+	VideoFileName  string `db:"video_file_name"`
+	VoiceFileName  string `db:"voice_file_name"`
 }
 
 // RequestsDB DB

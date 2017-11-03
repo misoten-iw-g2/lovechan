@@ -50,9 +50,6 @@ var AnswerType = MediaType("application/vnd.answerType+json", func() {
 		Attribute("answer", String, "回答", func() {
 			Example("体には気をつけてください!")
 		})
-		Attribute("filename", String, "音声ファイル名", func() {
-			Example("media01.wav")
-		})
 		Attribute("score", Number, "感情分析結果", func() {
 			Example(0.2)
 		})
@@ -60,18 +57,15 @@ var AnswerType = MediaType("application/vnd.answerType+json", func() {
 	Required(
 		"id",
 		"answer",
-		"filename",
 		"score",
 	)
 	View("default", func() {
 		Attribute("id")
 		Attribute("answer")
-		Attribute("filename")
 		Attribute("score")
 		Required(
 			"id",
 			"answer",
-			"filename",
 			"score",
 		)
 	})

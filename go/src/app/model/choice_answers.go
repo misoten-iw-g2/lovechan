@@ -20,7 +20,8 @@ const (
 type ChoiceAnswers struct {
 	ID            int    `db:"id"`
 	Answer        string `db:"answer"`
-	Filename      string `db:"filename"`
+	VideoFileName string `db:"video_file_name"`
+	VoiceFileName string `db:"voice_file_name"`
 	ChoiceDisplay string `db:"choice_display"`
 	Choice        string `db:"choice"`
 	QuestionID    int    `db:"question_id"`
@@ -88,6 +89,5 @@ func (ca ChoiceAnswers) ChoiceAnswerToAnswertype() app.Answertype {
 	a := app.Answertype{}
 	a.ID = ca.ID
 	a.Answer = ca.Answer
-	a.Filename = ca.Filename
 	return a
 }
