@@ -9,7 +9,6 @@
     }
 
     #video {
-      background: url('/video_bg.jpg') no-repeat; // 動画が再生を始めるまで、cssのほうでも背景を設定します。
       background-attachment: fixed; // 中央揃えになるように、fixed。
       background-position: center center; // positionも中央に。
       background-size: cover; // 画面サイズに応じてサイズを可変するように設定。
@@ -23,6 +22,10 @@
       position: absolute;
       top: 0;
       z-index: 1; // z-indexは調整してください。
+    }
+
+    #audio {
+        display: none;
     }
     </style>
   </head>
@@ -54,23 +57,34 @@
           $(window).on('resize', function(){
             getWindowMovieHeight();
           });
-        });
-        var c = new WebSocket('ws://localhost:8080/api/ws');
-        c.onopen = function(){
+
+          var $video = $('#video');
+          var $audio = $('#audio');
+          $video.on('ended', function() {
+            console.log('ended');
+            $video.attr('src', 'video/filename2.mp4');
+            $audio.attr('src', 'voice/filename2.mp3');
+          });
+          var c = new WebSocket('ws://localhost:8080/api/ws');
+          c.onopen = function(){
             c.onmessage = function(response){
-                console.log(response.data);
-                var data = $.parseJSON(response.data);
-                try {
-                  var video = $('#video');
-                  video.attr('src', 'video/'+data.body.video_file_name);
-                  video.load();
-                } catch(e) {
-                  console.log(e)
-                }
+              console.log(response.data);
+              var data = $.parseJSON(response.data);
+              try {
+                $video.attr('src', 'video/'+data.body.video_file_name);
+                $video.load();
+                $audio.attr('src', 'voice/'+data.body.voice_file_name);
+                $audio.load();
+              } catch(e) {
+                console.log(e)
+              }
             };
-        }
+          };
+        });
         </script>
+        <audio id="audio" src="" autoplay></audio>
         <div id="wrapper">
+            <p>音声出るよ（本番は消してね）</p>
         <video id="video" src="" autoplay muted></video>
         </div>
     </body>
