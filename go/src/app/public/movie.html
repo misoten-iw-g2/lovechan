@@ -1,25 +1,77 @@
 <html>
+  <head>
+    <style>
+    #wrapper {
+      height: 100%; // 高さを画面いっぱいに指定する。(vhが効かない場合の対策)
+      height: 100vh; // 高さを画面いっぱいに指定する。
+      position: relative;  //横幅がウィンドウズサイズの縦幅よりもはみ出てしまう場合に、左にずらすために指定。
+      width: 100%; // 横幅もいっぱいに。
+    }
+
+    #video {
+      background: url('/video_bg.jpg') no-repeat; // 動画が再生を始めるまで、cssのほうでも背景を設定します。
+      background-attachment: fixed; // 中央揃えになるように、fixed。
+      background-position: center center; // positionも中央に。
+      background-size: cover; // 画面サイズに応じてサイズを可変するように設定。
+      left: 0;
+      // 以下、画面いっぱいにするためのCSS設定
+      min-height: 100%;
+      min-height: 100vh;
+      min-width: 100%;
+      min-width: 100vw;
+      // wrapperのサイズに応じて、leftの位置をjQueryで指定するため、positionはabsoluteにします。
+      position: absolute;
+      top: 0;
+      z-index: 1; // z-indexは調整してください。
+    }
+    </style>
+  </head>
     <body>
         <script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
         <script>
+        $(function() {
+          var getWindowMovieHeight = function() {
+            // ここでブラウザの縦横のサイズを取得します。
+            var windowSizeHeight = $(window).outerHeight();
+            var windowSizeWidth = $(window).outerWidth();
+
+            // メディアの縦横比に合わせて数値は変更して下さい。(メディアのサイズが width < heightの場合で書いています。逆の場合は演算子を逆にしてください。)
+            var windowMovieSizeWidth = windowSizeHeight * 1.76388889;
+            var windowMovieSizeHeight = windowSizeWidth / 1.76388889;
+            var windowMovieSizeWidthLeftMargin = (windowMovieSizeWidth - windowSizeWidth) / 2;
+
+            if (windowMovieSizeHeight < windowSizeHeight) {
+              // 横幅のほうが大きくなってしまう場合にだけ反応するようにしています。
+              $("#video").css({left: -windowMovieSizeWidthLeftMargin});
+            }
+          };
+
+          // 以下画面の可変にも対応できるように。
+          $(window).on('load', function(){
+            getWindowMovieHeight();
+          });
+
+          $(window).on('resize', function(){
+            getWindowMovieHeight();
+          });
+        });
         var c = new WebSocket('ws://localhost:8080/api/ws');
         c.onopen = function(){
             c.onmessage = function(response){
                 console.log(response.data);
-                var newMessage = $('<li>').text(response.data);
-                $('#messages').append(newMessage);
-                $('#message').val('');
+                var data = $.parseJSON(response.data);
+                try {
+                  var video = $('#video');
+                  video.attr('src', 'video/'+data.body.video_file_name);
+                  video.load();
+                } catch(e) {
+                  console.log(e)
+                }
             };
-            $('form').submit(function(){
-                c.send($('#message').val());
-                return false;
-            });
         }
         </script>
-        <ul id=messages></ul>
-        <form>
-            <input id=message>
-            <input type="submit" id=send value=Send>
-        </form>
+        <div id="wrapper">
+        <video id="video" src="" autoplay muted></video>
+        </div>
     </body>
 </html>
