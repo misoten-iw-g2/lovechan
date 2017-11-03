@@ -3,6 +3,7 @@ package controller
 import (
 	"app/app"
 	"app/model"
+	"app/mywebsocket"
 
 	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
@@ -12,13 +13,15 @@ import (
 type QuestionsController struct {
 	*goa.Controller
 	db *sqlx.DB
+	ws *mywebsocket.Server
 }
 
 // NewQuestionsController creates a questions controller.
-func NewQuestionsController(service *goa.Service, db *sqlx.DB) *QuestionsController {
+func NewQuestionsController(service *goa.Service, db *sqlx.DB, ws *mywebsocket.Server) *QuestionsController {
 	return &QuestionsController{
 		Controller: service.NewController("QuestionsController"),
 		db:         db,
+		ws:         ws,
 	}
 }
 
@@ -71,6 +74,10 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 	if err != nil {
 		return goa.ErrInternal(err)
 	}
+	v := mywebsocket.VideoChange{
+		VideoFileName: "filename.mp4",
+	}
+	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 	// QuestionsController_Questions: end_implement
 	res := &app.Questiontype{}
 	res.Question = q.Question

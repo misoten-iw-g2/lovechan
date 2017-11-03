@@ -47,7 +47,7 @@ func (s *Server) mountController() {
 	story := controller.NewStoryController(s.service)
 	app.MountStoryController(s.service, story)
 	// Mount "questions" controller
-	questions := controller.NewQuestionsController(s.service, s.mysql)
+	questions := controller.NewQuestionsController(s.service, s.mysql, s.ws)
 	app.MountQuestionsController(s.service, questions)
 	// Mount "requests" controller
 	requests := controller.NewRequestsController(s.service, s.mysql)

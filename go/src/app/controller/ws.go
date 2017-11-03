@@ -26,8 +26,7 @@ func (c *WsController) Ws(ctx *app.WsWsContext) error {
 	// WsController_Ws: start_implement
 
 	// Put your logic here
-	c.ws.WebsocketServe("lovechan", ctx.ResponseWriter, ctx.Request)
-	c.ws.Send("lovechan", "hello", "world")
+	c.ws.WebsocketServe(mywebsocket.WsChannel, ctx.ResponseWriter, ctx.Request)
 
 	// WsController_Ws: end_implement
 	return nil

@@ -17,6 +17,7 @@ var _ = Resource("swagger", func() {
 
 var _ = Resource("front", func() {
 	Files("/movie", "public/movie.html")
+	Files("/video/*filepath", "public/video/")
 	Files("static/js/*filepath", "public/dist/static/js")
 	Files("/", "public/dist/index.html")
 	Files("*", "public/dist/index.html")

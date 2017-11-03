@@ -6,6 +6,19 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+// WsChannel channnel name
+const WsChannel = "lovechan"
+
+// WsVideoChange action type
+const WsVideoChange = "videoChange"
+
+// VideoChange ws用構造体
+type VideoChange struct {
+	VideoFileName string `json:"video_file_name"`
+	VoiceFileName string `json:"voice_file_name"`
+	Text          string `json:"text"`
+}
+
 const (
 	// Time allowed to write a message to the peer.
 	writeWait = 10 * time.Second
