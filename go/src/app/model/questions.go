@@ -10,11 +10,13 @@ import (
 
 // Questions DBカラム
 type Questions struct {
-	ID         int      `db:"id"`
-	Question   string   `db:"question"`
-	Count      int      `db:"count"`
-	AnswerType int      `db:"answer_type"`
-	Choice     []string `db:"-"`
+	ID            int      `db:"id"`
+	Question      string   `db:"question"`
+	Count         int      `db:"count"`
+	AnswerType    int      `db:"answer_type"`
+	VideoFileName string   `db:"video_file_name"`
+	VoiceFileName string   `db:"voice_file_name"`
+	Choice        []string `db:"-"`
 }
 
 // QuestionsDB DB

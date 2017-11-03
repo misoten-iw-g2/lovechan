@@ -17,11 +17,12 @@ const (
 
 // FreeAnswers DBカラム
 type FreeAnswers struct {
-	ID         int    `db:"id"`
-	Emotion    int    `db:"emotion"`
-	Filename   string `db:"filename"`
-	Answer     string `db:"answer"`
-	QuestionID int    `db:"question_id"`
+	ID            int    `db:"id"`
+	Emotion       int    `db:"emotion"`
+	VideoFileName string `db:"video_file_name"`
+	VoiceFileName string `db:"voice_file_name"`
+	Answer        string `db:"answer"`
+	QuestionID    int    `db:"question_id"`
 }
 
 // FreeAnswersDB DB
@@ -104,6 +105,5 @@ func (fs FreeAnswers) FreeAnswerToAnswertype() app.Answertype {
 	a := app.Answertype{}
 	a.ID = fs.ID
 	a.Answer = fs.Answer
-	a.Filename = fs.Filename
 	return a
 }
