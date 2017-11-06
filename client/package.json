@@ -81,6 +81,7 @@
     "webpack-dev-server": "~2.9.4",
     "webpack-manifest-plugin": "~2.0.0-rc.1",
     "fill-range": "~5.0.0",
+    "expand-range": "~2.0.1",
     "kind-of": "~6.0.0"
   },
   "optionalDependencies": {
