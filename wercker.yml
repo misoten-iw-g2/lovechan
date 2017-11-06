@@ -21,17 +21,25 @@ build:
         echo "yarn"
         yarn -v
   - script:
+      name: set yarn cache
+      code: |
+        export YARN_CACHE=$WERCKER_CACHE_DIR/yarn
+  - script:
       name: client install and check
       cwd: ${CLIENT}
       code: |
-        yarn global add webpack@latest
-        yarn --ignore-optional
+        HOME=$YARN_CACHE yarn global add webpack@latest
+        HOME=$YARN_CACHE yarn --ignore-optional
         yarn check
   - script:
       name: client build
       cwd: ${CLIENT}
       code: |
         NODE_PATH=$(which node) REPO=app yarn build
+  - script:
+      name: cleanup dev dependencies
+      code: |
+        HOME=$YARN_CACHE yarn --prod
   - script:
       name: client lint
       cwd: ${CLIENT}
