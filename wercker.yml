@@ -15,7 +15,7 @@ build:
       name: client install
       cwd: ${CLIENT}
       code: |
-        npm install -g webpack
+        yarn global add webpack@latest
   - script:
       name: client versionをチェックする
       code: |
@@ -23,7 +23,7 @@ build:
         npm -v
         yarn -v
   - script:
-      name: client install build
+      name: client install and build
       cwd: ${CLIENT}
       code: |
         yarn --ignore-optional
