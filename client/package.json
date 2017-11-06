@@ -85,6 +85,6 @@
     "fsevents": "~1.1.2"
   },
   "peerDependencies": {
-
+    "kind-of": "~6.0.0"
   }
 }
