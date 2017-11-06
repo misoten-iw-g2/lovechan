@@ -84,7 +84,7 @@ module.exports = {
                         sourceMap: false,
                       },
                     },
-                       require.resolve('resolve-url-loader'),
+                    require.resolve('resolve-url-loader'),
                     {
                       loader: require.resolve('sass-loader'),
                       options: {
