@@ -2,6 +2,10 @@ package controller
 
 import (
 	"app/app"
+	"app/model"
+	"app/mywebsocket"
+	"context"
+	"fmt"
 
 	"github.com/goadesign/goa"
 )
@@ -9,11 +13,15 @@ import (
 // StoryController implements the story resource.
 type StoryController struct {
 	*goa.Controller
+	ws *mywebsocket.Server
 }
 
 // NewStoryController creates a story controller.
-func NewStoryController(service *goa.Service) *StoryController {
-	return &StoryController{Controller: service.NewController("StoryController")}
+func NewStoryController(service *goa.Service, ws *mywebsocket.Server) *StoryController {
+	return &StoryController{
+		Controller: service.NewController("StoryController"),
+		ws:         ws,
+	}
 }
 
 const (
@@ -27,6 +35,11 @@ const (
 	listenPattern = "listen"
 )
 
+const (
+	wsCollect = "wsCollect"
+	wsMiss    = "wsMiss"
+)
+
 // Story runs the story action.
 func (c *StoryController) Story(ctx *app.StoryStoryContext) error {
 	// StoryController_Story: start_implement
@@ -37,27 +50,34 @@ func (c *StoryController) Story(ctx *app.StoryStoryContext) error {
 	res := app.Storytype{}
 	switch ctx.Payload.StoryPattern {
 	case hintPattern:
-		r, err := hintPatternStory(userAnswer, now)
+		r, err := hintPatternStory(ctx, userAnswer, now)
+		v := mywebsocket.VideoChange{
+			VideoFileName: "naruhodo.mp4",
+			VoiceFileName: "",
+		}
+		// 再度質問し直しの発生
+		goa.LogInfo(ctx, "err", "err", err)
 		if err != nil {
-			return goa.ErrInternal(err)
+			v.VideoFileName = "situmon.mp4"
 		}
 		res = r
+		c.ws.Send(mywebsocket.WsChannel, wsCollect, v)
 	case findPattern:
-		r, err := findPatternStory(userAnswer, now)
+		r, err := findPatternStory(ctx, userAnswer, now)
 		if err != nil {
-			return goa.ErrInternal(err)
+			return goa.ErrBadRequest(err)
 		}
 		res = r
 	case callPattern:
-		r, err := callPatternStory(userAnswer, now)
+		r, err := callPatternStory(ctx, userAnswer, now)
 		if err != nil {
-			return goa.ErrInternal(err)
+			return goa.ErrBadRequest(err)
 		}
 		res = r
 	case listenPattern:
-		r, err := listenPatternStory(userAnswer, now)
+		r, err := listenPatternStory(ctx, userAnswer, now)
 		if err != nil {
-			return goa.ErrInternal(err)
+			return goa.ErrBadRequest(err)
 		}
 		res = r
 	default:
@@ -68,68 +88,86 @@ func (c *StoryController) Story(ctx *app.StoryStoryContext) error {
 	return ctx.OK(&res)
 }
 
-func hintPatternStory(userAnswer string, now int) (app.Storytype, error) {
+func hintPatternStory(ctx context.Context, userAnswer string, now int) (app.Storytype, error) {
 	s := app.Storytype{}
 
 	// ストーリーに使う選択肢
-	c1 := []string{"エラーが出てる", "何もしてないけど壊れた", "画面が映らない", "インターネットに繋がらない"}
-	c2 := []string{"417", "114", "514", "1919"}
-	c3 := []string{"はい", "いいえ"}
+	cd1 := []string{"エラーが出てる", "何もしてないけど壊れた", "画面が映らない", "インターネットに繋がらない"}
+	c1 := []string{
+		"エラーが出てる,えらーがでてる",
+		"何もしてないけど壊れた,なにもしてないけどこわれた",
+		"画面が映らない,がめんがうつらない",
+		"インターネットに繋がらない,いんたーねっとにつならがない",
+	}
+	cd2 := []string{"417", "114", "514", "1919"}
+	cd3 := []string{"はい", "いいえ"}
 
 	// ストーリ設定
 	s.StoryPattern = hintPattern
-	s.NextStep = now + 1
-	switch now {
-	case 1:
+
+	if now == 1 {
 		s.Question = "画面に何か出てますか？"
-		s.Choices = c1
-		fallthrough
-	case 2:
+		s.Choices = cd1
+		s.NextStep = 2
+		s.Answer = cd1[0]
+		return s, nil
+	}
+	if now == 2 {
+		userChoices, err := model.UserChoiceAnswer(c1, userAnswer)
+		if err != nil || cd1[userChoices] != cd1[0] {
+			// TODO WebSocketで間違っていると伝える
+			s.Question = "画面に何か出てますか？"
+			s.Choices = cd1
+			s.NextStep = 2
+			s.Answer = cd1[0]
+			return s, err
+		}
 		s.Question = "エラーコードを教えてください"
-		s.Choices = c2
-	case 3:
+		s.Choices = cd2
+		s.NextStep = 3
+		s.Answer = cd2[1]
+		return s, nil
+	}
+	if now == 3 {
+		userChoices, err := model.UserChoiceAnswer(cd2, userAnswer)
+		if err != nil || cd2[userChoices] != cd2[1] {
+			// TODO WebSocketで間違っていると伝える
+			s.Question = "エラーコードを教えてください"
+			s.Choices = cd2
+			s.NextStep = 3
+			s.Answer = cd2[1]
+			return s, err
+		}
 		s.Question = "担当者を呼びますか？"
-		s.Choices = c3
-	case 4:
-		s.Choices = []string{}
+		s.Choices = cd3
+		s.NextStep = 4
+		s.Answer = cd3[0]
+		return s, nil
+	}
+	if now == 4 {
+		userChoices, err := model.UserChoiceAnswer(cd3, userAnswer)
+		if err != nil || cd3[userChoices] != cd3[0] {
+			// TODO WebSocketで間違っていると伝える
+			s.Question = "同期さんが詳しいようです呼びますか？"
+			s.Choices = cd3
+			s.NextStep = 4
+			s.Answer = cd3[0]
+		}
+		s.Question = "ストーリークリア"
 		s.IsClear = true
-	default:
+		return s, err
 	}
-	return s, nil
+	return s, fmt.Errorf("存在しないステップが選択されています")
 }
 
-func findPatternStory(userAnswer string, now int) (app.Storytype, error) {
-	// 現在のストーリーフェーズ
-	switch now {
-	case 2:
-		// エラーコードを教えてください
-	case 3:
-		// 担当者を呼びますか
-	default:
-	}
+func findPatternStory(ctx context.Context, userAnswer string, now int) (app.Storytype, error) {
 	return app.Storytype{}, nil
 }
 
-func callPatternStory(userAnswer string, now int) (app.Storytype, error) {
-	// 現在のストーリーフェーズ
-	switch now {
-	case 2:
-		// 誰を呼びますか
-	default:
-	}
+func callPatternStory(ctx context.Context, userAnswer string, now int) (app.Storytype, error) {
 	return app.Storytype{}, nil
 }
 
-func listenPatternStory(userAnswer string, now int) (app.Storytype, error) {
-	// 現在のストーリーフェーズ
-	switch now {
-	case 2:
-		// 画面に何か出てますか？
-	case 3:
-		// エラーコードを教えてください
-	case 4:
-		// 担当者を呼びますか
-	default:
-	}
+func listenPatternStory(ctx context.Context, userAnswer string, now int) (app.Storytype, error) {
 	return app.Storytype{}, nil
 }
