@@ -1,7 +1,7 @@
 /* @flow */
 import {createStore, applyMiddleware} from 'redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import promiseMiddleware from 'redux-promise';
+import promiseMiddleware from '@benmosher/redux-promise';
 import thunkMiddleware from 'redux-thunk';
 import reducer from '../reducers';
 

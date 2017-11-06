@@ -1,52 +1,46 @@
 {
   "plugins": [
-    "transform-decorators",
-    "transform-object-rest-spread",
-    "syntax-dynamic-import",
-    "transform-unicode-property-regex",
-    "transform-optional-catch-binding"
+    "@babel/syntax-dynamic-import",
   ],
   "env": {
     "development": {
       "presets": [
-        "flow",
-        "react",
-        ["es2015", { "modules": false }],
+        "@babel/flow",
+        "@babel/react",
+        "@babel/stage-0",
+        ["@babel/es2015", { "loose": true, "modules": false }],
       ],
       "plugins": [
-        "react-hot-loader/babel",
-        ["transform-runtime", {
+        ["@babel/transform-runtime", {
+          "helpers": false,
           "polyfill": false,
-          "regenerator": true
-        }],
-        ["transform-class-properties", { "loose": true }]
+          "regenerator": true,
+          "moduleName": "@babel/runtime"
+          }
+        ]
       ]
     },
     "test": {
       "presets": [
-        "flow",
-        "react",
-        "es2015",
-        ["env", {
-          "targets": { "node": "8.5" }
+        "@babel/flow",
+        "@babel/react",
+        "@babel/stage-0",
+        "@babel/es2015",
+        ["@babel/env", {
+          "targets": { "node": "8.9" }
         }]
       ],
-      "plugins": [
-        "transform-class-properties"
-      ]
     },
     "production": {
       "presets": [
-        "flow",
-        "react",
-        "es2015",
-        ["env", {
+        "@babel/flow",
+        "@babel/react",
+        "@babel/stage-0",
+        "@babel/es2015",
+        ["@babel/env", {
           "targets": { "browsers": ["last 2 versions", "safari >= 10"] }
         }]
-      ],
-      "plugins": [
-        "transform-class-properties"
-      ],
+      ]
     }
   }
 }
