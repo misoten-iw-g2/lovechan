@@ -1,7 +1,6 @@
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
 
-require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
@@ -27,10 +26,6 @@ const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 
 module.exports = {
   entry: [
-    'babel-polyfill',
-    'react-hot-loader/patch',
-    `webpack-dev-server/client?${protocol}://${devServerHost}:${devServerPort}`,
-    'webpack/hot/only-dev-server',
     require.resolve('./config/polyfills'),
     appCss,
     appIndex
@@ -97,22 +92,17 @@ module.exports = {
             },
           },
           {
-            // see:
-            // https://atom.io/packages/language-postcss
-            test: [/\.css$/, /\.pcss$/, /\.sss$/],
+            test: [/\.css$/, /\.scss$/],
             use: [
               require.resolve('style-loader'),
               {
                 loader: require.resolve('css-loader'),
-                options: { importLoaders: 1 },
+                options: { importLoaders: 2 },
               },
-              {
-                loader: require.resolve('resolve-url-loader')
-              },
+              require.resolve('resolve-url-loader'),
               {
                 loader: require.resolve('sass-loader'),
                 options: {
-                  indentedSyntax: true,
                   sourceMap: true
                 }
               }

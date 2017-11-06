@@ -262,3 +262,4 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/go,osx,vim,macos,windows,intellij,jetbrains,sublimetext,visualstudiocode
 
 .idea/
+/client/yarn.lock
