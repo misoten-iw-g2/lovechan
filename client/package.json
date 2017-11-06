@@ -80,8 +80,10 @@
     "webpack-dev-server": "~2.9.4",
     "webpack-manifest-plugin": "~2.0.0-rc.1"
   },
-  "optionalDependencies": {
-    "fsevents": "~1.1.2",
+  "peerDependencies": {
     "filename-regex": "~2.0.1"
+  },
+  "optionalDependencies": {
+    "fsevents": "~1.1.2"
   }
 }
