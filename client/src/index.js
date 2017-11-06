@@ -6,5 +6,4 @@
  *
  * @emails Gemcook, Inc.
  */
-import 'filename-regex';
 import './components/Render';
