@@ -6,6 +6,7 @@
   "scripts": {
     "start": "yarn webpack:development",
     "build": "yarn webpack:production && yarn fs:deploy",
+    "build:dev": "NODE_ENV=development webpack --config webpack/development.js",
     "webpack:development": "NODE_ENV=development webpack-dev-server --config webpack/development.js",
     "webpack:production": "NODE_ENV=production webpack --config webpack/production.js",
     "fs:deploy": "node webpack/config/deploy.js"
@@ -78,9 +79,7 @@
     "url-loader": "~0.6.2",
     "webpack": "~3.8.1",
     "webpack-dev-server": "~2.9.4",
-    "webpack-manifest-plugin": "~2.0.0-rc.1"
-  },
-  "peerDependencies": {
+    "webpack-manifest-plugin": "~2.0.0-rc.1",
     "filename-regex": "~2.0.1"
   },
   "optionalDependencies": {
