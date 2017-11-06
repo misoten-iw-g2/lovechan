@@ -3,12 +3,10 @@ package model
 import (
 	"app/app"
 	"context"
-	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
-	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
 
 const (
@@ -63,19 +61,14 @@ func (db *ChoiceAnswersDB) GetChoiceAnswerReplay(ctx context.Context, id int, us
 		goa.LogError(ctx, "ChoiceAnswersDB GetChoiceAnswerReplay Error 1: err", "err", err)
 		return ChoiceAnswers{}, err
 	}
-	topRateIndex := 0
-	var topRate float64
-	for k, v := range ca {
-		// a,b,c
-		cs := strings.Split(v.Choice, ",")
-		for _, v2 := range cs {
-			// ["a","b","c"]
-			rate := levenshtein.RatioForStrings([]rune(v2), []rune(userAnswer), levenshtein.DefaultOptions)
-			if rate > topRate {
-				topRateIndex = k
-				topRate = rate
-			}
-		}
+	choices := []string{}
+	for _, v := range ca {
+		choices = append(choices, v.Choice)
+	}
+	topRateIndex, err := UserChoiceAnswer(choices, userAnswer)
+	if err != nil {
+		goa.LogError(ctx, "ChoiceAnswersDB GetChoiceAnswerReplay Error 3: err", "err", err)
+		return ChoiceAnswers{}, err
 	}
 	if len(ca) != 0 {
 		return ca[topRateIndex], nil
