@@ -80,7 +80,7 @@
     "webpack": "~3.8.1",
     "webpack-dev-server": "~2.9.4",
     "webpack-manifest-plugin": "~2.0.0-rc.1",
-    "kind-of": "~6.0.0"
+    "randomatic": "~2.0.0"
   },
   "optionalDependencies": {
     "fsevents": "~1.1.2"
