@@ -81,6 +81,7 @@
     "webpack-manifest-plugin": "~2.0.0-rc.1"
   },
   "optionalDependencies": {
-    "fsevents": "~1.1.2"
+    "fsevents": "~1.1.2",
+    "filename-regex": "~2.0.1"
   }
 }
