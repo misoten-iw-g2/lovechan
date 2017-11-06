@@ -68,21 +68,25 @@ client:
         : ${SERVER:="./go/src/app"}
         : ${CLIENT:="./client"}
   - script:
-      name: client install
+      name: client versionをチェックする
+      code: |
+        echo "node"
+        node -v
+        echo "npm"
+        npm -v
+        echo "yarn"
+        yarn -v
+  - script:
+      name: client install and check
       cwd: ${CLIENT}
       code: |
         yarn global add webpack@latest
+        yarn --ignore-optional
+        yarn check
   - script:
-      name: client versionをチェックする
-      code: |
-        node -v
-        npm -v
-        yarn -v
-  - script:
-      name: client install and build
+      name: client build
       cwd: ${CLIENT}
       code: |
-        yarn --ignore-optional
         NODE_PATH=$(which node) REPO=app yarn build
   - script:
       name: client lint
