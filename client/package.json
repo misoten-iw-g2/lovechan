@@ -80,11 +80,14 @@
     "webpack": "~3.8.1",
     "webpack-dev-server": "~2.9.4",
     "webpack-manifest-plugin": "~2.0.0-rc.1",
-    "fill-range": "~5.0.0",
-    "expand-range": "~2.0.1",
-    "kind-of": "~6.0.0"
+    "braces#is-number#kind-of": "latest"
   },
   "optionalDependencies": {
-    "fsevents": "~1.1.2"
+    "fsevents": "~1.1.2",
+    "is-extglob": "latest",
+    "is-glob": "latest",
+    "braces#fill-range#is-number": "latest",
+    "braces#fill-range#isobject": "latest",
+    "braces#fill-range#randomatic": "latest"
   }
 }
