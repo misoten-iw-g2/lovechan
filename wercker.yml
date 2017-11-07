@@ -81,12 +81,11 @@ client:
       code: |
         export YARN_CACHE=$WERCKER_CACHE_DIR/yarn
   - script:
-      name: client install and check
+      name: client install
       cwd: ${CLIENT}
       code: |
         HOME=$YARN_CACHE yarn global add webpack@latest
         HOME=$YARN_CACHE yarn --ignore-optional
-        yarn check
   - script:
       name: client build
       cwd: ${CLIENT}
