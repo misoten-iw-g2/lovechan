@@ -1,49 +1,16 @@
-box: pei0804/go-node-docker
-build:
+backend:
+  box: golang:1.9.2
   after-steps:
       - slack-notifier:
           url: $SLACK_WEBHOOK_URL
           channel: notification
-          username: github
+          username: backend-CI
   steps:
   - script:
       name: ソースの場所を保存する
       code: |-
         : ${SERVER:="./go/src/app"}
         : ${CLIENT:="./client"}
-  - script:
-      name: client versionをチェックする
-      code: |
-        echo "node"
-        node -v
-        echo "npm"
-        npm -v
-        echo "yarn"
-        yarn -v
-  - script:
-      name: set yarn cache
-      code: |
-        export YARN_CACHE=$WERCKER_CACHE_DIR/yarn
-  - script:
-      name: client install
-      cwd: ${CLIENT}
-      code: |
-        HOME=$YARN_CACHE yarn global add webpack@latest
-        HOME=$YARN_CACHE yarn --ignore-optional
-  - script:
-      name: client build
-      cwd: ${CLIENT}
-      code: |
-        NODE_PATH=$(which node) REPO=app yarn build
-  - script:
-      name: cleanup dev dependencies
-      code: |
-        HOME=$YARN_CACHE yarn --prod
-  - script:
-      name: client lint
-      cwd: ${CLIENT}
-      code: |
-        make lint
   - script:
       name: backend versionをチェックする
       code: |
