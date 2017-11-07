@@ -11,7 +11,10 @@ func TestUserChoiceAnswer(t *testing.T) {
 		"インターネットに繋がらない,いんたーねっとにつならがない",
 	}
 	userAnswer := "何もしてないけど壊れたよ"
-	topRateIndex := UserChoiceAnswer(choices, userAnswer)
+	topRateIndex, err := UserChoiceAnswer(choices, userAnswer)
+	if err != nil {
+		t.Fatalf("エラーが発生しました %v", err)
+	}
 	if topRateIndex != 1 {
 		t.Fatalf("%sはchoicesの1番目が選択されるべきです 実際の値は%d", userAnswer, topRateIndex)
 	}
@@ -20,7 +23,10 @@ func TestUserChoiceAnswer(t *testing.T) {
 	}
 
 	userAnswer2 := "ネットに繋がらない"
-	topRateIndex2 := UserChoiceAnswer(choices, userAnswer2)
+	topRateIndex2, err := UserChoiceAnswer(choices, userAnswer2)
+	if err != nil {
+		t.Fatalf("エラーが発生しました %v", err)
+	}
 	if topRateIndex2 != 3 {
 		t.Fatalf("%sはchoicesの3番目が選択されるべきです 実際の値は%d", userAnswer, topRateIndex)
 	}
