@@ -55,7 +55,7 @@ backend:
         make build
 
 client:
-  box: node:8.9.0
+  box: node:8.9.0-alpine
   after-steps:
       - slack-notifier:
           url: $SLACK_WEBHOOK_URL
@@ -77,24 +77,16 @@ client:
         echo "yarn"
         yarn -v
   - script:
-      name: set yarn cache
-      code: |
-        export YARN_CACHE=$WERCKER_CACHE_DIR/yarn
-  - script:
-      name: client install
+      name: client lint
       cwd: ${CLIENT}
       code: |
-        HOME=$YARN_CACHE yarn global add webpack@latest
-        HOME=$YARN_CACHE yarn --ignore-optional
+        make lint
   - script:
-      name: client build
+      name: client install and build
       cwd: ${CLIENT}
       code: |
+        yarn --ignore-optional
         NODE_PATH=$(which node) REPO=app yarn build
-  - script:
-      name: cleanup dev dependencies
-      code: |
-        HOME=$YARN_CACHE yarn --prod
   - script:
       name: client lint
       cwd: ${CLIENT}
