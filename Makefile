@@ -16,33 +16,33 @@ win-install:
 direnv:
 	direnv allow
 
-docker_server: docker_build docker_up
+docker-server: docker-build docker-up
 
-docker_clean: docker_stop docker_rm 
+docker-clean: docker-stop docker-rm
 
 help:
-	@echo docker_build:	Build the docker container
-	@echo docker_up:	Start the docker container
-	@echo docker_stop:	Stop the docker container
-	@echo docker_rm:	Remove the docker container
-	@echo docker_ssh:	Execute an interactive bash shell on the container
+	@echo docker-build:	Build the docker container
+	@echo docker-up:	Start the docker container
+	@echo docker-stop:	Stop the docker container
+	@echo docker-rm:	Remove the docker container
+	@echo docker-ssh:	Execute an interactive bash shell on the container
 
-docker_build:
+docker-build:
 	docker-compose build
 
-docker_up:
+docker-up:
 	docker-compose up
 
-docker_stop:
+docker-stop:
 	docker-compose stop
 
-docker_rm:
+docker-rm:
 	docker-compose rm
 
-docker_ssh_mysql:
+docker-ssh-mysql:
 	docker exec -it lovechan_mysql_1 /bin/bash
 
-docker_ssh_api:
+docker-ssh-api:
 	docker exec -it lovechan_golang_1 /bin/bash
 
 ws-install:
@@ -50,3 +50,11 @@ ws-install:
 
 ws:
 	wsc ws://localhost:8080/api/ws
+
+CLIENT:=./client
+SERVER :=./go/src/app
+client-build:
+	$(MAKE) -C $(CLIENT) build
+
+config-set:
+	$(MAKE) -C $(SERVER) config-set

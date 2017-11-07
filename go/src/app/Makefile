@@ -55,12 +55,8 @@ ENV:=develop
 PORT:=:8080
 NOSECURE:=false
 CLIENT:=../../../client
-GAE:=../../../gae
 HOST:=0.0.0.0
 PORT:=:8080
-
-run:
-	$(MAKE) -C $(GAE) docker_server
 
 build:
 	go build -o goapp .
@@ -75,7 +71,7 @@ lint:
 
 config-set:
 	cp -f ./config/mysql.yml.tmpl ./config/mysql.yml
-	cp -f ./config/applicatioson.tmpl.tmpl ./config/application_default_credentials.json
+	cp -f ./config/application_default_credentials.json.tmpl ./config/application_default_credentials.json
 
 ##### client #####
 
