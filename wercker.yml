@@ -53,9 +53,8 @@ backend:
       name: backend go build
       code: |
         make build
-
 client:
-  box: node:8.9.0-alpine
+  box: node:8.9.0
   after-steps:
       - slack-notifier:
           url: $SLACK_WEBHOOK_URL
@@ -68,28 +67,21 @@ client:
         : ${SERVER:="./go/src/app"}
         : ${CLIENT:="./client"}
   - script:
-      name: client versionをチェックする
-      code: |
-        echo "node"
-        node -v
-        echo "npm"
-        npm -v
-        echo "yarn"
-        yarn -v
-  - script:
       name: client install
       cwd: ${CLIENT}
       code: |
+        npm install -g webpack
+  - script:
+      name: client versionをチェックする
+      code: |
+        node -v
+        npm -v
+        yarn -v
+  - script:
+      name: client install build
+      cwd: ${CLIENT}
+      code: |
         yarn --ignore-optional
-  - script:
-      name: client lint
-      cwd: ${CLIENT}
-      code: |
-        make lint
-  - script:
-      name: client build
-      cwd: ${CLIENT}
-      code: |
         NODE_PATH=$(which node) REPO=app yarn build
   - script:
       name: client lint

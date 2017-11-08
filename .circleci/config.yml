@@ -22,7 +22,6 @@ jobs :
       - run:
           name: machine info
           command:
-            source /root/.bashrc &&
             echo "node $(node -v)\"
             echo "yarn $(yarn --version)\"
 
