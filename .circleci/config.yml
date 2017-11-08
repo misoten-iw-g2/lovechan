@@ -3,15 +3,19 @@ jobs :
   build:
     docker:
       - image: node:8.9.0-alpine
+
+    working_directory: /home/node
+
     branches:
       only:
         - /squawknhart-.*/
         - master
+
     steps:
       - checkout
 
       - restore_cache:
-          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
 
       - run:
           name: check machine ENV
@@ -26,10 +30,9 @@ jobs :
 
       - run:
           name: build
-          command: yarn develop
+          command: yarn build
 
       - save_cache:
-          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
           paths:
-            - /root/node_modules
-            - /.cache/yarn/
+            - ~/.cache/yarn
