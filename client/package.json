@@ -8,7 +8,8 @@
     "build": "yarn webpack:production && yarn fs:deploy",
     "webpack:development": "NODE_ENV=development webpack-dev-server --config webpack/development.js",
     "webpack:production": "NODE_ENV=production webpack --config webpack/production.js",
-    "fs:deploy": "node webpack/config/deploy.js"
+    "fs:deploy": "node webpack/config/deploy.js",
+    "lint": "eslint"
   },
   "dependencies": {
     "immutable": "^4.0.0-rc.9",

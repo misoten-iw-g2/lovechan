@@ -4,35 +4,48 @@ jobs :
     docker:
       - image: node:8.9.0-alpine
 
-    working_directory: /home/node
-
     branches:
       only:
         - /squawknhart-.*/
         - master
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "76:bd:2c:3f:42:32:28:99:57:01:2c:1f:b9:ee:20:60"
+
       - checkout
 
       - restore_cache:
           key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
 
       - run:
-          name: check machine ENV
+          name: machine info
           command:
-            source /root/.bashrc &&
             echo "node $(node -v)\"
             echo "yarn $(yarn --version)\"
 
       - run:
           name: install dependencies
-          command: yarn
+          command:
+            cd /root/project/client
+            yarn
+
+      - run:
+          name: lint
+          command:
+            cd /root/project/client
+            yarn lint
+
 
       - run:
           name: build
-          command: yarn build
+          command:
+            cd /root/project/client
+            yarn build
 
       - save_cache:
           key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
           paths:
+            - ~/client/node_modules
             - ~/.cache/yarn
