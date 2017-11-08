@@ -37,7 +37,6 @@ jobs :
             cd /root/project/client
             yarn lint
 
-
       - run:
           name: build
           command:
