@@ -4,8 +4,6 @@ jobs :
     docker:
       - image: node:8.9.0-alpine
 
-    working_directory: /home/node
-
     branches:
       only:
         - /squawknhart-.*/
