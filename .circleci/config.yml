@@ -4,8 +4,6 @@ jobs :
     docker:
       - image: node:8.9.0-alpine
 
-    working_directory: /root/project/client
-
     branches:
       only:
         - /squawknhart-.*/
@@ -29,11 +27,15 @@ jobs :
 
       - run:
           name: install dependencies
-          command: yarn
+          command:
+            cd /root/project/client
+            yarn
 
       - run:
           name: build
-          command: yarn build
+          command:
+            cd /root/project/client
+            yarn build
 
       - save_cache:
           key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
