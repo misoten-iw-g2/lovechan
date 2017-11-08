@@ -13,13 +13,14 @@ jobs :
       - add_ssh_keys:
           fingerprints:
             - "76:bd:2c:3f:42:32:28:99:57:01:2c:1f:b9:ee:20:60"
+
       - checkout
 
       - restore_cache:
-          key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
+          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
       - run:
-          name: check machine ENV
+          name: machine info
           command:
             source /root/.bashrc &&
             echo "node $(node -v)\"
@@ -34,6 +35,7 @@ jobs :
           command: yarn build
 
       - save_cache:
-          key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
+          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.cache/yarn
+            - /root/project/client/node_modules
+            - /root/project/.cache/yarn
