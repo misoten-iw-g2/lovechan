@@ -53,38 +53,3 @@ backend:
       name: backend go build
       code: |
         make build
-client:
-  box: node:8.9.0
-  after-steps:
-      - slack-notifier:
-          url: $SLACK_WEBHOOK_URL
-          channel: notification
-          username: client-CI
-  steps:
-  - script:
-      name: ソースの場所を保存する
-      code: |-
-        : ${SERVER:="./go/src/app"}
-        : ${CLIENT:="./client"}
-  - script:
-      name: client install
-      cwd: ${CLIENT}
-      code: |
-        npm install -g webpack
-  - script:
-      name: client versionをチェックする
-      code: |
-        node -v
-        npm -v
-        yarn -v
-  - script:
-      name: client install build
-      cwd: ${CLIENT}
-      code: |
-        yarn --ignore-optional
-        NODE_PATH=$(which node) REPO=app yarn build
-  - script:
-      name: client lint
-      cwd: ${CLIENT}
-      code: |
-        make lint
