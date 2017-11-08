@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrapの使い方</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-header">ユーザー分析</h1>
+    <div class="panel panel-default">
+      <div class="panel-heading"><h2 class="panel-title">パネルタイトル</h2></div>
+      <div class="panel-body">
+          <canvas id="chart"></canvas>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><h2 class="panel-title">パネルタイトル</h2></div>
+      <div class="panel-body">
+          <canvas id="chart2"></canvas>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading"><h2 class="panel-title">パネルタイトル</h2></div>
+      <div class="panel-body">
+        <canvas id="chart3"></canvas>
+      </div>
+    </div>
+  </div>
+<script>
+  var ctx = document.getElementById("chart").getContext('2d');
+  var myChart = new Chart(ctx, {
+    //グラフの種類
+    type: 'line',
+    //データの設定
+    data: {
+      //データ項目のラベル
+      labels: ["1月", "2月", "3月", "4月", "5月", "6月"],
+      //データセット
+      datasets: [{
+        //凡例
+        label: "契約数",
+        //背景色
+        backgroundColor: "rgba(75,192,192,0.4)",
+        //枠線の色
+        borderColor: "rgba(75,192,192,1)",
+        //グラフのデータ
+        data: [-12, 19, 3, -5, 2, 3]
+      }]
+    },
+    //オプションの設定
+    options: {
+      scales: {
+        //縦軸の設定
+        yAxes: [{
+          ticks: {
+            //最小値を0にする
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+  var ctx2 = document.getElementById("chart2").getContext('2d');
+  var myChart2 = new Chart(ctx2, {
+    type: 'pie',
+    data: {
+      labels: ["M", "T", "W"],
+      datasets: [{
+        backgroundColor: [
+          "#2ecc71",
+          "#3498db",
+          "#34495e"
+        ],
+        data: [12, 19, 3]
+      }]
+    }
+  });
+  var ctx3 = document.getElementById("chart3").getContext('2d');
+  var myChart3 = new Chart(ctx3, {
+    //グラフの種類
+    type: 'bar',
+    //データの設定
+    data: {
+      //データ項目のラベル
+      labels: ["1月", "2月", "3月", "4月", "5月", "6月"],
+      //データセット
+      datasets: [
+        {
+          //凡例
+          label: "1年目",
+          //背景色
+          backgroundColor: "rgba(179,181,198,0.2)",
+          //枠線の色
+          borderColor: "rgba(179,181,198,1)",
+          //枠線の太さ
+          borderWidth: 1,
+          //背景色（ホバーしたときに）
+          hoverBackgroundColor: "rgba(179,181,198,0.4)",
+          //枠線の色（ホバーしたときに）
+          hoverBorderColor: "rgba(179,181,198,1)",
+          //グラフのデータ
+          data: [12, 19, 3, 5, 2, 3]
+        },
+        {
+          //凡例
+          label: "2年目",
+          //背景色
+          backgroundColor: "rgba(255,99,132,0.2)",
+          //枠線の色
+          borderColor: "rgba(255,99,132,1)",
+          //枠線の太さ
+          borderWidth: 1,
+          //背景色（ホバーしたときに）
+          hoverBackgroundColor: "rgba(255,99,132,0.4)",
+          //枠線の色（ホバーしたときに）
+          hoverBorderColor: "rgba(255,99,132,1)",
+          //グラフのデータ
+          data: [15, 15, 6, 8, 5, 6]
+        }
+      ]
+    },
+    //オプションの設定
+    options: {
+      //軸の設定
+      scales: {
+        //縦軸の設定
+        yAxes: [{
+          //目盛りの設定
+          ticks: {
+            //開始値を0にする
+            beginAtZero:true
+          }
+        }]
+      },
+      //ホバーの設定
+      hover: {
+        //ホバー時の動作（single, label, dataset）
+        mode: 'single'
+      }
+    }
+  });
+</script>
+</body>
