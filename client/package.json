@@ -9,7 +9,8 @@
     "build:dev": "NODE_ENV=development webpack --config webpack/development.js",
     "webpack:development": "NODE_ENV=development webpack-dev-server --config webpack/development.js",
     "webpack:production": "NODE_ENV=production webpack --config webpack/production.js",
-    "fs:deploy": "node webpack/config/deploy.js"
+    "fs:deploy": "node webpack/config/deploy.js",
+    "lint": "eslint"
   },
   "dependencies": {
     "@benmosher/redux-promise": "~0.6.0",
