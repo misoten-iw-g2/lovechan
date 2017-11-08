@@ -32,6 +32,11 @@ jobs :
             yarn
 
       - run:
+          name: lint
+          command:
+            make lint
+
+      - run:
           name: build
           command:
             cd /root/project/client
@@ -40,5 +45,5 @@ jobs :
       - save_cache:
           key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
           paths:
-            - /root/project/client/node_modules
-            - /root/project/.cache/yarn
+            - ~/client/node_modules
+            - ~/.cache/yarn
