@@ -21,8 +21,8 @@ tmp/
 
 
 ### client ###
-.node_modules/
-client/public/
+client/node_modules
+client/public
 
 ### config ###
 mysql.yml
