@@ -1,0 +1,35 @@
+version: 2
+jobs :
+  build:
+    docker:
+      - image: node:8.9.0-alpine
+    branches:
+      only:
+        - /squawknhart-.*/
+        - master
+    steps:
+      - checkout
+
+      - restore_cache:
+          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: check machine ENV
+          command:
+            source /root/.bashrc &&
+            echo "node $(node -v)\"
+            echo "yarn $(yarn --version)\"
+
+      - run:
+          name: install dependencies
+          command: yarn
+
+      - run:
+          name: build
+          command: yarn develop
+
+      - save_cache:
+          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - /root/node_modules
+            - /.cache/yarn/
