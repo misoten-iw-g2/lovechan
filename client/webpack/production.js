@@ -1,7 +1,6 @@
 process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
 
-require('babel-polyfill');
 const path = require('path');
 const webpack = require('webpack');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
@@ -27,7 +26,6 @@ module.exports = {
   bail: true,
   devtool: false,
   entry: [
-    'babel-polyfill',
     require.resolve('./config/polyfills'),
     appCss,
     appIndex,
@@ -72,9 +70,7 @@ module.exports = {
             },
           },
           {
-            // see:
-            // https://atom.io/packages/language-postcss
-            test: [/\.css$/, /\.pcss$/, /\.sss$/],
+            test: [/\.css$/, /\.scss$/],
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
@@ -83,18 +79,14 @@ module.exports = {
                     {
                       loader: require.resolve('css-loader'),
                       options: {
-                        importLoaders: 1,
-                        minimize: true,
-                        sourceMap: false,
+                        importLoaders: 2,
+                        minimize: true
                       },
                     },
-                    {
-                      loader: require.resolve('resolve-url-loader')
-                    },
+                    require.resolve('resolve-url-loader'),
                     {
                       loader: require.resolve('sass-loader'),
                       options: {
-                        indentedSyntax: true,
                         sourceMap: true
                       }
                     }

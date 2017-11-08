@@ -1,5 +1,4 @@
 [ignore]
-<PROJECT_ROOT>/node_modules/remove-flow-types-loader/test/.*
 <PROJECT_ROOT>/node_modules/stylelint/lib/.*
 
 [include]

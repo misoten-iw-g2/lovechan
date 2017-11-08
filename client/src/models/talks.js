@@ -7,7 +7,7 @@ const TalksState = Record({
 });
 
 class Talks extends TalksState {
-  recordStart(state: any, action: any) {
+  static recordStart(state: any, _action: any) {
     const newState = state.update('webrtc', async () => {
       const {navigator, AudioContext} = window;
 
@@ -48,7 +48,7 @@ class Talks extends TalksState {
     return newState;
   }
 
-  recordSave(state, payload) {
+  static recordSave(state, _payload) {
     const newState = state.update('webrtc', async () => {
       const {URL, document} = window;
       const {context, storeAudio, stream, bufferSize} = await state.webrtc;
@@ -137,7 +137,7 @@ class Talks extends TalksState {
     return newState;
   }
 
-  dammy(state, payload) {
+  static dammy(state, _payload) {
     const newState = state.update('recordBuffer', () => state.recordBuffer);
     return newState;
   }

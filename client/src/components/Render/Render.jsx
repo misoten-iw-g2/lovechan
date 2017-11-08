@@ -1,21 +1,21 @@
+/* eslint no-console: 0 */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {AppContainer} from 'react-hot-loader';
 import {BrowserRouter} from 'react-router-dom';
 import Routes from '../Routes';
 import store from '../../store';
 
 const render = () => {
+  const {document} = window;
   try {
     ReactDOM.render(
-      <AppContainer>
-        <Provider store={store}>
-          <BrowserRouter>
-            <Routes />
-          </BrowserRouter>
-        </Provider>
-      </AppContainer>,
+      <Provider store={store}>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      </Provider>,
       document.querySelector('main'),
     );
   } catch (e) {
@@ -24,12 +24,5 @@ const render = () => {
     console.log('ReactDOM.rendered');
   }
 };
-
-if (module.hot) {
-  module.hot.accept('../Routes', () => {
-    console.log('hot');
-    render();
-  });
-}
 
 render();

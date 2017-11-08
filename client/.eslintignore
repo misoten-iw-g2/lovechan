@@ -1,3 +1,4 @@
 *.lock
 package.json
 webpack/**
+src/models/talks.js
