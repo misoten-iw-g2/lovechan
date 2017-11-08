@@ -34,7 +34,9 @@ jobs :
       - run:
           name: lint
           command:
-            make lint
+            cd /root/project/client
+            yarn lint
+
 
       - run:
           name: build
