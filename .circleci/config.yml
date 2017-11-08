@@ -10,6 +10,9 @@ jobs :
         - master
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "76:bd:2c:3f:42:32:28:99:57:01:2c:1f:b9:ee:20:60"
       - checkout
 
       - restore_cache:
