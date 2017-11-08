@@ -64,6 +64,9 @@ func (s *Server) mountController() {
 	// Mount "ws" controller
 	ws := controller.NewWsController(s.service, s.ws)
 	app.MountWsController(s.service, ws)
+	// Mount "analytic" controller
+	analytic := controller.NewAnalyticController(s.service, s.mysql)
+	app.MountAnalyticController(s.service, analytic)
 }
 
 func (s *Server) mountMiddleware(env string) {
