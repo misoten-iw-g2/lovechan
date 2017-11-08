@@ -3,79 +3,36 @@ jobs :
   build:
     docker:
       - image: node:8.9.0-alpine
-<<<<<<< HEAD
 
-=======
->>>>>>> CI add config.yml
+    working_directory: /home/node
+
     branches:
       only:
         - /squawknhart-.*/
         - master
-<<<<<<< HEAD
 
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "76:bd:2c:3f:42:32:28:99:57:01:2c:1f:b9:ee:20:60"
-
       - checkout
 
       - restore_cache:
           key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
-
-      - run:
-          name: machine info
-          command:
-=======
-    steps:
-      - checkout
-
-      - restore_cache:
-          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
       - run:
           name: check machine ENV
           command:
             source /root/.bashrc &&
->>>>>>> CI add config.yml
             echo "node $(node -v)\"
             echo "yarn $(yarn --version)\"
 
       - run:
           name: install dependencies
-<<<<<<< HEAD
-          command:
-            cd /root/project/client
-            yarn
-
-      - run:
-          name: lint
-          command:
-            cd /root/project/client
-            yarn lint
-
-
-      - run:
-          name: build
-          command:
-            cd /root/project/client
-            yarn build
-
-      - save_cache:
-          key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
-          paths:
-            - ~/client/node_modules
-            - ~/.cache/yarn
-=======
           command: yarn
 
       - run:
           name: build
-          command: yarn develop
+          command: yarn build
 
       - save_cache:
-          key: lovechan-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: lovechan-{{ .Branch }}-{{ checksum "client/yarn.lock" }}
           paths:
-            - /root/node_modules
-            - /.cache/yarn/
->>>>>>> CI add config.yml
+            - ~/.cache/yarn
