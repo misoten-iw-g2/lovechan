@@ -2,6 +2,7 @@ package controller
 
 import (
 	"app/app"
+	"app/model"
 
 	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
@@ -26,9 +27,16 @@ func (c *AnalyticController) ListUserAnswer(ctx *app.ListUserAnswerAnalyticConte
 	// AnalyticController_ListUserAnswer: start_implement
 
 	// Put your logic here
-
+	uaDB := model.NewUserAnswersDB(c.db)
+	ua, err := uaDB.GetList(ctx)
+	if err != nil {
+		return goa.ErrInternal(err)
+	}
+	var res []*app.Useranswertype
+	for _, v := range ua {
+		res = append(res, v.UserAnswerToUserAnswertypePtr())
+	}
 	// AnalyticController_ListUserAnswer: end_implement
-	res := app.UseranswertypeCollection{}
 	return ctx.OK(res)
 }
 

@@ -20,7 +20,7 @@ type UserAnswers struct {
 	Answer     string    `db:"answer"`
 	Score      float64   `db:"score"`
 	QuestionID int       `db:"question_id"`
-	CreatedAt  time.Time `db:"question_id"`
+	CreatedAt  time.Time `db:"created_at"`
 }
 
 // UserAnswersDB DB
@@ -36,7 +36,7 @@ func NewUserAnswersDB(db *sqlx.DB) *UserAnswersDB {
 func (db *UserAnswersDB) GetList(ctx context.Context) ([]UserAnswers, error) {
 	sql, prepare, err := sq.Select("*").
 		From("user_answers").
-		OrderBy("created_at", "desc").
+		OrderBy("created_at DESC").
 		ToSql()
 	if err != nil {
 		goa.LogError(ctx, "UserAnswersDB GetList Error 1: err", "err", err)
@@ -98,6 +98,17 @@ func (db *UserAnswersDB) AddAnalysis(ctx context.Context, a UserAnswers) {
 
 func (ua UserAnswers) UserAnswerToUserAnswertype() app.Useranswertype {
 	u := app.Useranswertype{}
+	u.ID = ua.ID
+	u.Score = ua.Score
+	u.Answer = ua.Answer
+	u.Question = ua.Question
+	u.CreatedAt = ua.CreatedAt
+	u.QuestionID = ua.QuestionID
+	return u
+}
+
+func (ua UserAnswers) UserAnswerToUserAnswertypePtr() *app.Useranswertype {
+	u := &app.Useranswertype{}
 	u.ID = ua.ID
 	u.Score = ua.Score
 	u.Answer = ua.Answer
