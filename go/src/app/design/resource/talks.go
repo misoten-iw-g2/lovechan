@@ -9,22 +9,40 @@ import (
 )
 
 var _ = Resource("talks", func() {
-	DefaultMedia(media.SelectType)
 	BasePath("/api/talks")
-	Action("select", func() {
+	Action("Select", func() {
 		Description("与えられた選択肢の中で、ユーザーが選択したと思われる選択肢を返す")
 		Routing(
 			POST("/select"),
 		)
 		Payload(func() {
-			Attribute("selects")
-			Attribute("input")
+			Attribute("selects", ArrayOf(String), "選択肢", func() {
+				Example([]string{
+					"ドキュメント管理",
+					"ラブちゃん情報",
+					"スケジュール管理",
+					"障害対策",
+				})
+			})
+			Attribute("input", String, "ユーザーの入力", func() {
+				Default("")
+				Example("障害対策をしたい")
+			})
 			Required(
 				"selects",
 				"input",
 			)
 		})
-		Response(OK)
+		Response(OK, media.SelectType)
+		UseTrait(GeneralUserTrait)
+	})
+
+	Action("Speech", func() {
+		Description("音声ファイルを投げて、その音声の文字起こしを返す")
+		Routing(
+			POST("/speech"),
+		)
+		Response(OK, media.SpeechType)
 		UseTrait(GeneralUserTrait)
 	})
 })
