@@ -1,8 +1,12 @@
 package model
 
 import (
+	"app/app"
 	"app/util"
 	"context"
+	"fmt"
+	"strconv"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/goadesign/goa"
@@ -11,11 +15,12 @@ import (
 
 // UserAnswers DBカラム
 type UserAnswers struct {
-	ID         int     `db:"id"`
-	Question   string  `db:"question"`
-	Answer     string  `db:"answer"`
-	Score      float32 `db:"score"`
-	QuestionID int     `db:"question_id"`
+	ID         int       `db:"id"`
+	Question   string    `db:"question"`
+	Answer     string    `db:"answer"`
+	Score      float64   `db:"score"`
+	QuestionID int       `db:"question_id"`
+	CreatedAt  time.Time `db:"created_at"`
 }
 
 // UserAnswersDB DB
@@ -28,10 +33,28 @@ func NewUserAnswersDB(db *sqlx.DB) *UserAnswersDB {
 	return &UserAnswersDB{DB: db}
 }
 
+// GetList ユーザー回答の取得
+func (db *UserAnswersDB) GetList(ctx context.Context) ([]UserAnswers, error) {
+	sql, prepare, err := sq.Select("*").
+		From("user_answers").
+		OrderBy("created_at DESC").
+		ToSql()
+	if err != nil {
+		goa.LogError(ctx, "UserAnswersDB GetList Error 1: err", "err", err)
+		return []UserAnswers{}, err
+	}
+	ua := []UserAnswers{}
+	err = db.DB.Select(&ua, sql, prepare...)
+	if err != nil {
+		goa.LogError(ctx, "UserAnswersDB GetList Error 2: err", "err", err)
+		return []UserAnswers{}, err
+	}
+	return ua, nil
+}
+
 // Add Insert
 func (db *UserAnswersDB) Add(ctx context.Context, a UserAnswers) error {
-	sql, prepare, err := sq.
-		Insert("user_answers").
+	sql, prepare, err := sq.Insert("user_answers").
 		Columns(
 			"question",
 			"answer",
@@ -60,7 +83,8 @@ func (db *UserAnswersDB) AddAnalysis(ctx context.Context, a UserAnswers) {
 		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 1: err", "err", err)
 		return
 	}
-	a.Score = s.DocumentSentiment.GetScore()
+	score := s.DocumentSentiment.GetScore()
+	a.Score, err = strconv.ParseFloat(fmt.Sprint(score), 64)
 	if err != nil {
 		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 2: err", "err", err)
 		return
@@ -71,4 +95,28 @@ func (db *UserAnswersDB) AddAnalysis(ctx context.Context, a UserAnswers) {
 		return
 	}
 	goa.LogInfo(ctx, "UserAnswerDB AddAnalysis OK: insert", "insert", a)
+}
+
+// UserAnswerToUserAnswertype レスポンス用の構造体へ
+func (ua UserAnswers) UserAnswerToUserAnswertype() app.Useranswertype {
+	u := app.Useranswertype{}
+	u.ID = ua.ID
+	u.Score = ua.Score
+	u.Answer = ua.Answer
+	u.Question = ua.Question
+	u.CreatedAt = ua.CreatedAt
+	u.QuestionID = ua.QuestionID
+	return u
+}
+
+// UserAnswerToUserAnswertypePtr レスポンス用の構造体へ(ポインター)
+func (ua UserAnswers) UserAnswerToUserAnswertypePtr() *app.Useranswertype {
+	u := &app.Useranswertype{}
+	u.ID = ua.ID
+	u.Score = ua.Score
+	u.Answer = ua.Answer
+	u.Question = ua.Question
+	u.CreatedAt = ua.CreatedAt
+	u.QuestionID = ua.QuestionID
+	return u
 }
