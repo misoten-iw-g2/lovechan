@@ -10,14 +10,6 @@ import (
 
 var _ = Resource("analytic", func() {
 	BasePath("/api/analytic")
-	Action("ShowGraphLine", func() {
-		Description("感情分析データ(波線グラフ)")
-		Routing(
-			GET("graph/line"),
-		)
-		Response(OK, media.GraphLineType)
-		UseTrait(GeneralUserTrait)
-	})
 	Action("ShowGraphPie", func() {
 		Description("感情分析データ(円グラフ)")
 		Routing(

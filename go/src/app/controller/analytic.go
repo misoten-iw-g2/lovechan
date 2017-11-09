@@ -51,17 +51,6 @@ func (c *AnalyticController) ShowGraphBar(ctx *app.ShowGraphBarAnalyticContext) 
 	return ctx.OK(res)
 }
 
-// ShowGraphLine runs the ShowGraphLine action.
-func (c *AnalyticController) ShowGraphLine(ctx *app.ShowGraphLineAnalyticContext) error {
-	// AnalyticController_ShowGraphLine: start_implement
-
-	// Put your logic here
-
-	// AnalyticController_ShowGraphLine: end_implement
-	res := &app.Graphlinetype{}
-	return ctx.OK(res)
-}
-
 // ShowGraphPie runs the ShowGraphPie action.
 func (c *AnalyticController) ShowGraphPie(ctx *app.ShowGraphPieAnalyticContext) error {
 	// AnalyticController_ShowGraphPie: start_implement

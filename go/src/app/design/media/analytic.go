@@ -5,24 +5,6 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var GraphLineType = MediaType("application/vnd.graphLineType+json", func() {
-	Description("波線グラフ")
-	Attributes(func() {
-		Attribute("score", Number, "感情スコア", func() {
-			Example(1.2)
-		})
-	})
-	Required(
-		"score",
-	)
-	View("default", func() {
-		Attribute("score")
-		Required(
-			"score",
-		)
-	})
-})
-
 var GraphPieType = MediaType("application/vnd.graphPieType+json", func() {
 	Description("円グラフ")
 	Attributes(func() {
