@@ -33,6 +33,7 @@ func NewUserAnswersDB(db *sqlx.DB) *UserAnswersDB {
 	return &UserAnswersDB{DB: db}
 }
 
+// GetList ユーザー回答の取得
 func (db *UserAnswersDB) GetList(ctx context.Context) ([]UserAnswers, error) {
 	sql, prepare, err := sq.Select("*").
 		From("user_answers").
@@ -96,6 +97,7 @@ func (db *UserAnswersDB) AddAnalysis(ctx context.Context, a UserAnswers) {
 	goa.LogInfo(ctx, "UserAnswerDB AddAnalysis OK: insert", "insert", a)
 }
 
+// UserAnswerToUserAnswertype レスポンス用の構造体へ
 func (ua UserAnswers) UserAnswerToUserAnswertype() app.Useranswertype {
 	u := app.Useranswertype{}
 	u.ID = ua.ID
@@ -107,6 +109,7 @@ func (ua UserAnswers) UserAnswerToUserAnswertype() app.Useranswertype {
 	return u
 }
 
+// UserAnswerToUserAnswertypePtr レスポンス用の構造体へ(ポインター)
 func (ua UserAnswers) UserAnswerToUserAnswertypePtr() *app.Useranswertype {
 	u := &app.Useranswertype{}
 	u.ID = ua.ID
