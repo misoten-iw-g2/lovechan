@@ -53,6 +53,21 @@ class Routes extends React.Component<Props> {
                     <Route exact path="/" render={() => <div>aa</div>} />
                     {/* media */}
                     <Route exact path={routes.media} render={() => <Media />} />
+                    <Route
+                      exact
+                      path={routes.storyChoice}
+                      render={() => <div />}
+                    />
+                    <Route
+                      exact
+                      path={routes.withLoveChoice}
+                      render={() => <div />}
+                    />
+                    <Route
+                      exact
+                      path={routes.randomChoice}
+                      render={() => <div />}
+                    />
                   </Switch>
                 </CSSTransition>
               </TransitionGroup>
