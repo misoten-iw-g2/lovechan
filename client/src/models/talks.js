@@ -1,13 +1,12 @@
 /* @flow */
 import {Record} from 'immutable';
-// import {exportWAV} from './utils';
 
 const TalksState = Record({
   webrtc: undefined,
 });
 
 class Talks extends TalksState {
-  static recordStart(state: any, _action: any) {
+  recordStart(state: any, _action: any) {
     const newState = state.update('webrtc', async () => {
       const {navigator, AudioContext} = window;
 
@@ -48,7 +47,7 @@ class Talks extends TalksState {
     return newState;
   }
 
-  static recordSave(state, _payload) {
+  recordSave(state: any, _action: any) {
     const newState = state.update('webrtc', async () => {
       const {URL, document} = window;
       const {context, storeAudio, stream, bufferSize} = await state.webrtc;
@@ -72,7 +71,6 @@ class Talks extends TalksState {
       const src = context.createBufferSource();
       src.buffer = audioBuffer();
       src.connect(context.destination);
-      // src.start();
       // CAUTION
       const exportWAV = (audioData, sampleRate) => {
         const encodeWAV = samples => {
@@ -125,7 +123,6 @@ class Talks extends TalksState {
         return audioBlob;
       };
       // CAUTION
-
       const blob = exportWAV(storeAudio, context.sampleRate);
       const url = URL.createObjectURL(blob);
       const link = document.createElement(`a`);
@@ -133,11 +130,12 @@ class Talks extends TalksState {
       link.download = 'output.wav';
       link.textContent = 'download';
       link.click();
+      context.close();
     });
     return newState;
   }
 
-  static dammy(state, _payload) {
+  dammy(state: any, _action: any) {
     const newState = state.update('recordBuffer', () => state.recordBuffer);
     return newState;
   }
