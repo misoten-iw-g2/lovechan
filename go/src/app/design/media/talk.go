@@ -41,3 +41,28 @@ var SelectType = MediaType("application/vnd.selectType+json", func() {
 		)
 	})
 })
+
+var SpeechType = MediaType("application/vnd.speechType+json", func() {
+	Description(`受け取った音声データからテキストに起こす
+curl  -F 'uploadfile=@./output.wav'  -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/talks/speech'`)
+	Attributes(func() {
+		Attribute("text", String, "文字起こし", func() {
+			Example("こんにちは")
+		})
+		Attribute("confidence", String, "信頼性", func() {
+			Example("0.3")
+		})
+	})
+	Required(
+		"text",
+		"confidence",
+	)
+	View("default", func() {
+		Attribute("text")
+		Attribute("confidence")
+		Required(
+			"text",
+			"confidence",
+		)
+	})
+})
