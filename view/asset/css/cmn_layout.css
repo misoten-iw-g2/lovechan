@@ -1,0 +1,205 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/**
+ * 基本情報
+ */
+body {
+	width: 100%;
+	min-height: 100vh;
+	color: #fff;
+	text-align: center;
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 48px;
+	line-height: 2;
+	background-color: #434343;
+	position: relative;
+}
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+#content {
+	padding: 100px 0;
+}
+
+.clearfix:after,
+.contentIn:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.fB { font-weight: bold; }
+.tL { text-align: left; }
+.tR { text-align: right; }
+.tC { text-align: center; }
+
+.fL { float: left; }
+.fR { float: right; }
+
+
+.mainTitle {
+	padding: 30px 0;
+}
+
+.answerList li {
+	padding: 30px 0;
+	font-size: 72px;
+	font-weight: bold;
+	background-color: #666;
+}
+.answerList li.isChoice {
+	background-color: #e276aa;
+}
+
+.assistMsg {
+	height: 230px;
+	margin: auto;
+	font-size: 36px;
+	line-height: 1.5;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+.assistMsg.none {
+	display: none;
+}
+.assistMsg span {
+	font-size: 72px;
+	font-weight: bold;
+	vertical-align: baseline;
+}
+
+footer {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+footer .mike {
+	width: 100px;
+	margin: 30px auto;
+	text-align: center;
+}
+footer .mike.isOff {
+	display: block;
+}
+footer .mike.isOn {
+	display: block;
+}
+
+
+/* ２択 */
+.patternA .answerList li + li {
+	margin-top: 60px;
+}
+
+/* ３択 */
+.patternB .mainTitle {
+	padding: 45px 0;
+}
+.patternB .answerList {
+	display: table;
+	border-collapse: separate;
+	border-spacing: 60px 0;
+	overflow: hidden;
+	margin: 0 auto;
+}
+.patternB .answerList li {
+	display: table-cell;
+	width: 400px;
+	height: 400px;
+	text-align: center;
+	vertical-align: middle;
+	border-radius: 50px;
+}
+
+/* フリートーク */
+.patternC .freeTalk li {
+	position: relative;
+}
+.patternC .freeTalk li:nth-child(odd) {
+	margin-right: 50px;
+	text-align: right;
+}
+.patternC .freeTalk li:nth-child(even) {
+	margin-left: 50px;
+	color: #e276aa;
+	text-align: left;
+}
+.patternC .freeTalk li + li {
+	margin-top: 45px;
+}
+.patternC .freeTalk li .txt {
+	display: inline-block;
+	padding: 0 1em;
+	text-align: left;
+	border-radius: 15px;
+	position: relative;
+}
+.patternC .freeTalk li .txt:before,
+.patternC .freeTalk li .txt:after {
+	content: '';
+	width: 0;
+	height: 0;
+	margin-top: -22px;
+	position: absolute;
+	border: solid transparent;
+	border-width: 10px 20px;
+}
+.patternC .freeTalk li .txt:before {
+	margin-top: -25px;
+	border-width: 13px 25px;
+}
+
+/* ラヴちゃん側 */
+.patternC .freeTalk li:nth-child(odd) .love {
+	font-size: 20px;
+	position: absolute;
+	top: -40px;
+	right: 0;
+}
+.patternC .freeTalk li:nth-child(odd) .txt {
+	border: solid 3px #fff;
+}
+.patternC .freeTalk li:nth-child(odd) .txt:before,
+.patternC .freeTalk li:nth-child(odd) .txt:after {
+	top: 40%;
+	left: 100%;
+	border-width: 10px 20px;
+	border-left-color: #434343;
+}
+.patternC .freeTalk li:nth-child(odd) .txt:before {
+	margin-top: -25px;
+	border-width: 13px 25px;
+	border-left-color: #fff;
+}
+
+/* 自分側 */
+.patternC .freeTalk li:nth-child(even) .me {
+	font-size: 20px;
+	position: absolute;
+	top: -40px;
+}
+.patternC .freeTalk li:nth-child(even) .txt {
+	border: solid 3px #e276aa;
+}
+.patternC .freeTalk li:nth-child(even) .txt:before,
+.patternC .freeTalk li:nth-child(even) .txt:after {
+	top: 80%;
+	right: 100%;
+	border: solid transparent;
+	border-width: 10px 20px;
+	border-right-color: #434343;
+}
+.patternC .freeTalk li:nth-child(even) .txt:before {
+	margin-top: -25px;
+	border-width: 13px 25px;
+	border-right-color: #e276aa;
+}
