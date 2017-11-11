@@ -20,18 +20,15 @@ var _ = Resource("requests", func() {
 		UseTrait(GeneralUserTrait)
 	})
 	Action("request", func() {
-		Description("ラヴちゃんに動作をリクエストする")
+		Description(`ラヴちゃんに動作をリクエストする
+curl -F 'uploadfile=@./sampleVoice/request-ippatugei.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/requests'`)
 		Routing(
 			POST(""),
 		)
-		Payload(func() {
-			Attribute("user_answer", String, "ユーザーからの回答", func() {
-				MinLength(1)
-				Example("踊って")
-			})
-			Required("user_answer")
+		Response(OK, func() {
+			Media(media.RequestType, "full")
 		})
-		Response(OK)
+		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})
 })

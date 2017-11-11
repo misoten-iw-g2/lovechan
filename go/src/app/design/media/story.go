@@ -21,23 +21,25 @@ var StoryType = MediaType("application/vnd.storyType+json", func() {
 			Example("どんな画面が出てますか？")
 		})
 		Attribute("story_pattern", String, `ストーリーの進行パターン<br>
-			hint: 障害のヒント<br>
-			find: 必要な情報を探し出す<br>
-			call: 誰かを呼ぶ<br>
-			listen: みんなのラヴちゃんに聞いてみる
+			suddenly: 障害のヒント<br>
+			non: 選択なし
 			`, func() {
 			Enum(
-				"hint",
-				"find",
-				"call",
-				"listen",
+				"suddenly",
 				"non",
 			)
-			Example("hint")
+			Example("suddenly")
 			Default("non")
 		})
 		Attribute("is_clear", Boolean, "クリアしたか", func() {
 			Default(false)
+		})
+		Attribute("url", String, "次投げるべきURL", func() {
+			Example("/api/stories/hint/2")
+		})
+		Attribute("user_voice_text", String, "発言の文字起こし", func() {
+			Example("こんにちは")
+			Default("")
 		})
 	})
 	Required(
@@ -47,6 +49,8 @@ var StoryType = MediaType("application/vnd.storyType+json", func() {
 		"question",
 		"story_pattern",
 		"is_clear",
+		"url",
+		"user_voice_text",
 	)
 	View("default", func() {
 		Attribute("next_step")
@@ -55,6 +59,8 @@ var StoryType = MediaType("application/vnd.storyType+json", func() {
 		Attribute("question")
 		Attribute("story_pattern")
 		Attribute("is_clear")
+		Attribute("url")
+		Attribute("user_voice_text")
 		Required(
 			"next_step",
 			"answer",
@@ -62,6 +68,8 @@ var StoryType = MediaType("application/vnd.storyType+json", func() {
 			"question",
 			"story_pattern",
 			"is_clear",
+			"url",
+			"user_voice_text",
 		)
 	})
 })

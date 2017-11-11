@@ -82,3 +82,11 @@ func (r Requests) RequestToRequesttypePtr() *app.Requesttype {
 	a.Request = r.RequestDisplay
 	return a
 }
+
+// RequestToRequesttypeFull レスポンス構造体に格納する
+func (r Requests) RequestToRequesttypeFull() app.RequesttypeFull {
+	a := app.RequesttypeFull{}
+	a.ID = r.ID
+	a.Request = r.RequestDisplay
+	return a
+}
