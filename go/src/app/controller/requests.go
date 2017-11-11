@@ -50,13 +50,23 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 	if err != nil {
 		return goa.ErrInternal(err)
 	}
-	r, err := rDB.GetUserRequest(ctx, rs, ctx.Payload.UserAnswer)
+	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
+	if err != nil {
+		return goa.ErrBadRequest(err)
+	}
+	isReturn, _ := model.IsReturn(t)
+	if isReturn {
+		ctx.ResponseData.Header().Set("Location", "/conversations")
+		return ctx.MovedPermanently()
+	}
+	r, err := rDB.GetUserRequest(ctx, rs, t)
 	if err != nil {
 		return goa.ErrInternal(err)
 	}
 
 	// RequestsController_Request: end_implement
-	res := app.Requesttype{}
-	res = r.RequestToRequesttype()
-	return ctx.OK(&res)
+	res := app.RequesttypeFull{}
+	res = r.RequestToRequesttypeFull()
+	res.UserVoiceText = t
+	return ctx.OKFull(&res)
 }

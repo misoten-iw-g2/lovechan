@@ -49,20 +49,39 @@ curl  -F 'uploadfile=@./output.wav'  -X POST --header 'Content-Type: multipart/f
 		Attribute("text", String, "文字起こし", func() {
 			Example("こんにちは")
 		})
-		Attribute("confidence", String, "信頼性", func() {
-			Example("0.3")
-		})
 	})
 	Required(
 		"text",
-		"confidence",
 	)
 	View("default", func() {
 		Attribute("text")
-		Attribute("confidence")
 		Required(
 			"text",
-			"confidence",
+		)
+	})
+})
+
+var RoutingType = MediaType("application/vnd.routingType+json", func() {
+	Description("受け取った音声データからテキストに起こす")
+	Attributes(func() {
+		Attribute("next_page", String, "ページ名", func() {
+			Example("/stories")
+		})
+		Attribute("user_voice_text", String, "発言の文字起こし", func() {
+			Example("こんにちは")
+			Default("")
+		})
+	})
+	Required(
+		"next_page",
+		"user_voice_text",
+	)
+	View("default", func() {
+		Attribute("next_page")
+		Attribute("user_voice_text")
+		Required(
+			"next_page",
+			"user_voice_text",
 		)
 	})
 })

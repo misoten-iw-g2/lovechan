@@ -35,31 +35,39 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	if err != nil {
 		return goa.ErrInternal(err)
 	}
-
+	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
+	if err != nil {
+		return goa.ErrBadRequest(err)
+	}
+	isReturn, _ := model.IsReturn(t)
+	if isReturn {
+		ctx.ResponseData.Header().Set("Location", "/")
+		return ctx.MovedPermanently()
+	}
 	uaDB := model.NewUserAnswersDB(c.db)
 	ua := model.UserAnswers{
 		Question:   q.Question,
-		Answer:     ctx.Payload.UserAnswer,
+		Answer:     t,
 		QuestionID: ctx.ID,
 	}
 	go uaDB.AddAnalysis(ctx, ua)
-
 	res := app.Answertype{}
 	if q.AnswerType == model.FreeAnswerType {
 		faDB := model.NewFreeAnswersDB(c.db)
-		r, err := faDB.GetFreeAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
+		r, err := faDB.GetFreeAnswerReplay(ctx, ctx.ID, t)
 		if err != nil {
 			return goa.ErrInternal(err)
 		}
 		res = r.FreeAnswerToAnswertype()
 	} else if q.AnswerType == model.ChoiceAnswerType {
 		caDB := model.NewChoiceAnswersDB(c.db)
-		r, err := caDB.GetChoiceAnswerReplay(ctx, ctx.ID, ctx.Payload.UserAnswer)
+		r, err := caDB.GetChoiceAnswerReplay(ctx, ctx.ID, t)
 		if err != nil {
 			return goa.ErrInternal(err)
 		}
 		res = r.ChoiceAnswerToAnswertype()
 	}
+	res.UserVoiceText = t
 	// QuestionsController_Answers: end_implement
 	return ctx.OK(&res)
 }

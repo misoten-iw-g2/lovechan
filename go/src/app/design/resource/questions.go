@@ -11,7 +11,7 @@ import (
 var _ = Resource("questions", func() {
 	BasePath("/api/questions")
 	Action("questions", func() {
-		Description("ラヴちゃんから質問をする")
+		Description("ラヴちゃんから質問をもらう")
 		Routing(
 			GET(""),
 		)
@@ -19,7 +19,8 @@ var _ = Resource("questions", func() {
 		UseTrait(GeneralUserTrait)
 	})
 	Action("answers", func() {
-		Description("ラヴちゃんからの質問に回答する")
+		Description(`ラヴちゃんからの質問に回答する<br>
+curl -F 'uploadfile=@./sampleVoice/questions-2-tanosii.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/questions/2/answers'`)
 		Routing(
 			POST("/:id/answers"),
 		)
@@ -28,14 +29,8 @@ var _ = Resource("questions", func() {
 				Example(1)
 			})
 		})
-		Payload(func() {
-			Attribute("user_answer", String, "ユーザーからの回答", func() {
-				MinLength(1)
-				Example("今日はしんどい")
-			})
-			Required("user_answer")
-		})
 		Response(OK, media.AnswerType)
+		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})
 })

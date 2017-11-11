@@ -28,3 +28,20 @@ func UserChoiceAnswer(choices []string, userAnswer string) (int, error) {
 	}
 	return topRateIndex, nil
 }
+
+var backword = []string{"戻りたい", "もどりたい"}
+
+// IsReturn 戻りたいというワードが入力されたか判定する
+func IsReturn(userAnswer string) (bool, float64) {
+	var topRate float64
+	for _, v := range backword {
+		rate := levenshtein.RatioForStrings([]rune(v), []rune(userAnswer), levenshtein.DefaultOptions)
+		if rate > topRate {
+			topRate = rate
+		}
+	}
+	if topRate < 0.9 {
+		return false, topRate
+	}
+	return true, topRate
+}

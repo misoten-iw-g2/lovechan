@@ -53,20 +53,27 @@ var AnswerType = MediaType("application/vnd.answerType+json", func() {
 		Attribute("score", Number, "感情分析結果", func() {
 			Example(0.2)
 		})
+		Attribute("user_voice_text", String, "発言の文字起こし", func() {
+			Example("こんにちは")
+			Default("")
+		})
 	})
 	Required(
 		"id",
 		"answer",
 		"score",
+		"user_voice_text",
 	)
 	View("default", func() {
 		Attribute("id")
 		Attribute("answer")
 		Attribute("score")
+		Attribute("user_voice_text")
 		Required(
 			"id",
 			"answer",
 			"score",
+			"user_voice_text",
 		)
 	})
 })
