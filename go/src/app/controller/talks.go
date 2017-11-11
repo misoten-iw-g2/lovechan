@@ -81,7 +81,7 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 	switch ctx.CurrentPage {
 	case conversations:
 		routings := []string{requests, questions}
-		routingChoices := []string{"お願いする,おねがいする", "質問してもらう,しつもんしてもらう"}
+		routingChoices := []string{"何かお願いする,なにかおねがいする", "質問してもらう,しつもんしてもらう"}
 		i, err := model.UserChoiceAnswer(routingChoices, t)
 		if err != nil {
 			return goa.ErrBadRequest(err)
