@@ -18,10 +18,13 @@ const (
 type ChoiceAnswers struct {
 	ID            int    `db:"id"`
 	Answer        string `db:"answer"`
+	AnswerDisplay string `db:"answer_display"`
 	VideoFileName string `db:"video_file_name"`
 	VoiceFileName string `db:"voice_file_name"`
-	ChoiceDisplay string `db:"choice_display"`
 	Choice        string `db:"choice"`
+	ChoiceDisplay string `db:"choice_display"`
+	VoiceEmotion  string `db:"voice_emotion"`
+	VoiceSpeed    int    `db:"voice_speed"`
 	QuestionID    int    `db:"question_id"`
 }
 
@@ -77,10 +80,28 @@ func (db *ChoiceAnswersDB) GetChoiceAnswerReplay(ctx context.Context, id int, us
 	return ChoiceAnswers{}, nil
 }
 
+// ListAll 全件取得する
+func (db *ChoiceAnswersDB) ListAll(ctx context.Context) ([]ChoiceAnswers, error) {
+	sql, _, err := sq.Select("*").
+		From("choice_answers").
+		ToSql()
+	if err != nil {
+		goa.LogError(ctx, "ChoiceAnswersDB ListAll Error 1: err", "err", err)
+		return []ChoiceAnswers{}, err
+	}
+	c := []ChoiceAnswers{}
+	err = db.DB.Select(&c, sql)
+	if err != nil {
+		goa.LogError(ctx, "ChoiceAnswersDB ListAll Error 1: err", "err", err)
+		return []ChoiceAnswers{}, err
+	}
+	return c, nil
+}
+
 // ChoiceAnswerToAnswertype レスポンス構造体へ入れ直す
 func (ca ChoiceAnswers) ChoiceAnswerToAnswertype() app.Answertype {
 	a := app.Answertype{}
 	a.ID = ca.ID
-	a.Answer = ca.Answer
+	a.Answer = ca.AnswerDisplay
 	return a
 }

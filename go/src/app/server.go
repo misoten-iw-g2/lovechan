@@ -43,9 +43,9 @@ func (s *Server) mountController() {
 	// Mount "talks" controller
 	talks := controller.NewTalksController(s.service)
 	app.MountTalksController(s.service, talks)
-	// Mount "story" controller
-	story := controller.NewStoryController(s.service, s.ws)
-	app.MountStoryController(s.service, story)
+	// Mount "stories" controller
+	story := controller.NewStoriesController(s.service, s.ws)
+	app.MountStoriesController(s.service, story)
 	// Mount "questions" controller
 	questions := controller.NewQuestionsController(s.service, s.mysql, s.ws)
 	app.MountQuestionsController(s.service, questions)
@@ -67,6 +67,9 @@ func (s *Server) mountController() {
 	// Mount "analytic" controller
 	analytic := controller.NewAnalyticController(s.service, s.mysql)
 	app.MountAnalyticController(s.service, analytic)
+	// Mount "batch" controller
+	batch := controller.NewBatchController(s.service, s.mysql)
+	app.MountBatchController(s.service, batch)
 }
 
 func (s *Server) mountMiddleware(env string) {

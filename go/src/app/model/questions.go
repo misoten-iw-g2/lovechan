@@ -10,13 +10,16 @@ import (
 
 // Questions DBカラム
 type Questions struct {
-	ID            int      `db:"id"`
-	Question      string   `db:"question"`
-	Count         int      `db:"count"`
-	AnswerType    int      `db:"answer_type"`
-	VideoFileName string   `db:"video_file_name"`
-	VoiceFileName string   `db:"voice_file_name"`
-	Choice        []string `db:"-"`
+	ID              int      `db:"id"`
+	Question        string   `db:"question"`
+	QuestionDisplay string   `db:"question_display"`
+	AnswerType      int      `db:"answer_type"`
+	Count           int      `db:"count"`
+	VideoFileName   string   `db:"video_file_name"`
+	VoiceFileName   string   `db:"voice_file_name"`
+	VoiceEmotion    string   `db:"voice_emotion"`
+	VoiceSpeed      int      `db:"voice_speed"`
+	Choice          []string `db:"-"`
 }
 
 // QuestionsDB DB
@@ -24,8 +27,8 @@ type QuestionsDB struct {
 	DB *sqlx.DB
 }
 
-// NewQuestions イニシャライザ
-func NewQuestions(db *sqlx.DB) *QuestionsDB {
+// NewQuestionsDB イニシャライザ
+func NewQuestionsDB(db *sqlx.DB) *QuestionsDB {
 	return &QuestionsDB{DB: db}
 }
 
@@ -93,6 +96,24 @@ func (db *QuestionsDB) Get(ctx context.Context, id int) (Questions, error) {
 	if err != nil {
 		goa.LogError(ctx, "QuestionsDB Get Error 1: err", "err", err)
 		return Questions{}, err
+	}
+	return q, nil
+}
+
+// ListAll 全件取得する
+func (db *QuestionsDB) ListAll(ctx context.Context) ([]Questions, error) {
+	sql, _, err := sq.Select("*").
+		From("questions").
+		ToSql()
+	if err != nil {
+		goa.LogError(ctx, "QuestionsDB ListAll Error 1: err", "err", err)
+		return []Questions{}, err
+	}
+	q := []Questions{}
+	err = db.DB.Select(&q, sql)
+	if err != nil {
+		goa.LogError(ctx, "QuestionsDB ListAll Error 1: err", "err", err)
+		return []Questions{}, err
 	}
 	return q, nil
 }

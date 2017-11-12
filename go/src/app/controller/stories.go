@@ -10,16 +10,16 @@ import (
 	"github.com/goadesign/goa"
 )
 
-// StoryController implements the story resource.
-type StoryController struct {
+// StoriesController implements the story resource.
+type StoriesController struct {
 	*goa.Controller
 	ws *mywebsocket.Server
 }
 
-// NewStoryController creates a story controller.
-func NewStoryController(service *goa.Service, ws *mywebsocket.Server) *StoryController {
-	return &StoryController{
-		Controller: service.NewController("StoryController"),
+// NewStoriesController creates a stories controller.
+func NewStoriesController(service *goa.Service, ws *mywebsocket.Server) *StoriesController {
+	return &StoriesController{
+		Controller: service.NewController("StoriesController"),
 		ws:         ws,
 	}
 }
@@ -37,8 +37,8 @@ const (
 )
 
 // PlayStory runs the PlayStory action.
-func (c *StoryController) PlayStory(ctx *app.PlayStoryStoryContext) error {
-	// StoryController_PlayStory: start_implement
+func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
+	// StoriesController_PlayStory: start_implement
 
 	// Put your logic here
 	now := ctx.NowStep
@@ -72,13 +72,13 @@ func (c *StoryController) PlayStory(ctx *app.PlayStoryStoryContext) error {
 	res.UserVoiceText = t
 	goa.LogInfo(ctx, "request now: now", "now", now)
 	goa.LogInfo(ctx, "request user_answer: user_answer", "user_answer", t)
-	// StoryController_PlayStory: end_implement
+	// StoriesController_PlayStory: end_implement
 	return ctx.OK(&res)
 }
 
 // SelectStory runs the SelectStory action.
-func (c *StoryController) SelectStory(ctx *app.SelectStoryStoryContext) error {
-	// StoryController_SelectStory: start_implement
+func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) error {
+	// StoriesController_SelectStory: start_implement
 
 	// Put your logic here
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
@@ -116,7 +116,7 @@ func (c *StoryController) SelectStory(ctx *app.SelectStoryStoryContext) error {
 	res.URL = fmt.Sprintf("/api/stories/%s/%d", res.StoryPattern, res.NextStep)
 	res.UserVoiceText = t
 
-	// StoryController_SelectStory: end_implement
+	// StoriesController_SelectStory: end_implement
 	return ctx.OK(&res)
 }
 

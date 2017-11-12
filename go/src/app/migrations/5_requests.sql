@@ -1,7 +1,7 @@
 -- +migrate Up
 CREATE TABLE requests
 (
-  id bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
+	id bigint NOT NULL AUTO_INCREMENT COMMENT 'id',
 	request_display varchar(100) NOT NULL COMMENT 'リクエスト表示名',
 	request varchar(200) NOT NULL COMMENT 'リクエスト',
 	video_file_name varchar(100) NOT NULL COMMENT '動画ファイル名',
