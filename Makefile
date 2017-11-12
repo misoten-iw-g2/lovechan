@@ -31,6 +31,7 @@ docker-build:
 	docker-compose build
 
 docker-up:
+	rm -rf ./mysql
 	docker-compose up
 
 docker-stop:

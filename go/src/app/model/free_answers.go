@@ -22,6 +22,9 @@ type FreeAnswers struct {
 	VideoFileName string `db:"video_file_name"`
 	VoiceFileName string `db:"voice_file_name"`
 	Answer        string `db:"answer"`
+	AnswerDisplay string `db:"answer_display"`
+	VoiceEmotion  string `db:"voice_emotion"`
+	VoiceSpeed    int    `db:"voice_speed"`
 	QuestionID    int    `db:"question_id"`
 }
 
@@ -80,6 +83,24 @@ func (db *FreeAnswersDB) GetFreeAnswerReplay(ctx context.Context, questionID int
 	return FreeAnswers{}, nil
 }
 
+// ListAll 全件取得する
+func (db *FreeAnswersDB) ListAll(ctx context.Context) ([]FreeAnswers, error) {
+	sql, _, err := sq.Select("*").
+		From("free_answers").
+		ToSql()
+	if err != nil {
+		goa.LogError(ctx, "FreeAnswersDB ListAll Error 1: err", "err", err)
+		return []FreeAnswers{}, err
+	}
+	f := []FreeAnswers{}
+	err = db.DB.Select(&f, sql)
+	if err != nil {
+		goa.LogError(ctx, "FreeAnswersDB ListAll Error 1: err", "err", err)
+		return []FreeAnswers{}, err
+	}
+	return f, nil
+}
+
 const (
 	emotionGood   = 1
 	emotionNormal = 2
@@ -104,6 +125,6 @@ func getEmotion(ctx context.Context, score float32) int {
 func (fs FreeAnswers) FreeAnswerToAnswertype() app.Answertype {
 	a := app.Answertype{}
 	a.ID = fs.ID
-	a.Answer = fs.Answer
+	a.Answer = fs.AnswerDisplay
 	return a
 }

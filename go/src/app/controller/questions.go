@@ -30,7 +30,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	// QuestionsController_Answers: start_implement
 
 	// Put your logic here
-	qDB := model.NewQuestions(c.db)
+	qDB := model.NewQuestionsDB(c.db)
 	q, err := qDB.Get(ctx, ctx.ID)
 	if err != nil {
 		return goa.ErrInternal(err)
@@ -77,7 +77,7 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 	// QuestionsController_Questions: start_implement
 
 	// Put your logic here
-	qDB := model.NewQuestions(c.db)
+	qDB := model.NewQuestionsDB(c.db)
 	q, err := qDB.GetRandomQuestion(ctx)
 	if err != nil {
 		return goa.ErrInternal(err)
@@ -89,7 +89,7 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 	// QuestionsController_Questions: end_implement
 	res := &app.Questiontype{}
-	res.Question = q.Question
+	res.Question = q.QuestionDisplay
 	res.ID = q.ID
 	res.Choices = q.Choice
 	res.AnswerType = q.AnswerType

@@ -8,7 +8,7 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-var _ = Resource("story", func() {
+var _ = Resource("stories", func() {
 	BasePath("/api/stories")
 	DefaultMedia(media.StoryType)
 	Action("PlayStory", func() {
