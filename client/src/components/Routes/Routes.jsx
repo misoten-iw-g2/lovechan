@@ -5,78 +5,48 @@ import {Switch, withRouter} from 'react-router';
 import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import classNames from 'classnames';
 
-// components
-// import Sidebar from '../Common/Sidebar';
-// import Landing from '../Landing';
-// import Table from '../Table';
-import Media from '../../container/media';
+import {Landing, Media} from '../../container';
 
 import routes from '../../config/routes';
 
-export type Props = {
-  // getLoginUser(): void,
-  // checkSession(): void
-};
+export type Props = {};
 
-class Routes extends React.Component<Props> {
-  async componentWillMount<T>(): $await<T> {
-    // await this.props.getLoginUser();
-    // await this.props.checkSession();
-  }
-
-  async componentWillUpdate<T>(): $await<T> {
-    // await this.props.checkSession();
-    // await this.props.getLoginUser();
-  }
-
-  render() {
-    return (
-      <div>
-        <div>sidebar</div>
-        <div
-          className={classNames({
-            'gc-routes': true,
-          })}>
-          <Route
-            path="/"
-            render={({location}) => (
-              <TransitionGroup appear>
-                <CSSTransition
-                  classNames="fade"
-                  key={location.key}
-                  timeout={{
-                    appear: 600,
-                    enter: 600,
-                    exit: 600,
-                  }}>
-                  <Switch location={location} key={location.key}>
-                    <Route exact path="/" render={() => <div>aa</div>} />
-                    {/* media */}
-                    <Route exact path={routes.media} render={() => <Media />} />
-                    <Route
-                      exact
-                      path={routes.storyChoice}
-                      render={() => <div />}
-                    />
-                    <Route
-                      exact
-                      path={routes.withLoveChoice}
-                      render={() => <div />}
-                    />
-                    <Route
-                      exact
-                      path={routes.randomChoice}
-                      render={() => <div />}
-                    />
-                  </Switch>
-                </CSSTransition>
-              </TransitionGroup>
-            )}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+const Routes = (props: Props) => (
+  <div>
+    <div>
+      <Route
+        path="/"
+        render={({location}) => (
+          <TransitionGroup appear>
+            <CSSTransition
+              classNames="fade"
+              key={location.key}
+              timeout={{
+                appear: 600,
+                enter: 600,
+                exit: 600,
+              }}>
+              <Switch location={location} key={location.key}>
+                <Route exact path="/" render={() => <Landing />} />
+                <Route exact path={routes.media} render={() => <Media />} />
+                <Route exact path={routes.storyChoice} render={() => <div />} />
+                <Route
+                  exact
+                  path={routes.withLoveChoice}
+                  render={() => <div />}
+                />
+                <Route
+                  exact
+                  path={routes.randomChoice}
+                  render={() => <div />}
+                />
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+        )}
+      />
+    </div>
+  </div>
+);
 
 export default withRouter(Routes);

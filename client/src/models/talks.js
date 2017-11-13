@@ -32,7 +32,6 @@ class Talks extends TalksState {
           for (let i = 0; i < bufferSize; i += 1) {
             buffer[i] = channel[i];
           }
-          console.log(buffer);
           storeAudio.push(buffer);
         };
 

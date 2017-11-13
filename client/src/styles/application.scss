@@ -1,69 +1,7 @@
-body {
-  font-size: #{$app-font-size-main}px;
-  line-height: $app-line-height-main;
-  background-color: $app-color-page;
+.visible {
+  display: block;
+}
 
-  h1 {
-    font-family: $app-font-family-main;
-  }
-
-  div {
-    font-family: $app-font-family-main;
-  }
-
-  a {
-    &:hover {
-      text-decoration: none;
-    }
-
-    &:active {
-      cursor: default;
-      pointer-events: none;
-      text-decoration: none;
-    }
-
-    &:focus {
-      text-decoration: none;
-    }
-  }
-
-  .fade-enter {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  .fade-enter.fade-enter-active {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition: opacity 300ms ease-in 300ms, transform 300ms ease-in-out 300ms;
-  }
-
-  .fade-exit {
-    opacity: 1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translate3d(0, 0, 0);
-  }
-
-  .fade-exit.fade-exit-active {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-    transition: opacity 300ms ease-in, transform 300ms ease-in-out;
-  }
-
-  .gc-routes {
-    position: absolute;
-    top: 40px;
-    left: 270px;
-    width: calc(100vw - 320px);
-    height: calc(100vh - 40px);
-
-    .gc-mainpage {
-      width: 100% !important;
-    }
-  }
+.hide {
+  display: none;
 }

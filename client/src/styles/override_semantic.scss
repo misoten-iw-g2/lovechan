@@ -1,12 +1,8 @@
-body {
-  .ui.card {
-    box-shadow: none;
-  }
+.ui.grid {
+  margin: 0;
+}
 
-  h1.ui.header {
-    font-family: $app-font-family-main;
-    font-size: 28px;
-    font-weight: 300;
-    color: $app-color-header;
-  }
+.row {
+  margin: 0;
+  padding: 0;
 }
