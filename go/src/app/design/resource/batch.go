@@ -15,11 +15,23 @@ var _ = Resource("batch", func() {
 			POST("voices"),
 		)
 		Params(func() {
-			Param("is_overwrite", Boolean, func() {
+			Param("update_choice_answer", Boolean, func() {
 				Example(false)
 				Default(false)
 			})
-			Required("is_overwrite")
+			Param("update_free_answer", Boolean, func() {
+				Example(false)
+				Default(false)
+			})
+			Param("update_question", Boolean, func() {
+				Example(false)
+				Default(false)
+			})
+			Required(
+				"update_choice_asnwer",
+				"update_free_answer",
+				"update_question",
+			)
 		})
 		Response(OK)
 		UseTrait(GeneralUserTrait)
