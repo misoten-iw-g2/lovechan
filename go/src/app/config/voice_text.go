@@ -29,7 +29,6 @@ func (cs VoiceTextConfigs) Open(env string) (*VoiceTextConfig, error) {
 // see also: https://github.com/rubenv/sql-migrate
 type VoiceTextConfig struct {
 	Token        string `yaml:"token"`
-	Speaker      string `yaml:"speaker"`
 	EmotionLevel string `yaml:"emotion_level"`
 	Pitch        string `yaml:"pitch"`
 	Volume       string `yaml:"volume"`

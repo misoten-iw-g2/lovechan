@@ -10,6 +10,8 @@ go/src/app/public/dist/
 go/src/app/public/swagger/
 mysql/
 Gopkg.lock
+go/src/app/public/voice/
+go/src/app/public/video/
 
 ### go ###
 go/*
@@ -26,7 +28,7 @@ client/public
 
 ### config ###
 mysql.yml
-voice_test.yml
+voice_text.yml
 application_default_credentials.json
 
 # Created by https://www.gitignore.io/api/go,osx,vim,macos,windows,intellij,jetbrains,sublimetext,visualstudiocode
