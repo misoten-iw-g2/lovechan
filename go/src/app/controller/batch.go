@@ -2,6 +2,7 @@ package controller
 
 import (
 	"app/app"
+	"app/config"
 	"app/model"
 
 	"github.com/goadesign/goa"
@@ -11,14 +12,16 @@ import (
 // BatchController implements the batch resource.
 type BatchController struct {
 	*goa.Controller
-	db *sqlx.DB
+	db        *sqlx.DB
+	voiceText *config.VoiceTextConfig
 }
 
 // NewBatchController creates a batch controller.
-func NewBatchController(service *goa.Service, db *sqlx.DB) *BatchController {
+func NewBatchController(service *goa.Service, db *sqlx.DB, voiceText *config.VoiceTextConfig) *BatchController {
 	return &BatchController{
 		Controller: service.NewController("BatchController"),
 		db:         db,
+		voiceText:  voiceText,
 	}
 }
 
@@ -27,6 +30,7 @@ func (c *BatchController) CreateVoices(ctx *app.CreateVoicesBatchContext) error 
 	// BatchController_CreateVoices: start_implement
 
 	// Put your logic here
+
 	qDB := model.NewQuestionsDB(c.db)
 	qs, err := qDB.ListAll(ctx)
 	if err != nil {

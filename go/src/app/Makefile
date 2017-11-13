@@ -70,8 +70,9 @@ lint:
     fi
 
 config-set:
-	cp -f ./config/mysql.yml.tmpl ./config/mysql.yml
-	cp -f ./config/application_default_credentials.json.tmpl ./config/application_default_credentials.json
+	-cp -i ./config/mysql.yml.tmpl ./config/mysql.yml
+	-cp -i ./config/voice_text.yml.tmpl ./config/voice_text.yml
+	-cp -i ./config/application_default_credentials.json.tmpl ./config/application_default_credentials.json
 
 ##### client #####
 

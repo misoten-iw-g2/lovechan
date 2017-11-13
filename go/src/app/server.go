@@ -24,9 +24,10 @@ import (
 
 // Server 実行に必要な値を保持している
 type Server struct {
-	service *goa.Service
-	mysql   *sqlx.DB
-	ws      *mywebsocket.Server
+	service   *goa.Service
+	mysql     *sqlx.DB
+	voiceText *config.VoiceTextConfig
+	ws        *mywebsocket.Server
 }
 
 // NewServer Server構造体を作成する
@@ -68,7 +69,7 @@ func (s *Server) mountController() {
 	analytic := controller.NewAnalyticController(s.service, s.mysql)
 	app.MountAnalyticController(s.service, analytic)
 	// Mount "batch" controller
-	batch := controller.NewBatchController(s.service, s.mysql)
+	batch := controller.NewBatchController(s.service, s.mysql, s.voiceText)
 	app.MountBatchController(s.service, batch)
 }
 
@@ -83,7 +84,7 @@ func (s *Server) mountMiddleware(env string) {
 func (s *Server) loadConfig(settingFolder string, env string) {
 	mc, err := config.NewMysqlConfigsFromFile(filepath.Join(settingFolder, "mysql.yml"))
 	if err != nil {
-		log.Fatalf("cannot open database configuration. exit. %s", err)
+		log.Fatalf("$ make config-setを実行してください cannot open database configuration. exit. %s", err)
 	}
 	s.mysql, err = mc.Open(env)
 	if err != nil {
@@ -92,6 +93,14 @@ func (s *Server) loadConfig(settingFolder string, env string) {
 	err = s.mysql.Ping()
 	if err != nil {
 		log.Fatalf("database ping failed: %s", err)
+	}
+	vtcs, err := config.NewVoiceTextConfigsFromFile(filepath.Join(settingFolder, "voice_text.yml"))
+	if err != nil {
+		log.Fatalf("$ make config-setを実行してください voice text config notfound: %s", err)
+	}
+	s.voiceText, err = vtcs.Open(env)
+	if err != nil {
+		log.Fatalf("voice text init failed: %s", err)
 	}
 }
 
