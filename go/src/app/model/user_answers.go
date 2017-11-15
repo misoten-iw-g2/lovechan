@@ -53,6 +53,7 @@ func (db *UserAnswersDB) GetList(ctx context.Context) ([]UserAnswers, error) {
 	return ua, nil
 }
 
+// UserAnswersGroupByEmotion ユーザーの感情分析（棒グラフ）
 type UserAnswersGroupByEmotion struct {
 	// Formatが違う
 	CreatedAt string `db:"created_at"`
@@ -60,6 +61,7 @@ type UserAnswersGroupByEmotion struct {
 	Count     int    `db:"count"`
 }
 
+// GetListGroupByEmotion ユーザーの感情分析（棒グラフ）
 func (db *UserAnswersDB) GetListGroupByEmotion(ctx context.Context) ([]UserAnswersGroupByEmotion, error) {
 	q, prepare, err := sq.Select(
 		"DATE_FORMAT(created_at, '%Y-%m-%d') as created_at",
@@ -84,11 +86,13 @@ func (db *UserAnswersDB) GetListGroupByEmotion(ctx context.Context) ([]UserAnswe
 	return ua, nil
 }
 
+// UserAnswersGetListEmotionRatio ユーザーの感情分析（円グラフ）
 type UserAnswersGetListEmotionRatio struct {
 	Emotion int     `db:"emotion"`
 	Percent float64 `db:"percent"`
 }
 
+// GetListEmotionRatio ユーザーの感情分析（円グラフ）
 func (db *UserAnswersDB) GetListEmotionRatio(ctx context.Context) ([]UserAnswersGetListEmotionRatio, error) {
 	q, prepare, err := sq.Select(
 		"emotion",
@@ -183,6 +187,7 @@ func (ua UserAnswers) UserAnswerToUserAnswertypePtr() *app.Useranswertype {
 	return u
 }
 
+// UserAnswerToGraphpietype レスポンス用の構造体へ
 func (ua UserAnswersGetListEmotionRatio) UserAnswerToGraphpietype() app.Graphpietype {
 	u := app.Graphpietype{}
 	u.Emotion = ua.Emotion
@@ -190,6 +195,7 @@ func (ua UserAnswersGetListEmotionRatio) UserAnswerToGraphpietype() app.Graphpie
 	return u
 }
 
+// UserAnswerToGraphpietypePtr レスポンス用の構造体へ（ポインター）
 func (ua UserAnswersGetListEmotionRatio) UserAnswerToGraphpietypePtr() *app.Graphpietype {
 	u := &app.Graphpietype{}
 	u.Emotion = ua.Emotion
