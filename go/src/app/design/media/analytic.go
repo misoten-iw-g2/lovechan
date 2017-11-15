@@ -8,23 +8,23 @@ import (
 var GraphPieType = MediaType("application/vnd.graphPieType+json", func() {
 	Description("円グラフ")
 	Attributes(func() {
-		Attribute("emotion", Number, "感情", func() {
-			Example(1.2)
+		Attribute("emotion", Integer, "感情", func() {
+			Example(1)
 		})
-		Attribute("score", Number, "感情スコア", func() {
+		Attribute("percent", Number, "割合", func() {
 			Example(1.2)
 		})
 	})
 	Required(
 		"emotion",
-		"score",
+		"percent",
 	)
 	View("default", func() {
 		Attribute("emotion")
-		Attribute("score")
+		Attribute("percent")
 		Required(
 			"emotion",
-			"score",
+			"percent",
 		)
 	})
 })
@@ -32,29 +32,23 @@ var GraphPieType = MediaType("application/vnd.graphPieType+json", func() {
 var GraphBarType = MediaType("application/vnd.graphBarType+json", func() {
 	Description("棒グラフ")
 	Attributes(func() {
-		Attribute("emotion", Number, "感情", func() {
-			Example(1.2)
-		})
-		Attribute("score", Number, "感情スコア", func() {
-			Example(1.2)
-		})
 		Attribute("date", String, "date", func() {
 			Example("2016-10-10")
 		})
+		Attribute("count", ArrayOf(Integer), "count", func() {
+			Example([]int{1, 3, 5})
+		})
 	})
 	Required(
-		"emotion",
-		"score",
 		"date",
+		"count",
 	)
 	View("default", func() {
-		Attribute("emotion")
-		Attribute("score")
 		Attribute("date")
+		Attribute("count")
 		Required(
-			"emotion",
-			"score",
 			"date",
+			"count",
 		)
 	})
 })
