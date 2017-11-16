@@ -1,5 +1,6 @@
 /* @flow */
 import {Record} from 'immutable';
+import {postSpeech as postSpeechUrl} from '../config/url';
 
 const TalksState = Record({
   webrtc: undefined,
@@ -124,11 +125,23 @@ class Talks extends TalksState {
       // CAUTION
       const blob = exportWAV(storeAudio, context.sampleRate);
       const url = URL.createObjectURL(blob);
-      const link = document.createElement(`a`);
-      link.href = url;
-      link.download = 'output.wav';
-      link.textContent = 'download';
-      link.click();
+      const api = async () => {
+        const form: any = new FormData();
+        form.append('uploadfile', blob, 'out.wav');
+        const postSpeech = await fetch(postSpeechUrl, {
+          method: 'POST',
+          headers: {},
+          body: form
+        });
+        const responseData = await postSpeech;
+        console.log(responseData);
+      }
+      api();
+      // const link = document.createElement(`a`);
+      // link.href = url;
+      // link.download = 'output.wav';
+      // link.textContent = 'download';
+      // link.click();
       context.close();
     });
     return newState;
