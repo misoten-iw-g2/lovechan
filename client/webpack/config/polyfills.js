@@ -5,7 +5,7 @@ if (typeof Promise === 'undefined') {
 }
 
 // fetch API
-require('whatwg-fetch');
+// require('whatwg-fetch');
 
 // Object.assign()
 Object.assign = require('object-assign');
