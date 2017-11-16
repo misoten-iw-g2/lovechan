@@ -48,7 +48,7 @@ func (c *TalksController) Speech(ctx *app.SpeechTalksContext) error {
 	// Put your logic here
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
 	if err != nil {
-		return goa.ErrInternal(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 
 	// TalksController_Speech: end_implement
@@ -72,7 +72,7 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 	// Put your logic here
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
 	if err != nil {
-		return goa.ErrInternal(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	goa.LogInfo(ctx, "score", "score", t)
 
@@ -84,7 +84,7 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 		routingChoices := []string{"何かお願いする,なにかおねがいする", "質問してもらう,しつもんしてもらう"}
 		i, err := model.UserChoiceAnswer(routingChoices, t)
 		if err != nil {
-			return goa.ErrBadRequest(err)
+			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res.NextPage = fmt.Sprintf("%s/%s", basePath, routings[i])
 	case root:
@@ -92,7 +92,7 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 		routingChoices := []string{"話す,はなす", "ストーリー,すとーりー"}
 		i, err := model.UserChoiceAnswer(routingChoices, t)
 		if err != nil {
-			return goa.ErrBadRequest(err)
+			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res.NextPage = fmt.Sprintf("%s/%s", basePath, routings[i])
 	}
