@@ -51,7 +51,7 @@ func (s *Server) mountController() {
 	questions := controller.NewQuestionsController(s.service, s.mysql, s.ws)
 	app.MountQuestionsController(s.service, questions)
 	// Mount "requests" controller
-	requests := controller.NewRequestsController(s.service, s.mysql)
+	requests := controller.NewRequestsController(s.service, s.mysql, s.ws)
 	app.MountRequestsController(s.service, requests)
 	// Mount "front" controller
 	front := controller.NewFrontController(s.service)
