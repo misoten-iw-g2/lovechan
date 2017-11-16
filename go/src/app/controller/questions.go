@@ -56,14 +56,14 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 		faDB := model.NewFreeAnswersDB(c.db)
 		r, err := faDB.GetFreeAnswerReplay(ctx, ctx.ID, t)
 		if err != nil {
-			return goa.ErrInternal(err)
+			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res = r.FreeAnswerToAnswertype()
 	} else if q.AnswerType == model.ChoiceAnswerType {
 		caDB := model.NewChoiceAnswersDB(c.db)
 		r, err := caDB.GetChoiceAnswerReplay(ctx, ctx.ID, t)
 		if err != nil {
-			return goa.ErrInternal(err)
+			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res = r.ChoiceAnswerToAnswertype()
 	}
@@ -80,11 +80,11 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 	qDB := model.NewQuestionsDB(c.db)
 	q, err := qDB.GetRandomQuestion(ctx)
 	if err != nil {
-		return goa.ErrInternal(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	v := mywebsocket.VideoChange{
-		VideoFileName: "filename.mp4",
-		VoiceFileName: "filename.mp3",
+		VideoFileName: q.VideoFileName,
+		VoiceFileName: q.VoiceFileName,
 	}
 	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 	// QuestionsController_Questions: end_implement

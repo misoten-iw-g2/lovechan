@@ -73,3 +73,10 @@ curl_requests:
 
 curl_requests_voice:
 	curl -F 'uploadfile=@./sampleVoice/request-ippatugei.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/requests'
+
+curl_stories:
+	curl -F 'uploadfile=@./sampleVoice/story-selectpattern-hint-2.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/stories/hint/2'
+
+curl_stories_suddenly:
+	curl -v -H "Content-Type: application/json" -X POST $(host)/api/stories/suddenly/$(now_step) -d '{"text": "$(text)"}'
+

@@ -13,7 +13,7 @@ var _ = Resource("stories", func() {
 	DefaultMedia(media.StoryType)
 	Action("PlayStory", func() {
 		Description(`ストーリーを選択し、プレイをする<br>
-curl -F 'uploadfile=@./sampleVoice/story-selectpattern-hint-2.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/stories/hint/2'`)
+curl -F 'uploadfile=@./sampleVoice/story-selectpattern-hint-2.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/stories/suddenly/2'`)
 		Routing(
 			POST("/:story_pattern/:now_step"),
 		)
@@ -26,6 +26,7 @@ curl -F 'uploadfile=@./sampleVoice/story-selectpattern-hint-2.wav' -X POST --hea
 			Required("now_step", "story_pattern")
 		})
 		Response(OK)
+		Response(UnprocessableEntity, ErrorMedia)
 		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})

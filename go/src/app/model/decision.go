@@ -7,6 +7,9 @@ import (
 	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
 
+// ErrNotFoundChoice  一致している選択がない場合のエラー
+var ErrNotFoundChoice = errors.New("一致している選択肢が見つかりませんでした")
+
 // UserChoiceAnswer ユーザーが選んだ選択肢を返す 現状は未入力などは想定していない
 func UserChoiceAnswer(choices []string, userAnswer string) (int, error) {
 	topRateIndex := 0
@@ -24,7 +27,7 @@ func UserChoiceAnswer(choices []string, userAnswer string) (int, error) {
 		}
 	}
 	if topRate < 0.75 {
-		return 0, errors.New("一致している選択肢が見つかりませんでした")
+		return 0, ErrNotFoundChoice
 	}
 	return topRateIndex, nil
 }

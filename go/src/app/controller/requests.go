@@ -3,6 +3,7 @@ package controller
 import (
 	"app/app"
 	"app/model"
+	"app/mywebsocket"
 
 	"github.com/goadesign/goa"
 	"github.com/jmoiron/sqlx"
@@ -12,13 +13,15 @@ import (
 type RequestsController struct {
 	*goa.Controller
 	db *sqlx.DB
+	ws *mywebsocket.Server
 }
 
 // NewRequestsController creates a requests controller.
-func NewRequestsController(service *goa.Service, db *sqlx.DB) *RequestsController {
+func NewRequestsController(service *goa.Service, db *sqlx.DB, ws *mywebsocket.Server) *RequestsController {
 	return &RequestsController{
 		Controller: service.NewController("RequestsController"),
 		db:         db,
+		ws:         ws,
 	}
 }
 
@@ -30,12 +33,17 @@ func (c *RequestsController) List(ctx *app.ListRequestsContext) error {
 	rDB := model.NewRequestsDB(c.db)
 	rs, err := rDB.GetList(ctx)
 	if err != nil {
-		return goa.ErrInternal(err)
+		return ctx.InternalServerError(goa.ErrInternal(err))
 	}
 	var ar []*app.Requesttype
 	for _, v := range rs {
 		ar = append(ar, v.RequestToRequesttypePtr())
 	}
+	v := mywebsocket.VideoChange{
+		VideoFileName: "requests_question.mp4",
+		VoiceFileName: "requests_question.wav",
+	}
+	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 	// RequestsController_List: end_implement
 	return ctx.OK(ar)
 }
@@ -48,11 +56,11 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 	rDB := model.NewRequestsDB(c.db)
 	rs, err := rDB.GetList(ctx)
 	if err != nil {
-		return goa.ErrInternal(err)
+		return ctx.InternalServerError(goa.ErrInternal(err))
 	}
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
 	if err != nil {
-		return goa.ErrBadRequest(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
@@ -61,8 +69,13 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 	}
 	r, err := rDB.GetUserRequest(ctx, rs, t)
 	if err != nil {
-		return goa.ErrInternal(err)
+		return ctx.InternalServerError(goa.ErrInternal(err))
 	}
+	v := mywebsocket.VideoChange{
+		VideoFileName: r.VideoFileName,
+		VoiceFileName: r.VoiceFileName,
+	}
+	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 
 	// RequestsController_Request: end_implement
 	res := app.RequesttypeFull{}

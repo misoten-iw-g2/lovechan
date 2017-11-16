@@ -5,9 +5,31 @@ import (
 	"app/model"
 	"app/mywebsocket"
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/goadesign/goa"
+)
+
+const (
+	// 突然のエラー
+	suddenlyPattern = "suddenly"
+	// 何か考える
+	aboutPattern = "about"
+)
+
+const (
+	wsCollect = "wsCollect"
+	wsMiss    = "wsMiss"
+)
+
+var (
+	// ErrMissChoice 一致している選択がない場合のエラー
+	ErrMissChoice = errors.New("誤った選択肢が選択されたました")
+	// ErrNotFoundStep 存在しない選択肢が選ばれた場合のエラー
+	ErrNotFoundStep = errors.New("存在しないステップが選択されています")
+	// ErrUnprocessableEntity 選択肢に存在するが、間違いを選択している場合のエラー
+	ErrUnprocessableEntity = goa.NewErrorClass("unprocessable_entity", 422)
 )
 
 // StoriesController implements the story resource.
@@ -24,18 +46,6 @@ func NewStoriesController(service *goa.Service, ws *mywebsocket.Server) *Stories
 	}
 }
 
-const (
-	// 突然のエラー
-	suddenlyPattern = "suddenly"
-	// 何か考える
-	aboutPattern = "about"
-)
-
-const (
-	wsCollect = "wsCollect"
-	wsMiss    = "wsMiss"
-)
-
 // PlayStory runs the PlayStory action.
 func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 	// StoriesController_PlayStory: start_implement
@@ -44,7 +54,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 	now := ctx.NowStep
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
 	if err != nil {
-		goa.ErrBadRequest(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
@@ -54,24 +64,25 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 	res := app.Storytype{}
 	switch ctx.StoryPattern {
 	case suddenlyPattern:
-		r, err := suddenlyPatternStory(ctx, t, now)
-		v := mywebsocket.VideoChange{
-			VideoFileName: "naruhodo.mp4",
-			VoiceFileName: "",
-		}
-		// 再度質問し直しの発生
-		goa.LogInfo(ctx, "err", "err", err)
-		if err != nil {
-			v.VideoFileName = "situmon.mp4"
-		}
-		res = r
-		c.ws.Send(mywebsocket.WsChannel, wsCollect, v)
+		res, err = suddenlyPatternStory(ctx, t, now)
 	default:
 	}
 	res.URL = fmt.Sprintf("/api/stories/%s/%d", res.StoryPattern, res.NextStep)
 	res.UserVoiceText = t
 	goa.LogInfo(ctx, "request now: now", "now", now)
 	goa.LogInfo(ctx, "request user_answer: user_answer", "user_answer", t)
+	if err != nil && err == model.ErrNotFoundChoice {
+		return ctx.BadRequest(goa.ErrBadRequest(err))
+	}
+	if err != nil && err == ErrNotFoundStep {
+		return ctx.BadRequest(goa.ErrBadRequest(err))
+	}
+	if err != nil && err == ErrMissChoice {
+		return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
+	}
+	if err != nil {
+		return ctx.BadRequest(goa.ErrBadRequest(err))
+	}
 	// StoriesController_PlayStory: end_implement
 	return ctx.OK(&res)
 }
@@ -101,13 +112,13 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 	case suddenlyPattern:
 		r, err := suddenlyPatternStory(ctx, t, 1)
 		v := mywebsocket.VideoChange{
-			VideoFileName: "naruhodo.mp4",
+			VideoFileName: "",
 			VoiceFileName: "",
 		}
 		// 再度質問し直しの発生
 		goa.LogInfo(ctx, "err", "err", err)
 		if err != nil {
-			v.VideoFileName = "situmon.mp4"
+			v.VideoFileName = "please_choose.mp4"
 		}
 		res = r
 		c.ws.Send(mywebsocket.WsChannel, wsCollect, v)
@@ -146,13 +157,13 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (app.Storytype
 	}
 	if now == 2 {
 		userChoices, err := model.UserChoiceAnswer(c1, t)
-		if err != nil || cd1[userChoices] != cd1[0] {
-			// TODO WebSocketで間違っていると伝える
-			s.Question = "画面に何か出てますか？"
-			s.Choices = cd1
-			s.NextStep = 2
-			s.Answer = cd1[0]
-			return s, err
+		if err != nil {
+			goa.LogError(ctx, "suddenlyPatternStory 1: err", "err", err)
+			return app.Storytype{}, err
+		}
+		if cd1[userChoices] != cd1[0] {
+			goa.LogError(ctx, "suddenlyPatternStory 2: err", "err", ErrMissChoice)
+			return app.Storytype{}, ErrMissChoice
 		}
 		s.Question = "エラーコードを教えてください"
 		s.Choices = cd2
@@ -162,13 +173,13 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (app.Storytype
 	}
 	if now == 3 {
 		userChoices, err := model.UserChoiceAnswer(cd2, t)
-		if err != nil || cd2[userChoices] != cd2[1] {
-			// TODO WebSocketで間違っていると伝える
-			s.Question = "エラーコードを教えてください"
-			s.Choices = cd2
-			s.NextStep = 3
-			s.Answer = cd2[1]
-			return s, err
+		if err != nil {
+			goa.LogError(ctx, "suddenlyPatternStory 3: err", "err", err)
+			return app.Storytype{}, err
+		}
+		if cd2[userChoices] != cd2[1] {
+			goa.LogError(ctx, "suddenlyPatternStory 4: err", "err", ErrMissChoice)
+			return s, ErrMissChoice
 		}
 		s.Question = "担当者を呼びますか？"
 		s.Choices = cd3
@@ -178,16 +189,17 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (app.Storytype
 	}
 	if now == 4 {
 		userChoices, err := model.UserChoiceAnswer(cd3, t)
-		if err != nil || cd3[userChoices] != cd3[0] {
-			// TODO WebSocketで間違っていると伝える
-			s.Question = "同期さんが詳しいようです呼びますか？"
-			s.Choices = cd3
-			s.NextStep = 4
-			s.Answer = cd3[0]
+		if err != nil {
+			goa.LogError(ctx, "suddenlyPatternStory 5: err", "err", err)
+			return app.Storytype{}, err
+		}
+		if cd3[userChoices] != cd3[0] {
+			goa.LogError(ctx, "suddenlyPatternStory 6: err", "err", ErrMissChoice)
+			return s, ErrMissChoice
 		}
 		s.Question = "ストーリークリア"
 		s.IsClear = true
-		return s, err
+		return s, nil
 	}
-	return s, fmt.Errorf("存在しないステップが選択されています")
+	return s, ErrNotFoundStep
 }
