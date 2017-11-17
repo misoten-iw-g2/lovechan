@@ -1,91 +1,116 @@
 <html>
-  <head>
+<head>
     <style>
-    #wrapper {
-      height: 100%; // 高さを画面いっぱいに指定する。(vhが効かない場合の対策)
-      height: 100vh; // 高さを画面いっぱいに指定する。
-      position: relative;  //横幅がウィンドウズサイズの縦幅よりもはみ出てしまう場合に、左にずらすために指定。
-      width: 100%; // 横幅もいっぱいに。
-    }
+        .video {
+            overflow: hidden;
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
 
-    #video {
-      background-attachment: fixed; // 中央揃えになるように、fixed。
-      background-position: center center; // positionも中央に。
-      background-size: cover; // 画面サイズに応じてサイズを可変するように設定。
-      left: 0;
-      // 以下、画面いっぱいにするためのCSS設定
-      min-height: 100%;
-      min-height: 100vh;
-      min-width: 100%;
-      min-width: 100vw;
-      // wrapperのサイズに応じて、leftの位置をjQueryで指定するため、positionはabsoluteにします。
-      position: absolute;
-      top: 0;
-      z-index: 1; // z-indexは調整してください。
-    }
+        #audio {
+            display: none;
+        }
 
-    #audio {
-        display: none;
-    }
+        body {
+            background: black;
+        }
     </style>
-  </head>
-    <body>
-        <script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
-        <script>
-        $(function() {
-          var getWindowMovieHeight = function() {
-            // ここでブラウザの縦横のサイズを取得します。
-            var windowSizeHeight = $(window).outerHeight();
-            var windowSizeWidth = $(window).outerWidth();
+</head>
+<body>
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+<script>
+  $(function () {
 
-            // メディアの縦横比に合わせて数値は変更して下さい。(メディアのサイズが width < heightの場合で書いています。逆の場合は演算子を逆にしてください。)
-            var windowMovieSizeWidth = windowSizeHeight * 1.76388889;
-            var windowMovieSizeHeight = windowSizeWidth / 1.76388889;
-            var windowMovieSizeWidthLeftMargin = (windowMovieSizeWidth - windowSizeWidth) / 2;
+    var getWindowMovieHeight = function () {
+      // ここでブラウザの縦横のサイズを取得します。
+      var windowSizeHeight = $(window).outerHeight();
+      var windowSizeWidth = $(window).outerWidth();
 
-            if (windowMovieSizeHeight < windowSizeHeight) {
-              // 横幅のほうが大きくなってしまう場合にだけ反応するようにしています。
-              $("#video").css({left: -windowMovieSizeWidthLeftMargin});
-            }
-          };
+      // メディアの縦横比に合わせて数値は変更して下さい。(メディアのサイズが width < heightの場合で書いています。逆の場合は演算子を逆にしてください。)
+      var windowMovieSizeWidth = windowSizeHeight * 1.76388889;
+      var windowMovieSizeHeight = windowSizeWidth / 1.76388889;
+      var windowMovieSizeWidthLeftMargin = (windowMovieSizeWidth - windowSizeWidth) / 2;
 
-          // 以下画面の可変にも対応できるように。
-          $(window).on('load', function(){
-            getWindowMovieHeight();
+      if (windowMovieSizeHeight < windowSizeHeight) {
+        // 横幅のほうが大きくなってしまう場合にだけ反応するようにしています。
+        $("#video").css({left: -windowMovieSizeWidthLeftMargin});
+      }
+    };
+
+    // 以下画面の可変にも対応できるように。
+    $(window).on('load', function () {
+      getWindowMovieHeight();
+    });
+
+    $(window).on('resize', function () {
+      getWindowMovieHeight();
+    });
+
+    function playVideo(mp4Array) {
+      if (mp4Array.length === 1) {
+        mp4Array.push("repeat.mp4");
+        mp4Array.push("repeat.mp4");
+        mp4Array.push("repeat.mp4");
+        mp4Array.push("repeat.mp4");
+        mp4Array.push("repeat.mp4");
+      }
+      console.log(mp4Array);
+      //設定 ラップするコンテナdivのid指定
+      var tgtDiv = '#videoWrapper';
+
+      //メイン処理
+      mp4Array.forEach(makeVideoTag);
+      //メインが呼び出す関数
+      function makeVideoTag(val, index) {
+        $('<video>').attr({
+          id: 'video' + index,
+          Class: 'video',
+          src: 'video/' + val
+        }).appendTo($(tgtDiv)).hide();
+
+        // 最後でなければ入る
+        if (index !== mp4Array.length - 1) {
+          $(tgtDiv + ' #video' + index).on('ended', function (event) {
+            $(this).hide();
+            $(this).next().show();
+            $(this).next()[0].play();
           });
+        }
+        //HTML処理 生成したHTML<video>1個目を表示化
+        $(tgtDiv + ' video:eq(0)').show();
+        $(tgtDiv + ' video:eq(0)')[0].play();
+      }
+    }
 
-          $(window).on('resize', function(){
-            getWindowMovieHeight();
-          });
-
-          var $video = $('#video');
-          var $audio = $('#audio');
-          $video.on('ended', function() {
-            console.log('ended');
-            $video.attr('src', 'video/repeat.mp4');
-            $audio.attr('src', 'voice/repeat.mp3');
-          });
-          var c = new WebSocket('ws://localhost:8080/api/ws');
-          c.onopen = function(){
-            c.onmessage = function(response){
-              console.log(response.data);
-              var data = $.parseJSON(response.data);
-              try {
-                $video.attr('src', 'video/'+data.body.video_file_name);
-                $video.load();
-                $audio.attr('src', 'voice/'+data.body.voice_file_name);
-                $audio.load();
-              } catch(e) {
-                console.log(e)
-              }
-            };
-          };
-        });
-        </script>
-        <audio id="audio" src="" autoplay></audio>
-        <div id="wrapper">
-            <p>音声出るよ（本番は消してね）</p>
-        <video id="video" src="" autoplay muted></video>
-        </div>
-    </body>
+    var c = new WebSocket('ws://localhost:8080/api/ws');
+    c.onopen = function () {
+      c.onmessage = function (response) {
+        console.log(response.data);
+        var data = $.parseJSON(response.data);
+        try {
+          $('#videoWrapper').empty();
+          //設定部分 再生データの配列
+          var mp4Array = [
+            data.body.video_file_name
+          ];
+          playVideo(mp4Array);
+          setTimeout(function () {
+            $('#audio').attr('src', 'voice/'+data.body.voice_file_name).load();
+          }, 1500);
+        } catch (e) {
+          console.log(e)
+        }
+      };
+    };
+  });
+</script>
+<audio id="audio" src="" autoplay></audio>
+<p>音声出るよ（本番は消してね）</p>
+<video src="video/repeat.mp4" class="video"></video>
+<div id="videoWrapper">
+</div>
+</body>
 </html>

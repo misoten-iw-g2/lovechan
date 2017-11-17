@@ -212,8 +212,8 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 		s.NextStep = 2
 		s.Answer = cd1[0]
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_change_1.mp4"
+		si.voiceFileName = "stories_change_1.wav"
 		return si, nil
 	case 2:
 		userChoices, err := model.UserChoiceAnswer(c1, t)
@@ -230,8 +230,8 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 		s.NextStep = 3
 		s.Answer = cd2[0]
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_change_2.mp4"
+		si.voiceFileName = "stories_change_2.wav"
 		return si, nil
 	case 3:
 		userChoices, err := model.UserChoiceAnswer(cd2, t)
@@ -248,8 +248,8 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 		s.NextStep = 4
 		s.Answer = cd3[0]
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_change_3.mp4"
+		si.voiceFileName = "stories_change_3.wav"
 		return si, nil
 	case 4:
 		userChoices, err := model.UserChoiceAnswer(cd3, t)
@@ -264,8 +264,8 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 		s.Question = "ストーリークリア"
 		s.IsClear = true
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_change_4.mp4"
+		si.voiceFileName = "stories_change_4.wav"
 		return si, nil
 	default:
 		return storyInfo{}, ErrNotFoundStep
@@ -295,8 +295,8 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 		s.NextStep = 2
 		s.Answer = cd1[0]
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_suddenly_1.mp4"
+		si.voiceFileName = "stories_suddenly_1.wav"
 		return si, nil
 	case 2:
 		userChoices, err := model.UserChoiceAnswer(c1, t)
@@ -313,8 +313,8 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 		s.NextStep = 3
 		s.Answer = cd2[1]
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_suddenly_2.mp4"
+		si.voiceFileName = "stories_suddenly_2.wav"
 		return si, nil
 	case 3:
 		userChoices, err := model.UserChoiceAnswer(cd2, t)
@@ -331,8 +331,8 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 		s.NextStep = 4
 		s.Answer = cd3[0]
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_suddenly_3.mp4"
+		si.voiceFileName = "stories_suddenly_3.wav"
 		return si, nil
 	case 4:
 		userChoices, err := model.UserChoiceAnswer(cd3, t)
@@ -347,8 +347,8 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 		s.Question = "ストーリークリア"
 		s.IsClear = true
 		si.resp = s
-		si.videoFileName = ""
-		si.voiceFileName = ""
+		si.videoFileName = "stories_suddenly_4.mp4"
+		si.voiceFileName = "stories_suddenly_4.wav"
 		return si, nil
 	default:
 		return storyInfo{}, ErrNotFoundStep
