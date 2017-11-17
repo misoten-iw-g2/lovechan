@@ -16,17 +16,24 @@ const {
   appHtml,
 } = require('./config/paths');
 const {
+  protocol,
   devServerHost,
   devServerPort,
   raw,
   stringified,
 } = require('./config/env');
 
-const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-
 module.exports = {
   entry: [
     require.resolve('./config/polyfills'),
+    // activate HMR for React
+    'react-hot-loader/patch',
+    // bundle the client for webpack-dev-server
+    // and connect to the provided endpoint
+    `webpack-dev-server/client?${protocol}://${devServerHost}:${devServerPort}`,
+    // bundle the client for hot reloading
+    // only- means to only hot reload for successful updates
+    'webpack/hot/only-dev-server',
     appCss,
     appIndex
   ],
