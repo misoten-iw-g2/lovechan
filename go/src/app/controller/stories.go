@@ -14,14 +14,20 @@ import (
 const (
 	// 突然のエラー
 	suddenlyPattern = "suddenly"
-	// 何か考える
-	aboutPattern = "about"
+	// 使用変更
+	changePattern = "change"
 )
 
 const (
 	wsCollect = "wsCollect"
 	wsMiss    = "wsMiss"
 )
+
+type storyInfo struct {
+	resp          app.Storytype
+	videoFileName string
+	voiceFileName string
+}
 
 var (
 	// ErrMissChoice 一致している選択がない場合のエラー
@@ -61,29 +67,56 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 		ctx.ResponseData.Header().Set("Location", "/")
 		return ctx.MovedPermanently()
 	}
-	res := app.Storytype{}
+	si := storyInfo{}
 	switch ctx.StoryPattern {
 	case suddenlyPattern:
-		res, err = suddenlyPatternStory(ctx, t, now)
-	default:
+		si, err = suddenlyPatternStory(ctx, t, now)
+	case changePattern:
+		si, err = changePatternStory(ctx, t, now)
 	}
-	res.URL = fmt.Sprintf("/api/stories/%s/%d", res.StoryPattern, res.NextStep)
-	res.UserVoiceText = t
 	goa.LogInfo(ctx, "request now: now", "now", now)
 	goa.LogInfo(ctx, "request user_answer: user_answer", "user_answer", t)
 	if err != nil && err == model.ErrNotFoundChoice {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "once_again.mp4",
+			VoiceFileName: "once_again.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrNotFoundStep {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "stories_question.mp4",
+			VoiceFileName: "stories_question.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrMissChoice {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "stories_question.mp4",
+			VoiceFileName: "stories_question.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 		return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
 	}
 	if err != nil {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "stories_question.mp4",
+			VoiceFileName: "stories_question.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	// StoriesController_PlayStory: end_implement
+	res := si.resp
+	res.URL = fmt.Sprintf("/api/stories/%s/%d", res.StoryPattern, res.NextStep)
+	res.UserVoiceText = t
+	v := mywebsocket.VideoChange{
+		VideoFileName: si.videoFileName,
+		VoiceFileName: si.voiceFileName,
+	}
+	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 	return ctx.OK(&res)
 }
 
@@ -94,45 +127,155 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 	// Put your logic here
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
 	if err != nil {
-		return goa.ErrBadRequest(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
 		ctx.ResponseData.Header().Set("Location", "/")
 		return ctx.MovedPermanently()
 	}
-	storiesDisplay := []string{suddenlyPattern, aboutPattern}
-	stories := []string{"突然のエラー,とつぜんのエラー", "何か考える"}
+	storiesDisplay := []string{suddenlyPattern, changePattern}
+	stories := []string{"突然のエラー,とつぜんのエラー", "仕様変更,しようへんこう"}
 	i, err := model.UserChoiceAnswer(stories, t)
 	if err != nil {
-		return goa.ErrBadRequest(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
-	res := app.Storytype{}
+	si := storyInfo{}
 	switch storiesDisplay[i] {
 	case suddenlyPattern:
-		r, err := suddenlyPatternStory(ctx, t, 1)
-		v := mywebsocket.VideoChange{
-			VideoFileName: "",
-			VoiceFileName: "",
-		}
-		// 再度質問し直しの発生
-		goa.LogInfo(ctx, "err", "err", err)
-		if err != nil {
-			v.VideoFileName = "please_choose.mp4"
-		}
-		res = r
-		c.ws.Send(mywebsocket.WsChannel, wsCollect, v)
-	default:
+		si, err = suddenlyPatternStory(ctx, t, 1)
+	case changePattern:
+		si, err = changePatternStory(ctx, t, 1)
 	}
+	if err != nil && err == model.ErrNotFoundChoice {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "once_again.mp4",
+			VoiceFileName: "once_again.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
+	}
+	if err != nil && err == ErrNotFoundStep {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "stories_question.mp4",
+			VoiceFileName: "stories_question.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
+	}
+	if err != nil && err == ErrMissChoice {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "stories_question.mp4",
+			VoiceFileName: "stories_question.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
+	}
+	if err != nil {
+		v := mywebsocket.VideoChange{
+			VideoFileName: "stories_question.mp4",
+			VoiceFileName: "stories_question.wav",
+		}
+		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
+	}
+	// StoriesController_PlayStory: end_implement
+	res := si.resp
 	res.URL = fmt.Sprintf("/api/stories/%s/%d", res.StoryPattern, res.NextStep)
 	res.UserVoiceText = t
+	v := mywebsocket.VideoChange{
+		VideoFileName: si.videoFileName,
+		VoiceFileName: si.voiceFileName,
+	}
+	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 
 	// StoriesController_SelectStory: end_implement
 	return ctx.OK(&res)
 }
-
-func suddenlyPatternStory(ctx context.Context, t string, now int) (app.Storytype, error) {
+func changePatternStory(ctx context.Context, t string, now int) (storyInfo, error) {
 	s := app.Storytype{}
+	si := storyInfo{}
+	s.StoryPattern = suddenlyPattern
+	cd1 := []string{"詳しい人へ<br />のアポ", "勝手に<br />壊れた", "画面が<br />映らない", "ネットに<br />繋がらない"}
+	c1 := []string{
+		"詳しい人へのアポ,くわしいひとへのあぽ",
+		"勝手に壊れた,かってにこわれた",
+		"画面が映らない,がめんがうつらない",
+		"ネットに繋がらない,ねっとにつならがない",
+	}
+	cd2 := []string{"114", "3327", "3639", "223"}
+	cd3 := []string{"はい", "いいえ"}
+	switch now {
+	case 1:
+		s.Question = "何かお困りですか？"
+		s.Choices = cd1
+		s.NextStep = 2
+		s.Answer = cd1[0]
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	case 2:
+		userChoices, err := model.UserChoiceAnswer(c1, t)
+		if err != nil {
+			goa.LogError(ctx, "changePatternStory 1: err", "err", err)
+			return storyInfo{}, err
+		}
+		if cd1[userChoices] != cd1[0] {
+			goa.LogError(ctx, "changePatternStory 2: err", "err", ErrMissChoice)
+			return storyInfo{}, ErrMissChoice
+		}
+		s.Question = "プロジェクトIDを教えてください"
+		s.Choices = cd2
+		s.NextStep = 3
+		s.Answer = cd2[0]
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	case 3:
+		userChoices, err := model.UserChoiceAnswer(cd2, t)
+		if err != nil {
+			goa.LogError(ctx, "changePatternStory 3: err", "err", err)
+			return storyInfo{}, err
+		}
+		if cd2[userChoices] != cd2[0] {
+			goa.LogError(ctx, "changePatternStory 4: err", "err", ErrMissChoice)
+			return storyInfo{}, ErrMissChoice
+		}
+		s.Question = "同期さんが詳しいようです。呼びますか？"
+		s.Choices = cd3
+		s.NextStep = 4
+		s.Answer = cd3[0]
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	case 4:
+		userChoices, err := model.UserChoiceAnswer(cd3, t)
+		if err != nil {
+			goa.LogError(ctx, "changePatternStory 5: err", "err", err)
+			return storyInfo{}, err
+		}
+		if cd3[userChoices] != cd3[0] {
+			goa.LogError(ctx, "changePatternStory 6: err", "err", ErrMissChoice)
+			return storyInfo{}, ErrMissChoice
+		}
+		s.Question = "ストーリークリア"
+		s.IsClear = true
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	default:
+		return storyInfo{}, ErrNotFoundStep
+	}
+}
+
+func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, error) {
+	s := app.Storytype{}
+	si := storyInfo{}
+	s.StoryPattern = changePattern
 
 	// ストーリーに使う選択肢
 	cd1 := []string{"エラーが<br />出てる", "勝手に<br />壊れた", "画面が<br />映らない", "ネットに<br />繋がらない"}
@@ -145,61 +288,69 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (app.Storytype
 	cd2 := []string{"417", "114", "514", "1919"}
 	cd3 := []string{"はい", "いいえ"}
 
-	// ストーリ設定
-	s.StoryPattern = suddenlyPattern
-
-	if now == 1 {
+	switch now {
+	case 1:
 		s.Question = "画面に何か出てますか？"
 		s.Choices = cd1
 		s.NextStep = 2
 		s.Answer = cd1[0]
-		return s, nil
-	}
-	if now == 2 {
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	case 2:
 		userChoices, err := model.UserChoiceAnswer(c1, t)
 		if err != nil {
 			goa.LogError(ctx, "suddenlyPatternStory 1: err", "err", err)
-			return app.Storytype{}, err
+			return storyInfo{}, err
 		}
 		if cd1[userChoices] != cd1[0] {
 			goa.LogError(ctx, "suddenlyPatternStory 2: err", "err", ErrMissChoice)
-			return app.Storytype{}, ErrMissChoice
+			return storyInfo{}, ErrMissChoice
 		}
 		s.Question = "エラーコードを教えてください"
 		s.Choices = cd2
 		s.NextStep = 3
 		s.Answer = cd2[1]
-		return s, nil
-	}
-	if now == 3 {
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	case 3:
 		userChoices, err := model.UserChoiceAnswer(cd2, t)
 		if err != nil {
 			goa.LogError(ctx, "suddenlyPatternStory 3: err", "err", err)
-			return app.Storytype{}, err
+			return storyInfo{}, err
 		}
 		if cd2[userChoices] != cd2[1] {
 			goa.LogError(ctx, "suddenlyPatternStory 4: err", "err", ErrMissChoice)
-			return s, ErrMissChoice
+			return storyInfo{}, ErrMissChoice
 		}
 		s.Question = "担当者を呼びますか？"
 		s.Choices = cd3
 		s.NextStep = 4
 		s.Answer = cd3[0]
-		return s, nil
-	}
-	if now == 4 {
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	case 4:
 		userChoices, err := model.UserChoiceAnswer(cd3, t)
 		if err != nil {
 			goa.LogError(ctx, "suddenlyPatternStory 5: err", "err", err)
-			return app.Storytype{}, err
+			return storyInfo{}, err
 		}
 		if cd3[userChoices] != cd3[0] {
 			goa.LogError(ctx, "suddenlyPatternStory 6: err", "err", ErrMissChoice)
-			return s, ErrMissChoice
+			return storyInfo{}, ErrMissChoice
 		}
 		s.Question = "ストーリークリア"
 		s.IsClear = true
-		return s, nil
+		si.resp = s
+		si.videoFileName = ""
+		si.voiceFileName = ""
+		return si, nil
+	default:
+		return storyInfo{}, ErrNotFoundStep
 	}
-	return s, ErrNotFoundStep
 }

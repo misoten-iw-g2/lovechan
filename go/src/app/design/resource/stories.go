@@ -22,7 +22,10 @@ curl -F 'uploadfile=@./sampleVoice/story-selectpattern-hint-2.wav' -X POST --hea
 				Example(1)
 				Default(1)
 			})
-			Param("story_pattern", String)
+			Param("story_pattern", String, func() {
+				Enum("suddenly", "change", "")
+				Default("")
+			})
 			Required("now_step", "story_pattern")
 		})
 		Response(OK)
@@ -39,6 +42,7 @@ curl -F 'uploadfile=@./sampleVoice/story-select-err.wav' -X POST --header 'Conte
 			POST(""),
 		)
 		Response(OK)
+		Response(UnprocessableEntity, ErrorMedia)
 		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})
