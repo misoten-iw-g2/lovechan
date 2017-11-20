@@ -14,4 +14,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Media));
+const MediaContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Media),
+);
+
+export {MediaContainer as default, MediaContainer};
