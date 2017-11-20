@@ -1,29 +1,28 @@
 {
+  "parser": "babel-eslint",
   "extends": [
     "airbnb",
-    "plugin:react/recommended",
-    "plugin:flowtype/recommended",
     "plugin:import/errors",
+    "plugin:import/warnings",
     "prettier",
     "prettier/flowtype",
     "prettier/react"
   ],
   "plugins": [
-    "prettier",
+    "flowtype",
     "react",
-    "flowtype"
+    "prettier"
   ],
-  "env": {
-    "browser": true,
-    "node": true,
-    "jest": true
-  },
   "rules": {
     "prettier/prettier": ["error", "fb"],
     "max-len": ["error", {"code": 120, "ignoreUrls": true}],
     "no-confusing-arrow": "error",
     "no-mixed-operators": "error",
     "no-unexpected-multiline": "error",
-    "no-unused-vars": ["error", {"argsIgnorePattern": "^_", "varsIgnorePattern": "^_"}]
+    "global-require": "off"
+  },
+  "env": {
+    "node": true,
+    "browser": true
   }
 }
