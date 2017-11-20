@@ -13,6 +13,8 @@ const {
   appNodeModules,
   appSrc,
   appCss,
+  semanticCss,
+  semanticOverrideCss,
   appHtml,
 } = require('./config/paths');
 const {
@@ -34,6 +36,8 @@ module.exports = {
     // bundle the client for hot reloading
     // only- means to only hot reload for successful updates
     'webpack/hot/only-dev-server',
+    semanticCss,
+    semanticOverrideCss,
     appCss,
     appIndex
   ],
