@@ -1,9 +1,11 @@
-const landing = '/';
-const media = '/media';
-const stories = '/stories';
-
-export const routes = {
-  landing,
-  media,
-  stories,
+const routes = {
+  landing: '/',
+  stories: '/stories',
+  story_pattern: '/stories/:story_pattern/:now_step',
+  conversations: '/conversations',
+  requests: '/requests',
+  questions: '/questions',
+  media: '/media',
 };
+
+export {routes as default, routes};
