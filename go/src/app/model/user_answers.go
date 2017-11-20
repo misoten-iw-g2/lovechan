@@ -4,6 +4,7 @@ import (
 	"app/app"
 	"app/util"
 	"context"
+	"database/sql"
 	"fmt"
 	"strconv"
 	"time"
@@ -116,7 +117,7 @@ func (db *UserAnswersDB) GetListEmotionRatio(ctx context.Context) ([]UserAnswers
 }
 
 // Add Insert
-func (db *UserAnswersDB) Add(ctx context.Context, a UserAnswers) error {
+func (db *UserAnswersDB) Add(ctx context.Context, a UserAnswers) (sql.Result, error) {
 	sql, prepare, err := sq.Insert("user_answers").
 		Columns(
 			"question",
@@ -135,10 +136,9 @@ func (db *UserAnswersDB) Add(ctx context.Context, a UserAnswers) error {
 		ToSql()
 	if err != nil {
 		goa.LogError(ctx, "UserAnswerDB Add Error 1: err", "err", err)
-		return err
+		return nil, err
 	}
-	db.DB.MustExec(sql, prepare...)
-	return nil
+	return db.DB.MustExec(sql, prepare...), nil
 }
 
 // AddAnalysis 解析結果を格納する（非同期処理用）
@@ -155,7 +155,12 @@ func (db *UserAnswersDB) AddAnalysis(ctx context.Context, a UserAnswers) {
 		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 2: err", "err", err)
 		return
 	}
-	err = db.Add(ctx, a)
+	r, err := db.Add(ctx, a)
+	if err != nil {
+		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 3: err", "err", err)
+		return
+	}
+	_, err = r.LastInsertId()
 	if err != nil {
 		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 3: err", "err", err)
 		return
