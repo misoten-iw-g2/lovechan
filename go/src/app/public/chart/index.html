@@ -25,7 +25,7 @@
                 <th>ID</th>
                 <th>質問内容</th>
                 <th>回答</th>
-                <th class="text-right">感情点数</th>
+                <th class="text-right">感情点</th>
                 <th>時間</th>
             </tr>
             </thead>
@@ -34,13 +34,13 @@
         </table>
     </div>
     <div class="panel panel-default">
-        <div class="panel-heading"><h2 class="panel-title">パネルタイトル</h2></div>
+        <div class="panel-heading"><h2 class="panel-title">感情遷移図</h2></div>
         <div class="panel-body">
             <canvas id="chart"></canvas>
         </div>
     </div>
     <div class="panel panel-default">
-        <div class="panel-heading"><h2 class="panel-title">パネルタイトル</h2></div>
+        <div class="panel-heading"><h2 class="panel-title">感情割合</h2></div>
         <div class="panel-body">
             <canvas id="chart2"></canvas>
         </div>
@@ -83,7 +83,12 @@
       if (payload.id === undefined) {
         return;
       }
-      var HTML = '<tr><td>' + payload.id + '</td><td>' + payload.question + '</td><td>' + payload.answer + '</td><td class="text-right">' + payload.score + '</td><td>' + payload.createdAt + '</td></tr>'
+      var HTML = "";
+      if (payload.score < -0.1) {
+        HTML = '<tr style="background: #BBDEFB";><td>' + payload.id + '</td><td>' + payload.question + '</td><td>' + payload.answer + '</td><td class="text-right">' + payload.score + '</td><td>' + payload.createdAt + '</td></tr>'
+      } else {
+        HTML = '<tr><td>' + payload.id + '</td><td>' + payload.question + '</td><td>' + payload.answer + '</td><td class="text-right">' + payload.score + '</td><td>' + payload.createdAt + '</td></tr>'
+      }
       $('#userAnswer').append(HTML);
     }
 
@@ -100,9 +105,9 @@
             //凡例
             label: "",
             //背景色
-            backgroundColor: "rgba(75,192,192,0.4)",
+            backgroundColor: "rgba(252,231,240,0.4)",
             //枠線の色
-            borderColor: "rgba(75,192,192,1)",
+            borderColor: "rgba(226,118,170,1)",
             //グラフのデータ
             data: data
           }]
@@ -169,9 +174,9 @@
           labels: label,
           datasets: [{
             backgroundColor: [
-              "#2ecc71",
-              "#3498db",
-              "#34495e"
+              "#34495e",
+              "#95a5a6",
+              "#E276AA"
             ],
             data: data
           }]
