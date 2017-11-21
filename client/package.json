@@ -13,14 +13,12 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@benmosher/redux-promise": "^0.6.0",
+    "redux-promise-middleware": "^5.0.0",
     "classnames": "^2.2.5",
     "immutable": "^4.0.0-rc.9",
     "jquery": "^3.2.1",
     "moment": "^2.19.1",
     "node-sass": "^4.7.1",
-    "object-assign": "^4.1.1",
-    "promise": "^8.0.1",
     "prop-types": "^15.6.0",
     "react": "^16.1.1",
     "react-bootstrap-table": "^4.0.6",
@@ -36,10 +34,10 @@
     "redux-thunk": "^2.2.0",
     "semantic-ui-react": "^0.76.0",
     "semantic-ui-sass": "^2.2.11",
-    "store": "^2.0.12",
-    "whatwg-fetch": "^2.0.3"
+    "store": "^2.0.12"
   },
   "devDependencies": {
+    "@webpack-utils/polyfills": "^0.1.0",
     "@babel/cli": "^7.0.0-beta.32",
     "@babel/core": "^7.0.0-beta.32",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.32",

@@ -27,7 +27,7 @@ const {
 
 module.exports = {
   entry: [
-    require.resolve('./config/polyfills'),
+    require.resolve('@webpack-utils/polyfills'),
     // activate HMR for React
     'react-hot-loader/patch',
     // bundle the client for webpack-dev-server

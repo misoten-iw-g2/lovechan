@@ -14,6 +14,8 @@ const {
   appNodeModules,
   appSrc,
   appCss,
+  semanticCss,
+  semanticOverrideCss,
   appHtml,
   appPublic,
 } = require('./config/paths');
@@ -26,7 +28,9 @@ module.exports = {
   bail: true,
   devtool: false,
   entry: [
-    require.resolve('./config/polyfills'),
+    require.resolve('@webpack-utils/polyfills'),
+    semanticCss,
+    semanticOverrideCss,
     appCss,
     appIndex,
   ],
