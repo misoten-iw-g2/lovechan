@@ -1,6 +1,6 @@
 /* @flow */
 import {Record} from 'immutable';
-import {postSpeech as postSpeechUrl} from '../config/url';
+import {apiUrls} from '../config/url';
 
 const TalksState = Record({
   webrtc: undefined,
@@ -128,7 +128,7 @@ class Talks extends TalksState {
       const api = async () => {
         const form: any = new FormData();
         form.append('uploadfile', blob, 'out.wav');
-        const postSpeech = await fetch(postSpeechUrl, {
+        const postSpeech = await fetch(apiUrls.post_speach, {
           method: 'POST',
           headers: {},
           body: form

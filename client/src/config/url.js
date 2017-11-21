@@ -1,3 +1,5 @@
-const postSpeech = 'http://localhost:8080/api/talks/routings/root';
+const apiUrls = {
+  post_speach: 'http://localhost:8080/api/talks/routings/root',
+};
 
-export {postSpeech};
+export {apiUrls as default, apiUrls};
