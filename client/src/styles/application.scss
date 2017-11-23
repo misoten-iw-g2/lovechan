@@ -3,5 +3,12 @@
 }
 
 .hide {
-  display: none;
+  display: none !important;
+}
+
+html {
+  box-sizing: border-box;
+  font-weight: 400;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
 }
