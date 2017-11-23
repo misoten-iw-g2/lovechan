@@ -2,50 +2,73 @@
 import * as React from 'react';
 import {Route} from 'react-router-dom';
 import {Switch, withRouter} from 'react-router';
-import {TransitionGroup, CSSTransition} from 'react-transition-group';
-import classNames from 'classnames';
 
-import {Landing, Media} from '../../container';
+import {
+  LandingContainer,
+  StoriesContainer,
+  ConversationsContainer,
+  MediaContainer,
+  RequestsContainer,
+  QuestionsContainer,
+} from '../../containers';
+import {routes} from '../../config/uri';
 
-import routes from '../../config/routes';
+import {ThreeChoice, FourChoice} from '../Choice';
 
-export type Props = {};
+export type Props = {
+  location: {
+    key: string,
+  },
+  history: {},
+  match: {},
+};
 
-const Routes = (props: Props) => (
-  <div>
-    <div>
-      <Route
-        path="/"
-        render={({location}) => (
-          <TransitionGroup appear>
-            <CSSTransition
-              classNames="fade"
-              key={location.key}
-              timeout={{
-                appear: 600,
-                enter: 600,
-                exit: 600,
-              }}>
-              <Switch location={location} key={location.key}>
-                <Route exact path="/" render={() => <Landing />} />
-                <Route exact path={routes.media} render={() => <Media />} />
-                <Route exact path={routes.storyChoice} render={() => <div />} />
-                <Route
-                  exact
-                  path={routes.withLoveChoice}
-                  render={() => <div />}
-                />
-                <Route
-                  exact
-                  path={routes.randomChoice}
-                  render={() => <div />}
-                />
-              </Switch>
-            </CSSTransition>
-          </TransitionGroup>
-        )}
-      />
-    </div>
+const Routes = () => (
+  <div id="routes">
+    <Route
+      path="/"
+      render={(props: Props) => (
+        <Switch location={props.location} key={props.location.key}>
+          {/* landing */}
+          <Route
+            exact
+            path={routes.landing}
+            render={() => <LandingContainer />}
+          />
+          {/* stories */}
+          <Route
+            exact
+            path={routes.stories}
+            render={() => <StoriesContainer />}
+          />
+          {/* story_pattern */}
+          <Route exact path={routes.story_pattern} render={() => <div />} />
+          {/* conversations */}
+          <Route
+            exact
+            path={routes.conversations}
+            render={() => <ConversationsContainer />}
+          />
+          {/* requests */}
+          <Route
+            exact
+            path={routes.requests}
+            render={() => <RequestsContainer />}
+          />
+          {/* questions */}
+          <Route
+            exact
+            path={routes.questions}
+            render={() => <QuestionsContainer />}
+          />
+          {/* media */}
+          <Route exact path={routes.media} render={() => <MediaContainer />} />
+
+          <Route exact path="/three" render={() => <ThreeChoice />} />
+          <Route exact path="/four" render={() => <FourChoice />} />
+        </Switch>
+      )}
+    />
   </div>
 );
 

@@ -1,44 +1,40 @@
 {
+  "presets": [
+    "@babel/flow",
+    "@babel/react"
+  ],
   "plugins": [
     "@babel/syntax-dynamic-import",
+    "@babel/plugin-syntax-class-properties",
+    "@babel/plugin-syntax-object-rest-spread",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-proposal-export-namespace",
+    "@babel/plugin-proposal-export-default",
+    "@babel/plugin-proposal-unicode-property-regex"
   ],
   "env": {
     "development": {
       "presets": [
-        "@babel/flow",
-        "@babel/react",
-        "@babel/stage-0",
-        ["@babel/es2015", { "loose": true, "modules": false }],
+        ["@babel/es2015", { "loose": true, "modules": false }]
       ],
       "plugins": [
-        ["@babel/transform-runtime", {
-          "helpers": false,
-          "polyfill": false,
-          "regenerator": true,
-          "moduleName": "@babel/runtime"
-          }
-        ]
+        "react-hot-loader/babel"
       ]
     },
     "test": {
       "presets": [
-        "@babel/flow",
-        "@babel/react",
-        "@babel/stage-0",
         "@babel/es2015",
         ["@babel/env", {
           "targets": { "node": "8.9" }
         }]
-      ],
+      ]
     },
     "production": {
       "presets": [
-        "@babel/flow",
-        "@babel/react",
-        "@babel/stage-0",
         "@babel/es2015",
         ["@babel/env", {
-          "targets": { "browsers": ["last 2 versions", "safari >= 10"] }
+          "targets": { "browsers": ["> 1% in JP", "not Chrome 49", "last 2 Edge versions", "last 2 iOS versions"] }
         }]
       ]
     }

@@ -2,7 +2,7 @@
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import Media from '../components/Media';
+import Requests from '../components/Requests';
 import {actionCreators} from '../reducers/talks';
 
 const actions = actionCreators.talks;
@@ -14,4 +14,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Media));
+const RequestsContainer = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Requests),
+);
+
+export {RequestsContainer as default, RequestsContainer};

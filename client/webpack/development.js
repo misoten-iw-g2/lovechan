@@ -1,6 +1,4 @@
-process.env.BABEL_ENV = 'development';
-process.env.NODE_ENV = 'development';
-
+const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
@@ -13,22 +11,33 @@ const {
   appNodeModules,
   appSrc,
   appCss,
+  semanticCss,
+  semanticOverrideCss,
   appHtml,
 } = require('./config/paths');
 const {
+  protocol,
   devServerHost,
   devServerPort,
   raw,
   stringified,
 } = require('./config/env');
 
-const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-
 module.exports = {
   entry: [
-    require.resolve('./config/polyfills'),
+    require.resolve('@webpack-utils/polyfills'),
+    // activate HMR for React
+    'react-hot-loader/patch',
+    // bundle the client for webpack-dev-server
+    // and connect to the provided endpoint
+    `webpack-dev-server/client?${protocol}://${devServerHost}:${devServerPort}`,
+    // bundle the client for hot reloading
+    // only- means to only hot reload for successful updates
+    'webpack/hot/only-dev-server',
+    semanticCss,
+    semanticOverrideCss,
     appCss,
-    appIndex
+    appIndex,
   ],
   devtool: 'cheap-module-source-map',
   devServer: {
@@ -40,7 +49,7 @@ module.exports = {
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    historyApiFallback: { disableDotRule: true },
+    historyApiFallback: {disableDotRule: true},
     https: protocol === 'https',
     host: devServerHost,
     hot: true,
@@ -97,16 +106,34 @@ module.exports = {
               require.resolve('style-loader'),
               {
                 loader: require.resolve('css-loader'),
-                options: { importLoaders: 2 },
+                options: {importLoaders: 3},
               },
               require.resolve('resolve-url-loader'),
               {
                 loader: require.resolve('sass-loader'),
                 options: {
-                  sourceMap: true
-                }
-              }
-            ]
+                  sourceMap: true,
+                },
+              },
+              {
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  ident: 'postcss',
+                  plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    autoprefixer({
+                      browsers: [
+                        '> 1% in JP',
+                        'not Chrome 49',
+                        'last 2 Edge versions',
+                        'last 2 iOS versions',
+                      ],
+                      flexbox: 'no-2009',
+                    }),
+                  ],
+                },
+              },
+            ],
           },
           {
             exclude: [/\.js$/, /\.html$/, /\.json$/],
@@ -121,18 +148,18 @@ module.exports = {
   },
   plugins: [
     new webpack.LoaderOptionsPlugin({
-      debug: true
+      debug: true,
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new InterpolateHtmlPlugin(raw),
     new HtmlWebpackPlugin({
       inject: true,
-      template: appHtml
+      template: appHtml,
     }),
     new webpack.DefinePlugin(stringified),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new CaseSensitivePathsPlugin()
+    new CaseSensitivePathsPlugin(),
   ],
   node: {
     dgram: 'empty',

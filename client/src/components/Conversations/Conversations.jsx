@@ -8,18 +8,18 @@ type Props = {
   recordSave: () => void,
 };
 
-const Landing = (props: Props) => (
-  <div id="landing">
+const Conversations = (props: Props) => (
+  <div id="conversations">
     <Grid width="100%" gap={0}>
       <TwoChoice
         choiceApi={props.recordStart}
         postApi={props.recordSave}
-        choiceTitle="モードを選択して下さい"
-        choice1="ストーリー"
-        choice2="ラヴちゃんと会話する"
+        choiceTitle="ラブちゃんとしたいことを選んで下さい"
+        choice1="何かお願いする"
+        choice2="質問してもらう"
       />
     </Grid>
   </div>
 );
 
-export {Landing as default, Landing};
+export {Conversations as default, Conversations};

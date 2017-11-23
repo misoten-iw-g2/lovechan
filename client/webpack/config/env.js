@@ -35,6 +35,7 @@ const stringified = {
 };
 
 module.exports = {
+  protocol,
   devServerHost,
   devServerPort,
   raw,

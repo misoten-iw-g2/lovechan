@@ -1,8 +1,15 @@
-.ui.grid {
+.row {
   margin: 0;
 }
 
-.row {
+.ui.grid {
   margin: 0;
-  padding: 0;
+
+  .row {
+    padding: 0;
+  }
+
+  .row > .column {
+    padding: 0;
+  }
 }

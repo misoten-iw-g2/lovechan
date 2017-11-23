@@ -1,6 +1,4 @@
-process.env.BABEL_ENV = 'production';
-process.env.NODE_ENV = 'production';
-
+const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
@@ -14,19 +12,20 @@ const {
   appNodeModules,
   appSrc,
   appCss,
+  semanticCss,
+  semanticOverrideCss,
   appHtml,
   appPublic,
 } = require('./config/paths');
-const {
-  raw,
-  stringified,
-} = require('./config/env');
+const {raw, stringified} = require('./config/env');
 
 module.exports = {
   bail: true,
   devtool: false,
   entry: [
-    require.resolve('./config/polyfills'),
+    require.resolve('@webpack-utils/polyfills'),
+    semanticCss,
+    semanticOverrideCss,
     appCss,
     appIndex,
   ],
@@ -80,20 +79,39 @@ module.exports = {
                       loader: require.resolve('css-loader'),
                       options: {
                         importLoaders: 2,
-                        minimize: true
+                        minimize: true,
                       },
                     },
                     require.resolve('resolve-url-loader'),
                     {
                       loader: require.resolve('sass-loader'),
                       options: {
-                        sourceMap: true
-                      }
-                    }
+                        sourceMap: true,
+                      },
+                    },
+                    {
+                      loader: require.resolve('postcss-loader'),
+                      options: {
+                        ident: 'postcss',
+                        plugins: () => [
+                          require('postcss-flexbugs-fixes'),
+                          autoprefixer({
+                            browsers: [
+                              '> 1% in JP',
+                              'not Chrome 49',
+                              'last 2 Edge versions',
+                              'last 2 iOS versions',
+                            ],
+                            flexbox: 'no-2009',
+                          }),
+                        ],
+                      },
+                    },
                   ],
-                }, {}
-              )
-            )
+                },
+                {},
+              ),
+            ),
           },
           {
             exclude: [/\.js$/, /\.html$/, /\.json$/],
