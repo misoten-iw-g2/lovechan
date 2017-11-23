@@ -1,11 +1,9 @@
 /* @flow */
 import * as React from 'react';
-import {Grid, Header} from 'semantic-ui-react';
+import {Header} from 'semantic-ui-react';
 import classNames from 'classnames';
+import Grid from 'react-css-grid';
 import {MikeOff, MikeOn} from '../Icons';
-import './TwoChoice.scss';
-
-const {Row, Column} = Grid;
 
 type Props = {
   choiceApi: () => void,
@@ -23,52 +21,33 @@ class TwoChoice extends React.Component<Props> {
   render() {
     const {choiceTitle, choice1, choice2} = this.props;
     return (
-      <Grid id="two_choice">
-        <Row>
-          <Column width={16} className={classNames('row_flex', 'row_center')}>
-            <Header as="h1" className={classNames('header_description')}>
-              {choiceTitle}
-            </Header>
-          </Column>
-        </Row>
-        <Row className={classNames('btn_voice_choice-fix')}>
-          <Column
-            width={16}
-            className={classNames({
-              btn: true,
-              'btn-active': true,
-              btn_voice_choice: true,
-              row_flex: true,
-              row_center: true,
-            })}>
-            {choice1}
-          </Column>
-        </Row>
-        <Row>
-          <Column
-            width={16}
-            className={classNames(
-              'btn',
-              'btn_voice_choice',
-              'row_flex',
-              'row_center',
-            )}>
-            {choice2}
-          </Column>
-        </Row>
-        <Row>
-          <Column width={16} className={classNames('row_flex', 'row_center')}>
-            <MikeOff
-              className={classNames({mike: true, visible: true, hide: false})}
-              fill="#fff"
-            />
-            <MikeOn
-              className={classNames({mike: true, visible: false, hide: true})}
-              fill="#fff"
-            />
-          </Column>
-        </Row>
-      </Grid>
+      <div id="two_choice">
+        <Grid width="100%" gap={0} className={classNames('grid-header')}>
+          <Header as="h1" className={classNames('app_header')}>
+            {choiceTitle}
+          </Header>
+        </Grid>
+
+        <Grid width="20vw" gap="10vw" className={classNames('grid-btn')}>
+          <div className={classNames('app_btn', 'app_btn-voice_choiced')}>
+            <p>{choice1}</p>
+          </div>
+          <div className={classNames('app_btn')}>
+            <p>{choice2}</p>
+          </div>
+        </Grid>
+
+        <Grid width="100%" gap={0} className={classNames('grid-mike')}>
+          <MikeOff
+            className={classNames({app_mike: true, visible: true, hide: false})}
+            fill="#fff"
+          />
+          <MikeOn
+            className={classNames({app_mike: true, visible: false, hide: true})}
+            fill="#fff"
+          />
+        </Grid>
+      </div>
     );
   }
 }
