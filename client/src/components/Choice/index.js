@@ -1,3 +1,5 @@
-import importTwoChoice from './TwoChoice';
+import TwoChoice from './TwoChoice';
+import ThreeChoice from './ThreeChoice';
+import FourChoice from './FourChoice';
 
-export const TwoChoice = importTwoChoice;
+export {TwoChoice, ThreeChoice, FourChoice};
