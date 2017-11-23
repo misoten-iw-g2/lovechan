@@ -1,0 +1,66 @@
+#three_choice {
+  background-color: #434343;
+  width: 100%;
+  height: calc(100vh);
+
+  @media screen and (max-height: 1080px) {
+    overflow-y: hidden;
+  }
+
+  .grid {
+    &-header {
+      grid-template-rows: 9vw;
+      grid-template-areas: 'h1';
+      padding-bottom: 4vw;
+    }
+
+    &-btn {
+      grid-template-rows: 20vw;
+      padding: 0 10vw;
+    }
+
+    &-mike {
+      grid-template-rows: 20vw;
+      grid-template-areas: 'div';
+    }
+  }
+
+  .app_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 3vw;
+    line-height: 3vw;
+  }
+
+  .app_btn {
+    background-color: #666;
+    border-radius: 1vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &-voice_choiced {
+      background-color: #e276aa;
+    }
+
+    & > p {
+      padding: 0 0.6vw;
+      color: #fff;
+      font-weight: bold;
+      white-space: pre-wrap;
+      font-size: 2.6vw;
+    }
+  }
+
+  .app_mike {
+    position: fixed;
+    bottom: 0;
+    padding-bottom: 2vw;
+    width: 100%;
+    height: 16vw;
+    display: flex;
+    justify-content: center;
+  }
+}
