@@ -2,15 +2,18 @@
 import * as React from 'react';
 import {Route} from 'react-router-dom';
 import {Switch, withRouter} from 'react-router';
-import classNames from 'classnames';
 
 import {
   LandingContainer,
   StoriesContainer,
   ConversationsContainer,
   MediaContainer,
+  RequestsContainer,
+  QuestionsContainer,
 } from '../../containers';
 import {routes} from '../../config/uri';
+
+import {ThreeChoice, FourChoice} from '../Choice';
 
 export type Props = {
   location: {
@@ -21,7 +24,7 @@ export type Props = {
 };
 
 const Routes = () => (
-  <div>
+  <div id="routes">
     <Route
       path="/"
       render={(props: Props) => (
@@ -47,11 +50,22 @@ const Routes = () => (
             render={() => <ConversationsContainer />}
           />
           {/* requests */}
-          <Route exact path={routes.requests} render={() => <div />} />
+          <Route
+            exact
+            path={routes.requests}
+            render={() => <RequestsContainer />}
+          />
           {/* questions */}
-          <Route exact path={routes.questions} render={() => <div />} />
+          <Route
+            exact
+            path={routes.questions}
+            render={() => <QuestionsContainer />}
+          />
           {/* media */}
           <Route exact path={routes.media} render={() => <MediaContainer />} />
+
+          <Route exact path="/three" render={() => <ThreeChoice />} />
+          <Route exact path="/four" render={() => <FourChoice />} />
         </Switch>
       )}
     />
