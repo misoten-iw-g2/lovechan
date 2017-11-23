@@ -1,31 +1,25 @@
 /* @flow */
 import * as React from 'react';
-import {Grid} from 'semantic-ui-react';
-
-import _words from '../../config/words';
-import {TwoChoice} from '../Base';
+import Grid from 'react-css-grid';
+import {TwoChoice} from '../Choice';
 
 type Props = {
   recordStart: () => void,
   recordSave: () => void,
 };
 
-const {Row, Column} = Grid;
-
 const Landing = (props: Props) => (
-  <Grid id="landing">
-    <Row>
-      <Column width={16}>
-        <TwoChoice
-          choiceApi={props.recordStart}
-          postApi={props.recordSave}
-          choiceTitle="モードを選択して下さい"
-          choice1="ストーリー"
-          choice2="ラヴちゃんと会話する"
-        />
-      </Column>
-    </Row>
-  </Grid>
+  <div id="landing">
+    <Grid width="100%" gap={0}>
+      <TwoChoice
+        choiceApi={props.recordStart}
+        postApi={props.recordSave}
+        choiceTitle="モードを選択して下さい"
+        choice1="ストーリー"
+        choice2="ラヴちゃんと会話する"
+      />
+    </Grid>
+  </div>
 );
 
-export default Landing;
+export {Landing as default, Landing};
