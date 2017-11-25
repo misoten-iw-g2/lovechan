@@ -24,6 +24,19 @@
 <script>
   $(function () {
 
+    function shuffle(array) {
+      var n = array.length, t, i;
+
+      while (n) {
+        i = Math.floor(Math.random() * n--);
+        t = array[n];
+        array[n] = array[i];
+        array[i] = t;
+      }
+
+      return array;
+    }
+
     var getWindowMovieHeight = function () {
       // ここでブラウザの縦横のサイズを取得します。
       var windowSizeHeight = $(window).outerHeight();
@@ -51,11 +64,17 @@
 
     function playVideo(mp4Array) {
       if (mp4Array.length === 1) {
-        mp4Array.push("repeat.mp4");
-        mp4Array.push("repeat.mp4");
-        mp4Array.push("repeat.mp4");
-        mp4Array.push("repeat.mp4");
-        mp4Array.push("repeat.mp4");
+        // TODO ランダムに並び替える
+        var repeatArray = [];
+        repeatArray.push("repeat_1.mp4");
+        repeatArray.push("repeat_2.mp4");
+        repeatArray.push("repeat_3.mp4");
+        repeatArray.push("repeat_4.mp4");
+        repeatArray.push("repeat_1.mp4");
+        repeatArray.push("repeat_2.mp4");
+        repeatArray.push("repeat_3.mp4");
+        repeatArray.push("repeat_4.mp4");
+        mp4Array.push.apply(mp4Array, (shuffle(repeatArray)));
       }
       console.log(mp4Array);
       //設定 ラップするコンテナdivのid指定
@@ -68,7 +87,8 @@
         $('<video>').attr({
           id: 'video' + index,
           Class: 'video',
-          src: 'video/' + val
+          src: 'video/' + val,
+          muted: true
         }).appendTo($(tgtDiv)).hide();
 
         // 最後でなければ入る
@@ -99,7 +119,7 @@
           playVideo(mp4Array);
           setTimeout(function () {
             $('#audio').attr('src', 'voice/'+data.body.voice_file_name).load();
-          }, 1500);
+          }, 1000);
         } catch (e) {
           console.log(e)
         }
@@ -109,7 +129,7 @@
 </script>
 <audio id="audio" src="" autoplay></audio>
 <p>音声出るよ（本番は消してね）</p>
-<video src="video/repeat.mp4" class="video"></video>
+<video src="video/repeat_1.mp4" class="video" autoplay muted></video>
 <div id="videoWrapper">
 </div>
 </body>
