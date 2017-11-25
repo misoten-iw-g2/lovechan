@@ -68,6 +68,11 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 		caDB := model.NewChoiceAnswersDB(c.db)
 		r, err := caDB.GetChoiceAnswerReplay(ctx, ctx.ID, t)
 		if err != nil {
+			v = mywebsocket.VideoChange{
+				VideoFileName: "once_again.mp4",
+				VoiceFileName: "once_again.wav",
+			}
+			c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res = r.ChoiceAnswerToAnswertype()
