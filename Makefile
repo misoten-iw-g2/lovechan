@@ -62,14 +62,17 @@ config-set:
 
 host:=http://localhost:8080
 
+curl_routing:
+	curl -v -H "Content-Type: application/json" -X POST $(host)/api/talks/routings/$(now) -d '{"text": "$(text)"}'
+
 curl_question_answer:
-	curl -v -i -H "Content-Type: application/json" -X POST $(host)/api/questions/$(id)/answers -d '{"text": "$(text)"}'
+	curl -v -H "Content-Type: application/json" -X POST $(host)/api/questions/$(id)/answers -d '{"text": "$(text)"}'
 
 curl_question_answer_voice:
 	curl -F 'uploadfile=@./sampleVoice/questions-2-tanosii.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/questions/2/answers'
 
 curl_requests:
-	curl -v -i -H "Content-Type: application/json" -X POST $(host)/api/requests -d '{"text": "$(text)"}'
+	curl -v -H "Content-Type: application/json" -X POST $(host)/api/requests -d '{"text": "$(text)"}'
 
 curl_requests_voice:
 	curl -F 'uploadfile=@./sampleVoice/request-ippatugei.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/requests'
@@ -82,3 +85,7 @@ curl_stories_suddenly:
 
 curl_stories_change:
 	curl -v -H "Content-Type: application/json" -X POST $(host)/api/stories/change/$(now_step) -d '{"text": "$(text)"}'
+
+curl_stories_text:
+	curl -v -H "Content-Type: application/json" -X POST $(host)/api/stories -d '{"text": "$(text)"}'
+

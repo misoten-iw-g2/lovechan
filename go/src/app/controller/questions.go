@@ -52,6 +52,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	}
 	go uaDB.AddAnalysis(ctx, ua)
 	res := app.Answertype{}
+	v := mywebsocket.VideoChange{}
 	if q.AnswerType == model.FreeAnswerType {
 		faDB := model.NewFreeAnswersDB(c.db)
 		r, err := faDB.GetFreeAnswerReplay(ctx, ctx.ID, t)
@@ -59,6 +60,10 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res = r.FreeAnswerToAnswertype()
+		v = mywebsocket.VideoChange{
+			VideoFileName: r.VideoFileName,
+			VoiceFileName: r.VoiceFileName,
+		}
 	} else if q.AnswerType == model.ChoiceAnswerType {
 		caDB := model.NewChoiceAnswersDB(c.db)
 		r, err := caDB.GetChoiceAnswerReplay(ctx, ctx.ID, t)
@@ -66,7 +71,12 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res = r.ChoiceAnswerToAnswertype()
+		v = mywebsocket.VideoChange{
+			VideoFileName: r.VideoFileName,
+			VoiceFileName: r.VoiceFileName,
+		}
 	}
+	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
 	res.UserVoiceText = t
 	// QuestionsController_Answers: end_implement
 	return ctx.OK(&res)
