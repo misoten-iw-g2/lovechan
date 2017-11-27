@@ -19,7 +19,8 @@
     "no-confusing-arrow": "error",
     "no-mixed-operators": "error",
     "no-unexpected-multiline": "error",
-    "global-require": "off"
+    "global-require": "off",
+    "import/prefer-default-export": "off"
   },
   "env": {
     "node": true,
