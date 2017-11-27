@@ -2,11 +2,11 @@
 import {Record} from 'immutable';
 import {apiUrls} from '../config/url';
 
-const TalksState = Record({
+const TalksRecord = Record({
   webrtc: undefined,
 });
 
-class Talks extends TalksState {
+export default class TalksState extends TalksRecord {
   recordStart(state: any, _action: any) {
     const newState = state.update('webrtc', async () => {
       const {navigator, AudioContext} = window;
@@ -152,5 +152,3 @@ class Talks extends TalksState {
     return newState;
   }
 }
-
-export default Talks;

@@ -3,19 +3,14 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import Media from '../components/Media';
-import {actionCreators} from '../reducers/talks';
+import {actionTalksCreators} from '../actions';
 
-const actions = actionCreators.talks;
+const actions = actionTalksCreators.talks;
 
 const mapStateToProps = state => ({
   talks: state.talks,
 });
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-const MediaContainer = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Media),
-);
-
-export {MediaContainer as default, MediaContainer};
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Media));

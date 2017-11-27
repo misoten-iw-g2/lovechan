@@ -13,7 +13,7 @@ import {
 } from '../../containers';
 import {routes} from '../../config/uri';
 
-import {ThreeChoice, FourChoice} from '../Choice';
+import {ThreeChoice, FourChoice} from '../Templates';
 
 export type Props = {
   location: {

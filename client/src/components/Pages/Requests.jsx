@@ -1,7 +1,8 @@
 /* @flow */
 import * as React from 'react';
 import Grid from 'react-css-grid';
-import {ThreeChoice} from '../Choice';
+import {withRouter} from 'react-router';
+import {ThreeChoice} from '../Templates';
 
 type Props = {
   recordStart: () => void,
@@ -23,4 +24,4 @@ const Requests = (props: Props) => (
   </div>
 );
 
-export {Requests as default, Requests};
+export default withRouter(Requests);

@@ -2,20 +2,17 @@
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import Questions from '../components/Questions';
-import {actionCreators} from '../reducers/talks';
+import {Questions} from '../components/Pages';
+import {actionTalksCreators} from '../actions';
 
-const actions = actionCreators.talks;
+const actions = actionTalksCreators.talks;
 
 const mapStateToProps = state => ({
   talks: state.talks,
 });
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-const QuestionsContainer = withRouter(
+export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(Questions),
 );
-
-export {QuestionsContainer as default, QuestionsContainer};

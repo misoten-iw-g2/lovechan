@@ -1,7 +1,15 @@
 /* @flow */
-import {combineReducers} from 'redux';
-import {reducer as talks} from './talks';
+import {combineReducers, applyMiddleware} from 'redux';
+import createHistory from 'history/createBrowserHistory';
+import {routerReducer, routerMiddleware} from 'react-router-redux';
+import talks from './talks';
 
-export default combineReducers({
-  talks,
-});
+const history = createHistory();
+
+export default combineReducers(
+  {
+    talks,
+    router: routerReducer,
+  },
+  applyMiddleware(routerMiddleware(history)),
+);

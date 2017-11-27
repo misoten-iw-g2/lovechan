@@ -1,4 +1,4 @@
-const routes = {
+export const routes = {
   landing: '/',
   table: '/table',
   tableDetail: '/table/detail',
@@ -7,5 +7,3 @@ const routes = {
   withLoveChoice: '/with-love-choice',
   randomChoice: '/random-choice',
 };
-
-export default routes;

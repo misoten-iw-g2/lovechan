@@ -1,4 +1,4 @@
-const words = {
+export const words = {
   APP: {
     NAME: 'Lovechan',
   },
@@ -12,5 +12,3 @@ const words = {
     UPDATED: '更新日',
   },
 };
-
-export default words;
