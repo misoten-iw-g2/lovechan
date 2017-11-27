@@ -2,20 +2,17 @@
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import Landing from '../components/Landing';
-import {actionCreators} from '../reducers/talks';
+import {Landing} from '../components/Pages';
+import {actionTalksCreators} from '../actions';
 
-const actions = actionCreators.talks;
+const actions = actionTalksCreators.talks;
 
 const mapStateToProps = state => ({
   talks: state.talks,
 });
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-const LandingContainer = withRouter(
+export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(Landing),
 );
-
-export {LandingContainer as default, LandingContainer};

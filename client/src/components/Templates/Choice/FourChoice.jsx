@@ -3,7 +3,8 @@ import * as React from 'react';
 import {Header} from 'semantic-ui-react';
 import classNames from 'classnames';
 import Grid from 'react-css-grid';
-import {MikeOff, MikeOn} from '../Icons';
+import {withRouter} from 'react-router';
+import {MikeOff, MikeOn} from '../../Organisms';
 
 type Props = {
   choiceApi: () => void,
@@ -12,22 +13,32 @@ type Props = {
   choice1: string,
   choice2: string,
   choice3: string,
+  choice4: string,
 };
 
-class ThreeChoice extends React.Component<Props> {
+class FourChoice extends React.Component<Props> {
   componentDidMount() {}
 
   render() {
-    const {choiceTitle, choice1, choice2, choice3} = this.props;
+    const {
+      choiceTitle = '画面に何が出ていますか？',
+      choice1 = 'エラーが出てる',
+      choice2 = '勝手に壊れた',
+      choice3 = '画面が映らない',
+      choice4 = 'ネットに繋がらない',
+    } = this.props;
     return (
-      <div id="three_choice">
+      <div id="four_choice">
         <Grid width="100%" gap={0} className={classNames('grid-header')}>
           <Header as="h1" className={classNames('app_header')}>
             {choiceTitle}
           </Header>
         </Grid>
 
-        <Grid width="20vw" gap="10vw" className={classNames('grid-btn')}>
+        <Grid
+          width="calc(20vw)"
+          gap="calc(2vw)"
+          className={classNames('grid-btn')}>
           <div className={classNames('app_btn', 'app_btn-voice_choiced')}>
             <p>{choice1}</p>
           </div>
@@ -36,6 +47,9 @@ class ThreeChoice extends React.Component<Props> {
           </div>
           <div className={classNames('app_btn')}>
             <p>{choice3}</p>
+          </div>
+          <div className={classNames('app_btn')}>
+            <p>{choice4}</p>
           </div>
         </Grid>
 
@@ -54,4 +68,4 @@ class ThreeChoice extends React.Component<Props> {
   }
 }
 
-export default ThreeChoice;
+export default withRouter(FourChoice);

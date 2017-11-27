@@ -3,7 +3,8 @@ import * as React from 'react';
 import {Header} from 'semantic-ui-react';
 import classNames from 'classnames';
 import Grid from 'react-css-grid';
-import {MikeOff, MikeOn} from '../Icons';
+import {withRouter} from 'react-router';
+import {MikeOff, MikeOn} from '../../Organisms';
 
 type Props = {
   choiceApi: () => void,
@@ -11,17 +12,16 @@ type Props = {
   choiceTitle: string,
   choice1: string,
   choice2: string,
+  choice3: string,
 };
 
-class TwoChoice extends React.Component<Props> {
-  componentDidMount() {
-    this.props.choiceApi();
-  }
+class ThreeChoice extends React.Component<Props> {
+  componentDidMount() {}
 
   render() {
-    const {choiceTitle, choice1, choice2} = this.props;
+    const {choiceTitle, choice1, choice2, choice3} = this.props;
     return (
-      <div id="two_choice">
+      <div id="three_choice">
         <Grid width="100%" gap={0} className={classNames('grid-header')}>
           <Header as="h1" className={classNames('app_header')}>
             {choiceTitle}
@@ -34,6 +34,9 @@ class TwoChoice extends React.Component<Props> {
           </div>
           <div className={classNames('app_btn')}>
             <p>{choice2}</p>
+          </div>
+          <div className={classNames('app_btn')}>
+            <p>{choice3}</p>
           </div>
         </Grid>
 
@@ -52,4 +55,4 @@ class TwoChoice extends React.Component<Props> {
   }
 }
 
-export default TwoChoice;
+export default withRouter(ThreeChoice);
