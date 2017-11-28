@@ -1,1 +1,3 @@
-import './components/Render';
+import {main} from './components/Render';
+
+main();

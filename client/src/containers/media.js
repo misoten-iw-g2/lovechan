@@ -3,9 +3,9 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import Media from '../components/Media';
-import {actionTalksCreators} from '../actions';
+import {talksActions} from '../actions';
 
-const actions = actionTalksCreators.talks;
+const actions = talksActions.talks;
 
 const mapStateToProps = state => ({
   talks: state.talks,
