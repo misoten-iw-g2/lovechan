@@ -1,34 +1,17 @@
 /* @flow */
 import {createActions} from 'redux-actions';
-import {apiUrls} from '../config/url';
-import {RecordAudio} from '../utils/RecordAudio';
+import * as myself from './talks';
+import {postWAV} from './apis/postWAV';
 
-export default createActions({
+export const talksActions = createActions({
   talks: {
-    recordStart: undefined,
-    recordSave: undefined,
-    dammy: async () => {
-      const fetchDatas = await fetch(
-        'https://withonoware.co.jp/wp-json/wp/v2/news',
-      );
-      const datasJson = await fetchDatas.json();
-      return datasJson;
-    },
-    rootingFromRoot: async (
-      apiUrl: string,
-      context: any,
-      storeAudio: any,
-      stream: any,
-      bufferSize: any,
-    ) => {
-      const fetchDatas = RecordAudio.postWAV(
-        apiUrl,
-        context,
-        storeAudio,
-        stream,
-        bufferSize,
-      );
-      // return datasJson;
+    recordAudio: null,
+    saveAudio: null,
+    routing: async (apiUrl, blob) => {
+      const responseDatas = await postWAV(apiUrl, blob);
+      console.log(responseDatas);
     },
   },
 });
+
+export default Object.assign(talksActions, myself);

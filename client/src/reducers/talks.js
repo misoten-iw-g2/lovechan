@@ -1,22 +1,22 @@
 /* @flow */
 import {handleActions} from 'redux-actions';
-import {actionTalksCreators} from '../actions';
-import TalksState from '../models/talks';
+import * as myself from './talks';
+import {talksActions} from '../actions';
+import {TalksState} from '../models';
 
-export default handleActions(
+export const talksReducer = handleActions(
   {
-    [actionTalksCreators.talks.recordStart](state, action) {
-      return state.recordStart(state, action);
+    [talksActions.talks.recordAudio](state, action) {
+      return state.recordAudio(state, action);
     },
-    [actionTalksCreators.talks.recordSave](state, action) {
-      return state.recordSave(state, action);
+    [talksActions.talks.saveAudio](state, action) {
+      return state.saveAudio(state, action);
     },
-    [actionTalksCreators.talks.dammy](state, action) {
-      return state.dammy(state, action);
-    },
-    [actionTalksCreators.talks.rootingFromRoot](state, action) {
-      return state.rootingFromRoot(state, action);
+    [talksActions.talks.routing](state, action) {
+      return state.routing(state, action);
     },
   },
   new TalksState(),
 );
+
+export default Object.assign(talksReducer, myself);

@@ -1,3 +1,2 @@
-import combineReducers from './combineReducers';
-
-export default combineReducers;
+export * from './combineReducers';
+export * from './talks';

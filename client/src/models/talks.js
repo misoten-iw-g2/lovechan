@@ -1,13 +1,15 @@
 /* @flow */
+import * as myself from './talks';
 import {Record} from 'immutable';
 import {apiUrls} from '../config/url';
 
-const TalksRecord = Record({
-  webrtc: undefined,
+const TalksRecord: any = Record({
+  webrtc: null,
+  wav: null,
 });
 
-export default class TalksState extends TalksRecord {
-  recordStart(state: any, _action: any) {
+export class TalksState extends TalksRecord<any> {
+  recordAudio(state: any, _action: any) {
     const newState = state.update('webrtc', async () => {
       const {navigator, AudioContext} = window;
 
@@ -47,8 +49,8 @@ export default class TalksState extends TalksRecord {
     return newState;
   }
 
-  recordSave(state: any, _action: any) {
-    const newState = state.update('webrtc', async () => {
+  saveAudio(state: any, _action: any) {
+    const newState = state.update('wav', async () => {
       const {URL, document} = window;
       const {context, storeAudio, stream, bufferSize} = await state.webrtc;
       const audioBuffer = () => {
@@ -123,32 +125,14 @@ export default class TalksState extends TalksRecord {
         return audioBlob;
       };
       // CAUTION
-      const blob = exportWAV(storeAudio, context.sampleRate);
-      const url = URL.createObjectURL(blob);
-      const api = async () => {
-        const form: any = new FormData();
-        form.append('uploadfile', blob, 'out.wav');
-        const postSpeech = await fetch(apiUrls.post_speach, {
-          method: 'POST',
-          headers: {},
-          body: form
-        });
-        const responseData = await postSpeech;
-        console.log(responseData);
-      }
-      api();
-      // const link = document.createElement(`a`);
-      // link.href = url;
-      // link.download = 'output.wav';
-      // link.textContent = 'download';
-      // link.click();
-      context.close();
+      const result = context.close().then(() => {
+        const blob = exportWAV(storeAudio, context.sampleRate);
+        return blob;
+      });
+      return result;
     });
     return newState;
   }
-
-  dammy(state: any, _action: any) {
-    const newState = state.update('recordBuffer', () => state.recordBuffer);
-    return newState;
-  }
 }
+
+export default Object.assign(TalksState, myself);
