@@ -27,6 +27,7 @@ func GetTextByVoice(ctx context.Context, r *http.Request, paramName string) (str
 		if j.Text == "" {
 			return "", fmt.Errorf("Please store audio file in 'uploadfile' or store 'text' in text")
 		}
+		goa.LogInfo(ctx, "user_voice_text(text type): result", "result", j.Text)
 		return j.Text, nil
 	}
 	err := r.ParseMultipartForm(5 * 1024 * 1024)
@@ -67,6 +68,7 @@ func GetTextByVoice(ctx context.Context, r *http.Request, paramName string) (str
 	}
 	for _, result := range resp.Results {
 		for _, alt := range result.Alternatives {
+			goa.LogInfo(ctx, "user_voice_text: result", "result", alt.Transcript)
 			return alt.Transcript, nil
 		}
 	}

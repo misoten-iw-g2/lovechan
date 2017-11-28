@@ -129,6 +129,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 	if err != nil {
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
+	goa.LogInfo(ctx, "user_voice_text: t", "t", t)
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
 		ctx.ResponseData.Header().Set("Location", "/")
