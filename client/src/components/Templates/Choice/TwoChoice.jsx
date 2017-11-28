@@ -7,20 +7,18 @@ import {withRouter} from 'react-router';
 import {MikeOff, MikeOn} from '../../Organisms';
 
 type Props = {
-  choiceApi: () => void,
-  postApi: () => void,
+  recordApi: () => void,
+  saveApi: () => void,
   choiceTitle: string,
   choice1: string,
   choice2: string,
 };
 
-class TwoChoice extends React.Component<Props> {
-  componentDidMount() {
-    this.props.choiceApi();
-  }
+export class TwoChoice extends React.Component<Props> {
+  componentDidMount() {}
 
   render() {
-    const {choiceTitle, choice1, choice2} = this.props;
+    const {recordApi, saveApi, choiceTitle, choice1, choice2} = this.props;
     return (
       <div id="two_choice">
         <Grid width="100%" gap={0} className={classNames('grid-header')}>
@@ -29,7 +27,11 @@ class TwoChoice extends React.Component<Props> {
           </Header>
         </Grid>
 
-        <Grid width="20vw" gap="10vw" className={classNames('grid-btn')}>
+        <Grid
+          width="20vw"
+          gap="10vw"
+          className={classNames('grid-btn')}
+          onClick={() => saveApi()}>
           <div className={classNames('app_btn', 'app_btn-voice_choiced')}>
             <p>{choice1}</p>
           </div>
@@ -38,7 +40,11 @@ class TwoChoice extends React.Component<Props> {
           </div>
         </Grid>
 
-        <Grid width="100%" gap={0} className={classNames('grid-mike')}>
+        <Grid
+          width="100%"
+          gap={0}
+          className={classNames('grid-mike')}
+          onClick={() => recordApi()}>
           <MikeOff
             className={classNames({app_mike: true, visible: true, hide: false})}
             fill="#fff"
