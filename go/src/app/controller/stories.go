@@ -31,9 +31,9 @@ type storyInfo struct {
 
 var (
 	// ErrMissChoice 一致している選択がない場合のエラー
-	ErrMissChoice = errors.New("誤った選択肢が選択されたました")
+	ErrMissChoice = errors.New("incorrect choice")
 	// ErrNotFoundStep 存在しない選択肢が選ばれた場合のエラー
-	ErrNotFoundStep = errors.New("存在しないステップが選択されています")
+	ErrNotFoundStep = errors.New("not found step")
 	// ErrUnprocessableEntity 選択肢に存在するが、間違いを選択している場合のエラー
 	ErrUnprocessableEntity = goa.NewErrorClass("unprocessable_entity", 422)
 )

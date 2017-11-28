@@ -25,7 +25,7 @@ func GetTextByVoice(ctx context.Context, r *http.Request, paramName string) (str
 			return "", err
 		}
 		if j.Text == "" {
-			return "", fmt.Errorf("uploadfileに音声ファイルを格納するか、テキストデータをtextに格納してください。")
+			return "", fmt.Errorf("Please store audio file in 'uploadfile' or store 'text' in text")
 		}
 		return j.Text, nil
 	}

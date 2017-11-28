@@ -8,7 +8,7 @@ import (
 )
 
 // ErrNotFoundChoice  一致している選択がない場合のエラー
-var ErrNotFoundChoice = errors.New("一致している選択肢が見つかりませんでした")
+var ErrNotFoundChoice = errors.New("choice does not exist")
 
 // UserChoiceAnswer ユーザーが選んだ選択肢を返す 現状は未入力などは想定していない
 func UserChoiceAnswer(choices []string, userAnswer string) (int, error) {
