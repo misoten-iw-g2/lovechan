@@ -81,7 +81,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 			VideoFileName: "once_again.mp4",
 			VoiceFileName: "once_again.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrNotFoundStep {
@@ -89,7 +89,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrMissChoice {
@@ -97,7 +97,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
 	}
 	if err != nil {
@@ -105,7 +105,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	// StoriesController_PlayStory: end_implement
@@ -116,7 +116,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 		VideoFileName: si.videoFileName,
 		VoiceFileName: si.voiceFileName,
 	}
-	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 	return ctx.OK(&res)
 }
 
@@ -153,7 +153,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 			VideoFileName: "once_again.mp4",
 			VoiceFileName: "once_again.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrNotFoundStep {
@@ -161,7 +161,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrMissChoice {
@@ -169,7 +169,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
 	}
 	if err != nil {
@@ -177,7 +177,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
 		}
-		c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	// StoriesController_PlayStory: end_implement
@@ -188,7 +188,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 		VideoFileName: si.videoFileName,
 		VoiceFileName: si.voiceFileName,
 	}
-	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 
 	// StoriesController_SelectStory: end_implement
 	return ctx.OK(&res)

@@ -2,6 +2,7 @@ package model
 
 import (
 	"app/app"
+	"app/mywebsocket"
 	"app/util"
 	"context"
 	"database/sql"
@@ -16,13 +17,13 @@ import (
 
 // UserAnswers DBカラム
 type UserAnswers struct {
-	ID         int       `db:"id"`
-	Question   string    `db:"question"`
-	Answer     string    `db:"answer"`
-	Score      float64   `db:"score"`
-	Emotion    int       `db:"emotion"`
-	QuestionID int       `db:"question_id"`
-	CreatedAt  time.Time `db:"created_at"`
+	ID         int       `db:"id" json:"id"`
+	Question   string    `db:"question" json:"question"`
+	Answer     string    `db:"answer" json:"answer"`
+	Score      float64   `db:"score" json:"score"`
+	Emotion    int       `db:"emotion" json:"emotion"`
+	QuestionID int       `db:"question_id" json:"question_id"`
+	CreatedAt  time.Time `db:"created_at" json:"created_at"`
 }
 
 // UserAnswersDB DB
@@ -39,7 +40,7 @@ func NewUserAnswersDB(db *sqlx.DB) *UserAnswersDB {
 func (db *UserAnswersDB) GetList(ctx context.Context) ([]UserAnswers, error) {
 	sql, prepare, err := sq.Select("*").
 		From("user_answers").
-		OrderBy("created_at DESC").
+		OrderBy("id ASC").
 		ToSql()
 	if err != nil {
 		goa.LogError(ctx, "UserAnswersDB GetList Error 1: err", "err", err)
@@ -142,7 +143,7 @@ func (db *UserAnswersDB) Add(ctx context.Context, a UserAnswers) (sql.Result, er
 }
 
 // AddAnalysis 解析結果を格納する（非同期処理用）
-func (db *UserAnswersDB) AddAnalysis(ctx context.Context, a UserAnswers) {
+func (db *UserAnswersDB) AddAnalysis(ctx context.Context, ws *mywebsocket.Server, a UserAnswers) {
 	s, err := util.AnalyzeSentiment(ctx, a.Answer)
 	if err != nil {
 		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 1: err", "err", err)
@@ -160,11 +161,13 @@ func (db *UserAnswersDB) AddAnalysis(ctx context.Context, a UserAnswers) {
 		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 3: err", "err", err)
 		return
 	}
-	_, err = r.LastInsertId()
+	lastInsertID, err := r.LastInsertId()
 	if err != nil {
 		goa.LogError(ctx, "UserAnswerDB AddAnalysis Error 3: err", "err", err)
 		return
 	}
+	a.ID = int(lastInsertID)
+	ws.Send(mywebsocket.WsUserAnswerChannel, mywebsocket.WsUserAnswerChange, a)
 	goa.LogInfo(ctx, "UserAnswerDB AddAnalysis OK: insert", "insert", a)
 }
 

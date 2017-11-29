@@ -6,11 +6,23 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// WsChannel channnel name
-const WsChannel = "lovechan"
+const (
+	// WsMovieChannel channnel name
+	WsMovieChannel = "movie"
+	// WsUserAnswerChannel channnel name
+	WsUserAnswerChannel = "user_answer"
+	// WsPieChannel channnel name
+	WsPieChannel = "pie"
+)
 
-// WsVideoChange action type
-const WsVideoChange = "videoChange"
+const (
+	// WsVideoChange action type
+	WsVideoChange = "videoChange"
+	// WsPieChange action type
+	WsPieChange = "pieChange"
+	// WsUserAnswerChange action type
+	WsUserAnswerChange = "userAnswerChange"
+)
 
 // VideoChange ws用構造体
 type VideoChange struct {

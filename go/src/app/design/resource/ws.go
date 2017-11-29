@@ -11,6 +11,12 @@ var _ = Resource("ws", func() {
 	BasePath("/api/ws")
 	Action("ws", func() {
 		Description("websocket配信")
+		Params(func() {
+			Param("channel", String, "channel", func() {
+				Enum("movie", "pie", "user_answer")
+			})
+			Required("channel")
+		})
 		Routing(GET(""))
 		UseTrait(GeneralUserTrait)
 		Response(SwitchingProtocols)
