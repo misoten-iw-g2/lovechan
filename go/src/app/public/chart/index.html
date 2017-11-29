@@ -11,12 +11,20 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+    <script type="text/javascript" src="chartjs-plugin-streaming.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container">
     <h1 class="page-header">ユーザー分析</h1>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h2 class="panel-title">感情遷移図</h2></div>
+        <div class="panel-body">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
     <div class="panel panel-default">
         <div class="panel-heading"><h2 class="panel-title">パネルタイトル</h2></div>
         <table class="table table-striped table-bordered table-hover">
@@ -26,18 +34,11 @@
                 <th>質問内容</th>
                 <th>回答</th>
                 <th class="text-right">感情点</th>
-                <th>時間</th>
             </tr>
             </thead>
             <tbody id="userAnswer">
             </tbody>
         </table>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-heading"><h2 class="panel-title">感情遷移図</h2></div>
-        <div class="panel-body">
-            <canvas id="chart"></canvas>
-        </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading"><h2 class="panel-title">感情割合</h2></div>
@@ -48,7 +49,6 @@
 </div>
 <script>
   $(function () {
-    var ctx = document.getElementById("chart").getContext('2d');
     var ctx2 = document.getElementById("chart2").getContext('2d');
 
     function userAnswerParsePayload(userAnswer) {
@@ -56,8 +56,7 @@
         id: userAnswer['id'],
         question: userAnswer['question'],
         answer: userAnswer['answer'],
-        score: userAnswer['score'],
-        createdAt: userAnswer['created_at']
+        score: userAnswer['score']
       };
     };
 
@@ -71,10 +70,8 @@
       $.each(resp, function (i, userAnswer) {
         payload = userAnswerParsePayload(userAnswer);
         addUserAnswerRecord(payload);
-        data.push(payload.score);
-        labels.push("");
+        onRefresh(payload.score);
       });
-      myChart = new Chart(ctx,newLineData(data, labels)) ;
     }).fail(function (resp) {
       console.log(resp)
     });
@@ -85,47 +82,65 @@
       }
       var HTML = "";
       if (payload.score < -0.1) {
-        HTML = '<tr style="background: #BBDEFB";><td>' + payload.id + '</td><td>' + payload.question + '</td><td>' + payload.answer + '</td><td class="text-right">' + payload.score + '</td><td>' + payload.createdAt + '</td></tr>'
+        HTML = '<tr style="background: #BBDEFB";><td>' + payload.id + '</td><td>' + payload.question + '</td><td>' + payload.answer + '</td><td class="text-right">' + payload.score + '</td></tr>'
       } else {
-        HTML = '<tr><td>' + payload.id + '</td><td>' + payload.question + '</td><td>' + payload.answer + '</td><td class="text-right">' + payload.score + '</td><td>' + payload.createdAt + '</td></tr>'
+        HTML = '<tr><td>' + payload.id + '</td><td>' + payload.question + '</td><td>' + payload.answer + '</td><td class="text-right">' + payload.score + '</td></tr>'
       }
-      $('#userAnswer').append(HTML);
+      $('#userAnswer').prepend(HTML);
+      $('#userAnswer > tr:first-child').fadeOut(500,function(){$(this).fadeIn(500)});
     }
 
-    function newLineData(data, labels) {
-      return {
-        //グラフの種類
-        type: 'line',
-        //データの設定
-        data: {
-          //データ項目のラベル
-          labels: labels,
-          //データセット
-          datasets: [{
-            //凡例
-            label: "",
-            //背景色
-            backgroundColor: "rgba(252,231,240,0.4)",
-            //枠線の色
-            borderColor: "rgba(226,118,170,1)",
-            //グラフのデータ
-            data: data
-          }]
-        },
-        //オプションの設定
-        options: {
-          scales: {
-            //縦軸の設定
-            yAxes: [{
-              ticks: {
-                //最小値を0にする
-                beginAtZero: true
-              }
-            }]
+    var c = new WebSocket('ws://' + location.hostname + ':8080/api/ws?channel=user_answer');
+    c.onopen = function () {
+      c.onmessage = function (response) {
+        console.log(response.data);
+        var data = $.parseJSON(response.data);
+        try {
+          //設定部分 再生データの配列
+          var payload = userAnswerParsePayload(data.body);
+          addUserAnswerRecord(payload);
+          onRefresh(payload.score);
+        } catch (e) {
+          console.log(e)
+        }
+      };
+    };
+
+    function onRefresh(score) {
+      config.data.labels.push("");
+      config.data.datasets.forEach(function (dataset) {
+        dataset.data.push(score);
+      });
+      window.myBar.update();
+    }
+
+    var config = {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: [],
+          backgroundColor: "rgba(252,231,240,0.4)",
+          borderColor: "rgba(226,118,170,1)",
+          data: []
+        }]
+      },
+      options: {
+        plugins: {
+          streaming: {
+            duration: 20000,
+            refresh: 1000,
+            delay: 2000,
+            onRefresh: onRefresh
           }
         }
       }
-    }
+    };
+
+    window.onload = function () {
+      var ctx = document.getElementById('chart').getContext('2d');
+      window.myBar = new Chart(ctx, config);
+    };
 
     function graphPieParsePayload(graphPie) {
       return {
@@ -184,71 +199,6 @@
       }
     }
 
-//    function newBarData(data, labels) {
-//      return {
-//        //グラフの種類
-//        type: 'bar',
-//        //データの設定
-//        data: {
-//          //データ項目のラベル
-//          labels: labels,
-//          //データセット
-//          datasets: [
-//            {
-//              //凡例
-//              label: "1年目",
-//              //背景色
-//              backgroundColor: "rgba(179,181,198,0.2)",
-//              //枠線の色
-//              borderColor: "rgba(179,181,198,1)",
-//              //枠線の太さ
-//              borderWidth: 1,
-//              //背景色（ホバーしたときに）
-//              hoverBackgroundColor: "rgba(179,181,198,0.4)",
-//              //枠線の色（ホバーしたときに）
-//              hoverBorderColor: "rgba(179,181,198,1)",
-//              //グラフのデータ
-//              data: data
-//            },
-//            {
-//              //凡例
-//              label: "2年目",
-//              //背景色
-//              backgroundColor: "rgba(255,99,132,0.2)",
-//              //枠線の色
-//              borderColor: "rgba(255,99,132,1)",
-//              //枠線の太さ
-//              borderWidth: 1,
-//              //背景色（ホバーしたときに）
-//              hoverBackgroundColor: "rgba(255,99,132,0.4)",
-//              //枠線の色（ホバーしたときに）
-//              hoverBorderColor: "rgba(255,99,132,1)",
-//              //グラフのデータ
-//              data: data
-//            }
-//          ]
-//        },
-//        //オプションの設定
-//        options: {
-//          //軸の設定
-//          scales: {
-//            //縦軸の設定
-//            yAxes: [{
-//              //目盛りの設定
-//              ticks: {
-//                //開始値を0にする
-//                beginAtZero: true
-//              }
-//            }]
-//          },
-//          //ホバーの設定
-//          hover: {
-//            //ホバー時の動作（single, label, dataset）
-//            mode: 'single'
-//          }
-//        }
-//      }
-//    }
   });
 </script>
 </body>

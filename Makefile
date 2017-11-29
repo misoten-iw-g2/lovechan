@@ -49,8 +49,9 @@ docker-ssh-api:
 ws-install:
 	go get -u github.com/raphael/wsc
 
+channel:=user_answer
 ws:
-	wsc ws://localhost:8080/api/ws
+	wsc ws://localhost:8080/api/ws?channel=$(channel)
 
 CLIENT:=./client
 SERVER :=./go/src/app

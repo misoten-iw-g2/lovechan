@@ -50,7 +50,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 		Answer:     t,
 		QuestionID: ctx.ID,
 	}
-	go uaDB.AddAnalysis(ctx, ua)
+	go uaDB.AddAnalysis(ctx, c.ws, ua)
 	res := app.Answertype{}
 	v := mywebsocket.VideoChange{}
 	if q.AnswerType == model.FreeAnswerType {
@@ -72,7 +72,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 				VideoFileName: "once_again.mp4",
 				VoiceFileName: "once_again.wav",
 			}
-			c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+			c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res = r.ChoiceAnswerToAnswertype()
@@ -81,7 +81,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 			VoiceFileName: r.VoiceFileName,
 		}
 	}
-	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 	res.UserVoiceText = t
 	// QuestionsController_Answers: end_implement
 	return ctx.OK(&res)
@@ -101,7 +101,7 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 		VideoFileName: q.VideoFileName,
 		VoiceFileName: q.VoiceFileName,
 	}
-	c.ws.Send(mywebsocket.WsChannel, mywebsocket.WsVideoChange, v)
+	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 	// QuestionsController_Questions: end_implement
 	res := &app.Questiontype{}
 	res.Question = q.QuestionDisplay

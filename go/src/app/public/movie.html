@@ -105,7 +105,7 @@
       }
     }
 
-    var c = new WebSocket('ws://localhost:8080/api/ws');
+    var c = new WebSocket('ws://'+location.hostname+':8080/api/ws?channel=movie');
     c.onopen = function () {
       c.onmessage = function (response) {
         console.log(response.data);
