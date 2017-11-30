@@ -14,7 +14,7 @@ module.exports = {
   publicPath: '/',
   appSrc: resolvePath('src'),
   appCss: resolvePath('src/styles/index.scss'),
-  semanticCss: resolvePath('node_modules/semantic-ui-sass/semantic-ui.scss'),
+  semanticCss: resolvePath('node_modules/semantic-ui-css/semantic.min.css'),
   semanticOverrideCss: resolvePath('src/styles/override_semantic.scss'),
   appPublic: resolvePath('public'),
 };
