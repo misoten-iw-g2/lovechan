@@ -68,11 +68,13 @@ export class TalksState extends TalksRecord<any> {
         return buffer;
       };
 
-      const mainAudioTrack = stream.getAudioTracks()[0];
-      mainAudioTrack.stop();
+      // mike
+      stream.getAudioTracks()[0].stop();
+
       const src = context.createBufferSource();
       src.buffer = audioBuffer();
       src.connect(context.destination);
+
       // CAUTION
       const exportWAV = (audioData, sampleRate) => {
         const encodeWAV = samples => {
@@ -129,8 +131,16 @@ export class TalksState extends TalksRecord<any> {
         const blob = exportWAV(storeAudio, context.sampleRate);
         return blob;
       });
+
       return result;
     });
+    return newState;
+  }
+
+  routing(state: any, action: any) {
+    console.log(state);
+    console.log(action);
+    const newState = state.set('webrtc', 'wwwwwwwwwww');
     return newState;
   }
 }

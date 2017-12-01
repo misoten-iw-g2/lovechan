@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Grid from 'react-css-grid';
 import {withRouter} from 'react-router';
+import * as myself from './Stories';
 import {TwoChoice} from '../Templates';
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
   recordSave: () => void,
 };
 
-const Stories = (props: Props) => (
+export const Stories = (props: Props) => (
   <div id="stories">
     <Grid width="100%" gap={0}>
       <TwoChoice
@@ -23,4 +24,4 @@ const Stories = (props: Props) => (
   </div>
 );
 
-export default withRouter(Stories);
+export default Object.assign(withRouter(Stories), myself);

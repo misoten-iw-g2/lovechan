@@ -13,7 +13,7 @@ import {
 } from '../../containers';
 import {routes} from '../../config/uri';
 
-import {ThreeChoice, FourChoice} from '../Templates';
+import {ThreeChoice, FourChoice, Chat} from '../Templates';
 
 export type Props = {
   location: {
@@ -63,6 +63,8 @@ const Routes = () => (
           />
           {/* media */}
           <Route exact path={routes.media} render={() => <MediaContainer />} />
+          {/* chat */}
+          <Route exact path="/chat" render={() => <Chat />} />
 
           <Route exact path="/three" render={() => <ThreeChoice />} />
           <Route exact path="/four" render={() => <FourChoice />} />
