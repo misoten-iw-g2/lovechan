@@ -69,6 +69,9 @@ curl_routing:
 curl_question_answer:
 	curl -v -H "Content-Type: application/json" -X POST $(host)/api/questions/$(id)/answers -d '{"text": "$(text)"}'
 
+curl_routing_story_voice:
+	curl -F 'uploadfile=@./sampleVoice/questions-2-tanosii.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/talks/routings/root'
+
 curl_question_answer_voice:
 	curl -F 'uploadfile=@./sampleVoice/questions-2-tanosii.wav' -X POST --header 'Content-Type: multipart/form-data' 'http://localhost:8080/api/questions/2/answers'
 

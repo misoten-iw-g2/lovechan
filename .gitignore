@@ -9,7 +9,6 @@ go/src/app/js/
 go/src/app/public/dist/
 go/src/app/public/swagger/
 mysql/
-Gopkg.lock
 go/src/app/public/voice/
 go/src/app/public/video/
 
@@ -20,6 +19,7 @@ go/src/*
 !go/src/app/
 go/src/app/goapp
 tmp/
+Gopkg.lock
 
 
 ### client ###

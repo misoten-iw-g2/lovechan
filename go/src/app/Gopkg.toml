@@ -22,25 +22,21 @@
 
 
 [[constraint]]
-  branch = "master"
+  revision = "0000b0d6fa546d549886da15ef182437222add59"
   name = "github.com/deadcheat/goacors"
 
 [[constraint]]
-  branch = "master"
+  version = "v1.3.0"
   name = "github.com/goadesign/goa"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/goadesign/gorma"
+  version = "v0.16.0"
+  name = "github.com/GoogleCloudPlatform/google-cloud-go"
 
 [[constraint]]
-  name = "github.com/jinzhu/gorm"
-  version = "1.0.0"
+  revision = "99f3ad6d85ae53d0fecf788ab62d0e9734b3c117"
+  name = "github.com/jmoiron/sqlx"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/pei0804/goa-stater"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/spf13/cobra"
+  revision = "b89020ee79b89a7f932c5617d218fc06db382f53"
+  name = "github.com/gorilla/websocket"
