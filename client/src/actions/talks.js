@@ -1,17 +1,42 @@
 /* @flow */
 import {createActions} from 'redux-actions';
-import * as myself from './talks';
+import {Record} from 'immutable';
 import {postWAV} from './apis/postWAV';
 
-export const talksActions = createActions({
+const SuccessResponseRecord = Record({
+  next_page: '',
+  user_voice_text: '',
+});
+
+const FailedResponseRecord = Record({
+  id: '',
+  code: '',
+  bad_request: '',
+  status: '',
+  detail: '',
+});
+
+export default createActions({
   talks: {
     recordAudio: null,
     saveAudio: null,
     routing: async (apiUrl, blob) => {
-      const responseDatas = await postWAV(apiUrl, blob);
-      console.log(responseDatas);
+      try {
+        const postWAVResponse = await postWAV(apiUrl, blob);
+        const responseJSON = await postWAVResponse.json();
+
+        if (!postWAVResponse.ok) {
+          const failedDatasRecord = new FailedResponseRecord(responseJSON);
+          throw Error(failedDatasRecord.get('detail'));
+        }
+        const successResponseRecord = new SuccessResponseRecord(responseJSON);
+        const payload = await successResponseRecord.toJS();
+
+        return payload;
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
     },
   },
 });
-
-export default Object.assign(talksActions, myself);

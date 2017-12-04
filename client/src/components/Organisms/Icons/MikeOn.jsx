@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 import * as React from 'react';
 
-export default function MikeOn(props: any) {
+function MikeOnComponent(props: any) {
   return (
     <svg viewBox="0 0 512 512" {...props}>
       <path
@@ -12,3 +12,9 @@ export default function MikeOn(props: any) {
     </svg>
   );
 }
+
+function MikeOn() {
+  return MikeOnComponent;
+}
+
+export default MikeOn();

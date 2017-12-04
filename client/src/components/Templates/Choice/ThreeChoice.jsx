@@ -15,7 +15,7 @@ type Props = {
   choice3: string,
 };
 
-export class ThreeChoice extends React.Component<Props> {
+class ThreeChoiceComponent extends React.Component<Props> {
   componentDidMount() {}
 
   render() {
@@ -39,7 +39,8 @@ export class ThreeChoice extends React.Component<Props> {
           width="20vw"
           gap="10vw"
           className={classNames('grid-btn')}
-          onClick={() => saveApi()}>
+          onClick={() => saveApi()}
+        >
           <div className={classNames('app_btn', 'app_btn-voice_choiced')}>
             <p>{choice1}</p>
           </div>
@@ -55,7 +56,8 @@ export class ThreeChoice extends React.Component<Props> {
           width="100%"
           gap={0}
           className={classNames('grid-mike')}
-          onClick={() => recordApi()}>
+          onClick={() => recordApi()}
+        >
           <MikeOff
             className={classNames({app_mike: true, visible: true, hide: false})}
             fill="#fff"
@@ -70,4 +72,8 @@ export class ThreeChoice extends React.Component<Props> {
   }
 }
 
-export default withRouter(ThreeChoice);
+function ThreeChoice() {
+  return withRouter(ThreeChoiceComponent);
+}
+
+export default ThreeChoice();

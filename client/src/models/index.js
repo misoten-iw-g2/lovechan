@@ -1,1 +1,1 @@
-export * from './talks';
+export {default as TalksState, default} from './TalksState';

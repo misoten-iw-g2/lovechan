@@ -1,1 +1,5 @@
-export const assets = {};
+function assets() {
+  return Object.assign({}, {});
+}
+
+export default assets();

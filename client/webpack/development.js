@@ -23,9 +23,29 @@ const {
   stringified,
 } = require('./config/env');
 
+const postcssLoaderOptions = {
+  ident: 'postcss',
+  plugins: () => [
+    require('postcss-flexbugs-fixes'),
+    autoprefixer({
+      browsers: [
+        '> 1% in JP',
+        'not Chrome 49',
+        'last 2 Edge versions',
+        'last 2 iOS versions',
+      ],
+      flexbox: 'no-2009',
+    }),
+  ],
+};
+
+const sassLoaderOptions = {sourceMap: true};
+
 module.exports = {
   entry: [
     require.resolve('@webpack-utils/polyfills'),
+    '@webcomponents/webcomponentsjs/custom-elements-es5-adapter',
+    '@webcomponents/webcomponentsjs/webcomponents-loader',
     // activate HMR for React
     'react-hot-loader/patch',
     // bundle the client for webpack-dev-server
@@ -80,10 +100,16 @@ module.exports = {
     rules: [
       {
         oneOf: [
+          /**
+           * HTML resolve
+           */
           {
             test: /\.html/,
             loader: require.resolve('html-loader'),
           },
+          /**
+           * Assets resolve
+           */
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
@@ -92,6 +118,9 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+          /**
+           * Babel
+           */
           {
             test: /\.(js|jsx)$/,
             include: appSrc,
@@ -100,6 +129,9 @@ module.exports = {
               cacheDirectory: true,
             },
           },
+          /**
+           * CSS Modules resolve
+           */
           {
             test: [/\.css$/, /\.scss$/],
             use: [
@@ -111,30 +143,35 @@ module.exports = {
               require.resolve('resolve-url-loader'),
               {
                 loader: require.resolve('sass-loader'),
-                options: {
-                  sourceMap: true,
-                },
+                options: sassLoaderOptions,
               },
               {
                 loader: require.resolve('postcss-loader'),
-                options: {
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({
-                      browsers: [
-                        '> 1% in JP',
-                        'not Chrome 49',
-                        'last 2 Edge versions',
-                        'last 2 iOS versions',
-                      ],
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                },
+                options: postcssLoaderOptions,
               },
             ],
           },
+          /**
+           * Raw CSS resolve
+           */
+          {
+            test: [/\.css$/, /\.scss$/],
+            use: [
+              require.resolve('raw-loader'),
+              require.resolve('resolve-url-loader'),
+              {
+                loader: require.resolve('sass-loader'),
+                options: sassLoaderOptions,
+              },
+              {
+                loader: require.resolve('postcss-loader'),
+                options: postcssLoaderOptions,
+              },
+            ],
+          },
+          /**
+           * File resolve
+           */
           {
             exclude: [/\.js$/, /\.html$/, /\.json$/],
             loader: require.resolve('file-loader'),

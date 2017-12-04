@@ -2,12 +2,13 @@
 /* eslint-disable max-len */
 import * as React from 'react';
 
-export default function MikeOff(props: any) {
+function MikeOffComponent(props: any) {
   return (
     <svg
       xmlnsXlink="http://www.w3.org/1999/xlink"
       viewBox="0 0 512 512"
-      {...props}>
+      {...props}
+    >
       <defs>
         <path id="a" d="M109.5 179.2h290.7V512H109.5z" />
       </defs>
@@ -22,3 +23,9 @@ export default function MikeOff(props: any) {
     </svg>
   );
 }
+
+function MikeOff() {
+  return MikeOffComponent;
+}
+
+export default MikeOff();

@@ -1,1 +1,1 @@
-export * from './talks';
+export {default as talksActions, default} from './talks';

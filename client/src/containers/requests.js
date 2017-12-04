@@ -13,6 +13,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Requests),
-);
+function RequestsContainer() {
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(Requests));
+}
+
+export default RequestsContainer();

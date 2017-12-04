@@ -4,7 +4,6 @@ import {Header} from 'semantic-ui-react';
 import classNames from 'classnames';
 import Grid from 'react-css-grid';
 import {withRouter} from 'react-router';
-import * as myself from './FourChoice';
 import {MikeOff, MikeOn} from '../../Organisms';
 
 type Props = {
@@ -17,7 +16,7 @@ type Props = {
   choice4: string,
 };
 
-export class FourChoice extends React.Component<Props> {
+class FourChoiceComponent extends React.Component<Props> {
   componentDidMount() {}
 
   render() {
@@ -42,7 +41,8 @@ export class FourChoice extends React.Component<Props> {
           width="calc(20vw)"
           gap="calc(2vw)"
           className={classNames('grid-btn')}
-          onClick={() => saveApi()}>
+          onClick={() => saveApi()}
+        >
           <div className={classNames('app_btn', 'app_btn-voice_choiced')}>
             <p>{choice1}</p>
           </div>
@@ -61,7 +61,8 @@ export class FourChoice extends React.Component<Props> {
           width="100%"
           gap={0}
           className={classNames('grid-mike')}
-          onClick={() => recordApi()}>
+          onClick={() => recordApi()}
+        >
           <MikeOff
             className={classNames({app_mike: true, visible: true, hide: false})}
             fill="#fff"
@@ -76,4 +77,8 @@ export class FourChoice extends React.Component<Props> {
   }
 }
 
-export default Object.assign(withRouter(FourChoice), myself);
+function FourChoice() {
+  return withRouter(FourChoiceComponent);
+}
+
+export default FourChoice();

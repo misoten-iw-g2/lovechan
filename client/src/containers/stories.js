@@ -8,11 +8,13 @@ import {talksActions} from '../actions';
 const actions = talksActions.talks;
 
 const mapStateToProps = state => ({
-  talks: state.talks,
+  talks: state.talks.toJS(),
 });
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Stories),
-);
+function StoriesContainer() {
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(Stories));
+}
+
+export default StoriesContainer();

@@ -1,7 +1,5 @@
-import Landing from './Landing';
-import Conversations from './Conversations';
-import Stories from './Stories';
-import Requests from './Requests';
-import Questions from './Questions';
-
-export {Landing, Conversations, Stories, Requests, Questions};
+export {default as Landing} from './Landing';
+export {default as Conversations} from './Conversations';
+export {default as Stories} from './Stories';
+export {default as Requests} from './Requests';
+export {default as Questions} from './Questions';

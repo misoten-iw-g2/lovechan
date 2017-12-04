@@ -13,6 +13,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Conversations),
-);
+function ConversationsContainer() {
+  return withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(Conversations)
+  );
+}
+
+export default ConversationsContainer();

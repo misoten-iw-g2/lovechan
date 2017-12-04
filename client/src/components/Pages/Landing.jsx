@@ -1,19 +1,21 @@
 /* @flow */
 import * as React from 'react';
 import Grid from 'react-css-grid';
-import {withRouter} from 'react-router';
-import * as myself from './Landing';
 import {TwoChoice} from '../Templates';
-import {apiUrls} from '../../config/url';
+import {url} from '../../config';
 
 type Props = {
   recordAudio: () => void,
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
-  talks: {toJS: () => any},
+  talks: {wav: any},
+  history: {},
+  location: {},
+  match: {},
 };
 
-export const Landing = (props: Props) => {
+function LandingComponent(props: Props) {
+  console.log(props);
   const handleClick = async action => {
     switch (action) {
       case 'RECORD':
@@ -28,9 +30,9 @@ export const Landing = (props: Props) => {
   };
 
   const fetchRouting = async () => {
-    const propWAV = props.talks.toJS().wav;
+    const propWAV = props.talks.wav;
     if (propWAV !== null) {
-      await props.routing(apiUrls.root, propWAV);
+      await props.routing(url.apis.root, propWAV);
     }
   };
 
@@ -47,6 +49,10 @@ export const Landing = (props: Props) => {
       </Grid>
     </div>
   );
-};
+}
 
-export default Object.assign(withRouter(Landing), myself);
+function Landing() {
+  return LandingComponent;
+}
+
+export default Landing();

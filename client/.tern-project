@@ -1,0 +1,33 @@
+{
+  "ecmaVersion": "7",
+  "libs": [
+    "browser"
+  ],
+  "loadEagerly": [
+    "src/**/*.js",
+    "src/**/*.jsx"
+  ],
+  "dontLoad": [
+    "node_modules/**",
+    "public/static/js/*.js"
+  ],
+  "plugins": {
+    "doc_comment": true,
+    "complete_strings": {
+      "maxLength": 15
+    },
+    "modules": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "node_resolve": {},
+    "node": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "es_modules": {},
+    "commonjs": {}
+  }
+}

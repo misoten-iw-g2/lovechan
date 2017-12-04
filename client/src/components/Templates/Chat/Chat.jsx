@@ -10,15 +10,14 @@ type Props = {
   recordApi: () => void,
   saveApi: () => void,
   choiceTitle: string,
-  choice1: string,
-  choice2: string,
+  talks: [],
 };
 
-class TwoChoiceComponent extends React.Component<Props> {
+class ChatComponent extends React.Component<Props> {
   componentDidMount() {}
 
   render() {
-    const {recordApi, saveApi, choiceTitle, choice1, choice2} = this.props;
+    const {recordApi, saveApi, choiceTitle, talks} = this.props;
     return (
       <div id="two_choice">
         <Grid width="100%" gap={0} className={classNames('grid-header')}>
@@ -61,8 +60,8 @@ class TwoChoiceComponent extends React.Component<Props> {
   }
 }
 
-function TwoChoice() {
-  return withRouter(TwoChoiceComponent);
+function Chat() {
+  return withRouter(ChatComponent);
 }
 
-export default TwoChoice();
+export default Chat();

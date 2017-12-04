@@ -1,24 +1,36 @@
 /* @flow */
-import {createStore, applyMiddleware} from 'redux';
-import {composeWithDevTools} from 'redux-devtools-extension';
+/* eslint no-underscore-dangle: off */
+import {createStore, applyMiddleware, compose} from 'redux';
+import {instrument, persistState} from 'redux-devtools';
 import promiseMiddleware from 'redux-promise-middleware';
 import thunkMiddleware from 'redux-thunk';
-import createHistory from 'history/createBrowserHistory';
+import {createBrowserHistory} from 'history';
 import {routerMiddleware} from 'react-router-redux';
-import * as myself from './createStore';
 import {reducers} from '../reducers';
+import {routingMiddleware} from './routingMiddleware';
 
-const history = createHistory();
+// console.log(routingMiddleware());
 
-export const store = createStore(
-  reducers,
-  composeWithDevTools(
-    applyMiddleware(
-      promiseMiddleware(),
-      thunkMiddleware,
-      routerMiddleware(history),
-    ),
-  ),
-);
+const history = createBrowserHistory();
 
-export default Object.assign(store, myself);
+const middlewares = [
+  thunkMiddleware,
+  promiseMiddleware(),
+  routerMiddleware(history),
+  routingMiddleware(),
+];
+
+let enhancer;
+if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+  enhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(
+    applyMiddleware(...middlewares)
+  );
+} else {
+  enhancer = compose(
+    applyMiddleware(...middlewares),
+    instrument(),
+    persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
+  );
+}
+
+export default createStore(reducers, enhancer);

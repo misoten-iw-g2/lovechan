@@ -1,18 +1,19 @@
-/* eslint no-console: 0 */
+/* @flow */
+/* eslint no-console: off */
 import * as React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 import {AppContainer} from 'react-hot-loader';
-import createHistory from 'history/createBrowserHistory';
+import {createBrowserHistory} from 'history';
 import {ConnectedRouter} from 'react-router-redux';
 import {Routes} from '../Routes';
 import {store} from '../../store';
 
-const main = () => {
-  const mainRender = ComponentRoutes => {
+function main() {
+  const mainRender = (ComponentRoutes: any) => {
     const {document} = window;
-    const history = createHistory();
+    const history = createBrowserHistory();
     render(
       <AppContainer>
         <Provider store={store}>
@@ -23,7 +24,7 @@ const main = () => {
           </ConnectedRouter>
         </Provider>
       </AppContainer>,
-      document.querySelector('main'),
+      document.querySelector('main')
     );
   };
 
@@ -38,6 +39,6 @@ const main = () => {
   } catch (e) {
     console.error(e);
   }
-};
+}
 
 export default main;
