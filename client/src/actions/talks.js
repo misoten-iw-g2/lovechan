@@ -1,7 +1,6 @@
 /* @flow */
 import {createActions} from 'redux-actions';
 import {Record} from 'immutable';
-import * as myself from './talks';
 import {postWAV} from './apis/postWAV';
 
 const SuccessResponseRecord = Record({
@@ -17,7 +16,7 @@ const FailedResponseRecord = Record({
   detail: '',
 });
 
-export const talksActions = createActions({
+export default createActions({
   talks: {
     recordAudio: null,
     saveAudio: null,
@@ -31,15 +30,13 @@ export const talksActions = createActions({
           throw Error(failedDatasRecord.get('detail'));
         }
         const successResponseRecord = new SuccessResponseRecord(responseJSON);
-        const payload = await successResponseRecord.toJSON();
+        const payload = await successResponseRecord.toJS();
 
         return payload;
       } catch (e) {
         console.log(e);
-        return e;
+        throw e;
       }
     },
   },
 });
-
-export default Object.assign(talksActions, myself);

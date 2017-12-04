@@ -1,2 +1,1 @@
-/* @flow */
-export * from './createStore';
+export {default as store, default} from './createStore';

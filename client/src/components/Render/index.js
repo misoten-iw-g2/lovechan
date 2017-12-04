@@ -1,3 +1,1 @@
-import Render from './Render';
-
-export {Render as main};
+export {default as main, default} from './Render';

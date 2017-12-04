@@ -1,0 +1,43 @@
+parser: 'babel-eslint'
+
+extends:
+  - airbnb
+  - plugin:import/errors
+  - plugin:import/warnings
+  - prettier
+  - prettier/flowtype
+  - prettier/react
+
+plugins:
+  - flowtype
+  - react
+  - prettier
+
+env:
+  browser: true
+  node: true
+
+rules:
+  no-unused-vars:
+    - 2
+    -
+      argsIgnorePattern: ^_
+      varsIgnorePattern: ^_
+  prettier/prettier:
+    - error
+    -
+      singleQuote: true
+      trailingComma: es5
+      bracketSpacing: false
+      jsxBracketSameLine: false
+      parser: flow
+  max-len:
+    - error
+    -
+      code: 120
+      ignoreUrls: true
+  no-confusing-arrow: error
+  no-mixed-operators: error
+  no-unexpected-multiline: error
+  global-require: off
+  class-methods-use-this: off

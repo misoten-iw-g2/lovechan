@@ -1,3 +1,1 @@
-/* @flow */
-export * from './combineReducers';
-export * from './talks';
+export {default as reducers, default} from './combineReducers';

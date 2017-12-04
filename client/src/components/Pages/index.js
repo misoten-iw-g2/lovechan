@@ -1,5 +1,5 @@
-export * from './Landing';
-export * from './Conversations';
-export * from './Stories';
-export * from './Requests';
-export * from './Questions';
+export {default as Landing} from './Landing';
+export {default as Conversations} from './Conversations';
+export {default as Stories} from './Stories';
+export {default as Requests} from './Requests';
+export {default as Questions} from './Questions';

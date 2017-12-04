@@ -2,7 +2,7 @@
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import Media from '../components/Media';
+import {Media} from '../components/Media';
 import {talksActions} from '../actions';
 
 const actions = talksActions.talks;
@@ -13,4 +13,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Media));
+function MediaContainer() {
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(Media));
+}
+
+export default MediaContainer();

@@ -21,9 +21,11 @@ const {raw, stringified} = require('./config/env');
 
 module.exports = {
   bail: true,
-  devtool: false,
+  devtool: 'nosources-source-map',
   entry: [
     require.resolve('@webpack-utils/polyfills'),
+    '@webcomponents/webcomponentsjs/custom-elements-es5-adapter',
+    '@webcomponents/webcomponentsjs/webcomponents-loader',
     semanticCss,
     semanticOverrideCss,
     appCss,

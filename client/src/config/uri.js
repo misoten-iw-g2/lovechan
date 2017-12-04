@@ -1,9 +1,18 @@
-export const routes = {
-  landing: '/',
-  stories: '/stories',
-  story_pattern: '/stories/:story_pattern/:now_step',
-  conversations: '/conversations',
-  requests: '/requests',
-  questions: '/questions',
-  media: '/media',
-};
+function uri() {
+  return Object.assign(
+    {},
+    {
+      routes: {
+        landing: '/',
+        stories: '/stories',
+        story_pattern: '/stories/:story_pattern/:now_step',
+        conversations: '/conversations',
+        requests: '/requests',
+        questions: '/questions',
+        media: '/media',
+      },
+    }
+  );
+}
+
+export default uri();

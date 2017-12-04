@@ -1,14 +1,12 @@
 /* @flow */
-import * as myself from './talks';
 import {Record} from 'immutable';
-import {apiUrls} from '../config/url';
 
-const TalksRecord: any = Record({
+const TalksRecord = Record({
   webrtc: null,
   wav: null,
 });
 
-export class TalksState extends TalksRecord<any> {
+export class TalksState extends TalksRecord {
   recordAudio(state: any, _action: any) {
     const newState = state.update('webrtc', async () => {
       const {navigator, AudioContext} = window;
@@ -51,13 +49,12 @@ export class TalksState extends TalksRecord<any> {
 
   saveAudio(state: any, _action: any) {
     const newState = state.update('wav', async () => {
-      const {URL, document} = window;
       const {context, storeAudio, stream, bufferSize} = await state.webrtc;
       const audioBuffer = () => {
         const buffer = context.createBuffer(
           1,
           storeAudio.length * bufferSize,
-          context.sampleRate,
+          context.sampleRate
         );
         const channel = buffer.getChannelData(0);
         for (let i = 0; i < storeAudio.length; i += 1) {
@@ -71,9 +68,11 @@ export class TalksState extends TalksRecord<any> {
       // mike
       stream.getAudioTracks()[0].stop();
 
-      const src = context.createBufferSource();
-      src.buffer = audioBuffer();
-      src.connect(context.destination);
+      if (!context.state === 'closed') {
+        const src = context.createBufferSource();
+        src.buffer = audioBuffer();
+        src.connect(context.destination);
+      }
 
       // CAUTION
       const exportWAV = (audioData, sampleRate) => {
@@ -127,22 +126,27 @@ export class TalksState extends TalksRecord<any> {
         return audioBlob;
       };
       // CAUTION
-      const result = context.close().then(() => {
-        const blob = exportWAV(storeAudio, context.sampleRate);
-        return blob;
-      });
 
-      return result;
+      if (!context.state === 'closed') {
+        const result = context.close().then(() => {
+          const blob = exportWAV(storeAudio, context.sampleRate);
+          return blob;
+        });
+        return result;
+      }
+      const blob = exportWAV(storeAudio, context.sampleRate);
+      return blob;
     });
     return newState;
   }
 
   routing(state: any, action: any) {
-    console.log(state);
-    console.log(action);
-    const newState = state.set('webrtc', 'wwwwwwwwwww');
+    const newState = state.update('wav', async () => {
+      console.log(state);
+      return 'aaaaa';
+    });
     return newState;
   }
 }
 
-export default Object.assign(TalksState, myself);
+export default TalksState;

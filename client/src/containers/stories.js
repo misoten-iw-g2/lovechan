@@ -13,6 +13,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Stories),
-);
+function StoriesContainer() {
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(Stories));
+}
+
+export default StoriesContainer();

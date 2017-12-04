@@ -4,7 +4,6 @@ import {Header} from 'semantic-ui-react';
 import classNames from 'classnames';
 import Grid from 'react-css-grid';
 import {withRouter} from 'react-router';
-import * as myself from './Chat';
 import {MikeOff, MikeOn} from '../../Organisms';
 
 type Props = {
@@ -14,7 +13,7 @@ type Props = {
   talks: [],
 };
 
-export class Chat extends React.Component<Props> {
+class ChatComponent extends React.Component<Props> {
   componentDidMount() {}
 
   render() {
@@ -31,7 +30,8 @@ export class Chat extends React.Component<Props> {
           width="20vw"
           gap="10vw"
           className={classNames('grid-btn')}
-          onClick={() => saveApi()}>
+          onClick={() => saveApi()}
+        >
           <div className={classNames('app_btn', 'app_btn-voice_choiced')}>
             <p>{choice1}</p>
           </div>
@@ -44,7 +44,8 @@ export class Chat extends React.Component<Props> {
           width="100%"
           gap={0}
           className={classNames('grid-mike')}
-          onClick={() => recordApi()}>
+          onClick={() => recordApi()}
+        >
           <MikeOff
             className={classNames({app_mike: true, visible: true, hide: false})}
             fill="#fff"
@@ -59,4 +60,8 @@ export class Chat extends React.Component<Props> {
   }
 }
 
-export default Object.assign(withRouter(Chat), myself);
+function Chat() {
+  return withRouter(ChatComponent);
+}
+
+export default Chat();

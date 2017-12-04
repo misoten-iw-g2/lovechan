@@ -1,3 +1,3 @@
-export * from './TwoChoice';
-export * from './ThreeChoice';
-export * from './FourChoice';
+export {default as TwoChoice} from './TwoChoice';
+export {default as ThreeChoice} from './ThreeChoice';
+export {default as FourChoice} from './FourChoice';

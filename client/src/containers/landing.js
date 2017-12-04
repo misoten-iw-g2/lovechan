@@ -13,6 +13,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Landing),
-);
+function LandingContainer() {
+  return withRouter(connect(mapStateToProps, mapDispatchToProps)(Landing));
+}
+
+export default LandingContainer();

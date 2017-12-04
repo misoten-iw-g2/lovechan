@@ -1,4 +1,2 @@
-import MikeOn from './MikeOn';
-import MikeOff from './MikeOff';
-
-export {MikeOn, MikeOff};
+export {default as MikeOn} from './MikeOn';
+export {default as MikeOff} from './MikeOff';
