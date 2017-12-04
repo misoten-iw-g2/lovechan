@@ -5,7 +5,7 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 import {AppContainer} from 'react-hot-loader';
-import createHistory from 'history/createBrowserHistory';
+import {createBrowserHistory} from 'history';
 import {ConnectedRouter} from 'react-router-redux';
 import {Routes} from '../Routes';
 import {store} from '../../store';
@@ -13,7 +13,7 @@ import {store} from '../../store';
 function main() {
   const mainRender = (ComponentRoutes: any) => {
     const {document} = window;
-    const history = createHistory();
+    const history = createBrowserHistory();
     render(
       <AppContainer>
         <Provider store={store}>

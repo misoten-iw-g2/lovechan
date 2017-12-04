@@ -8,7 +8,7 @@ import {talksActions} from '../actions';
 const actions = talksActions.talks;
 
 const mapStateToProps = state => ({
-  talks: state.talks,
+  talks: state.talks.toJS(),
 });
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);

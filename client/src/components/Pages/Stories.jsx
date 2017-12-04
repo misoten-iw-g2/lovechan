@@ -1,7 +1,6 @@
 /* @flow */
 import * as React from 'react';
 import Grid from 'react-css-grid';
-import {withRouter} from 'react-router';
 import {TwoChoice} from '../Templates';
 
 type Props = {
@@ -26,7 +25,7 @@ function StoriesComponent(props: Props) {
 }
 
 function Stories() {
-  return withRouter(StoriesComponent);
+  return StoriesComponent;
 }
 
 export default Stories();
