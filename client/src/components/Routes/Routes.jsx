@@ -31,40 +31,32 @@ function RoutesComponent() {
         <Route
           exact
           path={uri.routes.landing}
-          render={() => <LandingContainer />}
+          render={props => <LandingContainer location={props.location} />}
         />
         {/* stories */}
         <Route
-          exact
           path={uri.routes.stories}
-          render={() => <StoriesContainer />}
+          render={props => <StoriesContainer location={props.location} />}
         />
         {/* story_pattern */}
         <Route exact path={uri.routes.story_pattern} render={() => <div />} />
         {/* conversations */}
         <Route
-          exact
           path={uri.routes.conversations}
           render={() => <ConversationsContainer />}
         />
         {/* requests */}
         <Route
-          exact
           path={uri.routes.requests}
           render={() => <RequestsContainer />}
         />
         {/* questions */}
         <Route
-          exact
           path={uri.routes.questions}
           render={() => <QuestionsContainer />}
         />
         {/* media */}
-        <Route
-          exact
-          path={uri.routes.media}
-          render={() => <MediaContainer />}
-        />
+        <Route path={uri.routes.media} render={() => <MediaContainer />} />
         {/* chat */}
         <Route exact path="/chat" render={() => <Chat />} />
 

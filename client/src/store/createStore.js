@@ -4,14 +4,10 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import {instrument, persistState} from 'redux-devtools';
 import promiseMiddleware from 'redux-promise-middleware';
 import thunkMiddleware from 'redux-thunk';
-import {createBrowserHistory} from 'history';
 import {routerMiddleware} from 'react-router-redux';
 import {reducers} from '../reducers';
 import {routingMiddleware} from './routingMiddleware';
-
-// console.log(routingMiddleware());
-
-const history = createBrowserHistory();
+import {history} from '../config';
 
 const middlewares = [
   thunkMiddleware,

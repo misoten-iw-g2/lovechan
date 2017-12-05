@@ -44,8 +44,6 @@ const sassLoaderOptions = {sourceMap: true};
 module.exports = {
   entry: [
     require.resolve('@webpack-utils/polyfills'),
-    '@webcomponents/webcomponentsjs/custom-elements-es5-adapter',
-    '@webcomponents/webcomponentsjs/webcomponents-loader',
     // activate HMR for React
     'react-hot-loader/patch',
     // bundle the client for webpack-dev-server

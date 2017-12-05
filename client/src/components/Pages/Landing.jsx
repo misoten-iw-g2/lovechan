@@ -15,7 +15,6 @@ type Props = {
 };
 
 function LandingComponent(props: Props) {
-  console.log(props);
   const handleClick = async action => {
     switch (action) {
       case 'RECORD':
