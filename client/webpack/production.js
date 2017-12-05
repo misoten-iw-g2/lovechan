@@ -19,13 +19,31 @@ const {
 } = require('./config/paths');
 const {raw, stringified} = require('./config/env');
 
+const postcssLoaderOptions = {
+  ident: 'postcss',
+  plugins: () => [
+    require('postcss-flexbugs-fixes'),
+    autoprefixer({
+      browsers: [
+        '> 1% in JP',
+        'not Chrome 49',
+        'last 2 Edge versions',
+        'last 2 iOS versions',
+      ],
+      flexbox: 'no-2009',
+    }),
+  ],
+};
+
+const sassLoaderOptions = {
+  sourceMap: true,
+};
+
 module.exports = {
   bail: true,
   devtool: 'nosources-source-map',
   entry: [
     require.resolve('@webpack-utils/polyfills'),
-    '@webcomponents/webcomponentsjs/custom-elements-es5-adapter',
-    '@webcomponents/webcomponentsjs/webcomponents-loader',
     semanticCss,
     semanticOverrideCss,
     appCss,
@@ -50,10 +68,16 @@ module.exports = {
     rules: [
       {
         oneOf: [
+          /**
+           * HTML resolve
+           */
           {
             test: /\.html/,
             loader: require.resolve('html-loader'),
           },
+          /**
+           * Assets resolve
+           */
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),
@@ -62,8 +86,11 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+          /**
+           * Babel
+           */
           {
-            test: /\.(js|jsx)$/,
+            test: /\.(js|jsx|mjs)$/,
             include: appSrc,
             loader: require.resolve('babel-loader'),
             options: {
@@ -75,49 +102,60 @@ module.exports = {
             loader: ExtractTextPlugin.extract(
               Object.assign(
                 {
-                  fallback: require.resolve('style-loader'),
+                  fallback: {
+                    loader: require.resolve('style-loader'),
+                    options: {
+                      hmr: false,
+                    },
+                  },
                   use: [
+                    /**
+                     * CSS Modules resolve
+                     */
                     {
                       loader: require.resolve('css-loader'),
-                      options: {
-                        importLoaders: 2,
-                        minimize: true,
-                      },
+                      options: {importLoaders: 3},
                     },
                     require.resolve('resolve-url-loader'),
                     {
                       loader: require.resolve('sass-loader'),
-                      options: {
-                        sourceMap: true,
-                      },
+                      options: sassLoaderOptions,
                     },
                     {
                       loader: require.resolve('postcss-loader'),
-                      options: {
-                        ident: 'postcss',
-                        plugins: () => [
-                          require('postcss-flexbugs-fixes'),
-                          autoprefixer({
-                            browsers: [
-                              '> 1% in JP',
-                              'not Chrome 49',
-                              'last 2 Edge versions',
-                              'last 2 iOS versions',
-                            ],
-                            flexbox: 'no-2009',
-                          }),
-                        ],
-                      },
+                      options: postcssLoaderOptions,
+                    },
+                    /**
+                     * Raw CSS resolve
+                     */
+                    {
+                      test: [/\.css$/, /\.scss$/],
+                      use: [
+                        require.resolve('raw-loader'),
+                        require.resolve('resolve-url-loader'),
+                        {
+                          loader: require.resolve('sass-loader'),
+                          options: sassLoaderOptions,
+                        },
+                        {
+                          loader: require.resolve('postcss-loader'),
+                          options: postcssLoaderOptions,
+                        },
+                      ],
                     },
                   ],
                 },
-                {},
-              ),
+                {}
+              )
             ),
+            // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
           },
+          /**
+           * File resolve
+           */
           {
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
             loader: require.resolve('file-loader'),
+            exclude: [/\.js$/, /\.html$/, /\.json$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },

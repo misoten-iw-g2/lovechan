@@ -3,24 +3,20 @@
 import * as React from 'react';
 import {render} from 'react-dom';
 import {Provider} from 'react-redux';
-import {BrowserRouter} from 'react-router-dom';
 import {AppContainer} from 'react-hot-loader';
-import {createBrowserHistory} from 'history';
 import {ConnectedRouter} from 'react-router-redux';
 import {Routes} from '../Routes';
 import {store} from '../../store';
+import {history} from '../../config';
 
 function main() {
   const mainRender = (ComponentRoutes: any) => {
     const {document} = window;
-    const history = createBrowserHistory();
     render(
       <AppContainer>
         <Provider store={store}>
           <ConnectedRouter history={history}>
-            <BrowserRouter>
-              <ComponentRoutes />
-            </BrowserRouter>
+            <ComponentRoutes />
           </ConnectedRouter>
         </Provider>
       </AppContainer>,

@@ -14,7 +14,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
 function StoriesContainer() {
-  return withRouter(connect(mapStateToProps, mapDispatchToProps)(Stories));
+  return connect(mapStateToProps, mapDispatchToProps)(Stories);
 }
 
 export default StoriesContainer();
