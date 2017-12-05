@@ -9,9 +9,6 @@ type Props = {
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
   talks: {wav: any},
-  history: {},
-  location: {},
-  match: {},
 };
 
 function LandingComponent(props: Props) {

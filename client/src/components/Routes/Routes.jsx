@@ -31,13 +31,10 @@ function RoutesComponent() {
         <Route
           exact
           path={uri.routes.landing}
-          render={props => <LandingContainer location={props.location} />}
+          render={() => <LandingContainer />}
         />
         {/* stories */}
-        <Route
-          path={uri.routes.stories}
-          render={props => <StoriesContainer location={props.location} />}
-        />
+        <Route path={uri.routes.stories} render={() => <StoriesContainer />} />
         {/* story_pattern */}
         <Route exact path={uri.routes.story_pattern} render={() => <div />} />
         {/* conversations */}
