@@ -197,7 +197,7 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 	s := app.Storytype{}
 	si := storyInfo{}
 	s.StoryPattern = suddenlyPattern
-	cd1 := []string{"詳しい人へ<br />のアポ", "勝手に<br />壊れた", "画面が<br />映らない", "ネットに<br />繋がらない"}
+	cd1 := []string{"詳しい人へのアポ", "勝手に壊れた", "画面が映らない", "ネットに繋がらない"}
 	c1 := []string{
 		"詳しい人へのアポ,くわしいひとへのあぽ",
 		"勝手に壊れた,かってにこわれた",
@@ -279,7 +279,7 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 	s.StoryPattern = changePattern
 
 	// ストーリーに使う選択肢
-	cd1 := []string{"エラーが<br />出てる", "勝手に<br />壊れた", "画面が<br />映らない", "ネットに<br />繋がらない"}
+	cd1 := []string{"エラーが出てる", "勝手に壊れた", "画面が映らない", "ネットに繋がらない"}
 	c1 := []string{
 		"エラーが出てる,えらーがでてる",
 		"勝手に壊れた,かってにこわれた",
