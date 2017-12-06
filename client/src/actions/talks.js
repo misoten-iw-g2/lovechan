@@ -4,6 +4,13 @@ import {Record} from 'immutable';
 import {postWAV} from './apis/postWAV';
 
 const SuccessResponseRecord = Record({
+  answer: '',
+  choices: [],
+  is_clear: null,
+  next_step: null,
+  question: '',
+  story_pattern: '',
+  url: '',
   next_page: '',
   user_voice_text: '',
 });

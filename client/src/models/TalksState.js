@@ -1,10 +1,10 @@
 /* @flow */
 import {Record} from 'immutable';
-import {push} from 'react-router-redux';
 
 const TalksRecord = Record({
   webrtc: null,
   wav: null,
+  routingDatas: [],
 });
 
 export class TalksState extends TalksRecord {
@@ -142,9 +142,10 @@ export class TalksState extends TalksRecord {
   }
 
   routing(state: any, action: any) {
-    console.log(action);
-
-    const newState = state.delete('webrtc').delete('wav');
+    const newState = state
+      .delete('webrtc')
+      .delete('wav')
+      .set('routingDatas', action.payload);
     return newState;
   }
 }
