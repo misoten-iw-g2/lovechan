@@ -4,3 +4,4 @@ export {default as ConversationsContainer} from './conversations';
 export {default as RequestsContainer} from './requests';
 export {default as QuestionsContainer} from './questions';
 export {default as MediaContainer} from './media';
+export {default as CustomFourChoiceContainer} from './customfourchoice';
