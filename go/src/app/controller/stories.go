@@ -196,7 +196,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 func changePatternStory(ctx context.Context, t string, now int) (storyInfo, error) {
 	s := app.Storytype{}
 	si := storyInfo{}
-	s.StoryPattern = suddenlyPattern
+	s.StoryPattern = changePattern
 	cd1 := []string{"詳しい人へのアポ", "勝手に壊れた", "画面が映らない", "ネットに繋がらない"}
 	c1 := []string{
 		"詳しい人へのアポ,くわしいひとへのあぽ",
@@ -276,7 +276,7 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, error) {
 	s := app.Storytype{}
 	si := storyInfo{}
-	s.StoryPattern = changePattern
+	s.StoryPattern = suddenlyPattern
 
 	// ストーリーに使う選択肢
 	cd1 := []string{"エラーが出てる", "勝手に壊れた", "画面が映らない", "ネットに繋がらない"}
