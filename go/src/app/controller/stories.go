@@ -204,7 +204,7 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 		"画面が映らない,がめんがうつらない",
 		"ネットに繋がらない,ねっとにつならがない",
 	}
-	cd2 := []string{"114", "3327", "3639", "223"}
+	cd2 := []string{"427", "3327", "3639", "223"}
 	cd3 := []string{"はい", "いいえ"}
 	switch now {
 	case 1:
@@ -286,7 +286,7 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 		"画面が映らない,がめんがうつらない",
 		"ネットに繋がらない,ねっとにつならがない",
 	}
-	cd2 := []string{"417", "114", "514", "1919"}
+	cd2 := []string{"427", "114", "514", "1919"}
 	cd3 := []string{"はい", "いいえ"}
 
 	switch now {
