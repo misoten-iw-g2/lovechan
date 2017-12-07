@@ -2,13 +2,12 @@
 import * as React from 'react';
 import Grid from 'react-css-grid';
 import {FourChoice} from '../Templates';
-import {url} from '../../config';
 
 type Props = {
   recordAudio: () => void,
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
-  talks: {wav: any, routingDatas: {question: string, choices: []}},
+  talks: {wav: any, routingDatas: {question: string, choices: [], url: string}},
 };
 
 function CustomFourChoiceComponent(props: Props) {
@@ -26,9 +25,12 @@ function CustomFourChoiceComponent(props: Props) {
   };
 
   const fetchRouting = async () => {
-    const propWAV = props.talks.wav;
+    const {talks} = props;
+    const propWAV = talks.wav;
+    const apiURI = `http://localhost:8080${talks.routingDatas.url}`;
+    console.log(apiURI);
     if (propWAV !== null) {
-      await props.routing(url.apis.root, propWAV);
+      await props.routing(apiURI, propWAV);
     }
   };
 

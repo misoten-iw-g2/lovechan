@@ -142,10 +142,7 @@ export class TalksState extends TalksRecord {
   }
 
   routing(state: any, action: any) {
-    const newState = state
-      .delete('webrtc')
-      .delete('wav')
-      .set('routingDatas', action.payload);
+    const newState = state.set('routingDatas', action.payload);
     return newState;
   }
 }
