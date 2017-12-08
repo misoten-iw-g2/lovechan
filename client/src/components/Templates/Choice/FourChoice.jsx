@@ -10,6 +10,7 @@ type Props = {
   saveApi: () => void,
   choiceTitle: string,
   choices: [],
+  isClear: boolean,
 };
 
 const {Fragment} = React;
@@ -18,18 +19,28 @@ class FourChoiceComponent extends React.Component<Props> {
   componentDidMount() {}
 
   render() {
-    const {recordApi, saveApi, choiceTitle, choices = []} = this.props;
+    const {
+      recordApi,
+      saveApi,
+      choiceTitle,
+      choices = [],
+      isClear = false,
+    } = this.props;
 
-    const mapChoicesRender = choices.map((item, index) => {
-      const mapChoicesKey = `${item}${index}`;
-      return (
-        <Fragment key={mapChoicesKey}>
-          <div className={classNames('app_btn')}>
-            <p>{item}</p>
-          </div>
-        </Fragment>
-      );
-    });
+    const mapChoicesRender = !isClear ? (
+      choices.map((item, index) => {
+        const mapChoicesKey = `${item}${index}`;
+        return (
+          <Fragment key={mapChoicesKey}>
+            <div className={classNames('app_btn')}>
+              <p>{item}</p>
+            </div>
+          </Fragment>
+        );
+      })
+    ) : (
+      <Fragment />
+    );
 
     return (
       <div id="four_choice">

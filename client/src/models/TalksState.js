@@ -12,38 +12,41 @@ export class TalksState extends TalksRecord {
     const newState = state.update('webrtc', async () => {
       const {navigator, AudioContext} = window;
 
-      const subscriptionMedia = navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: false,
-      });
+      if (state.webrtc !== null) {
+        const subscriptionMedia = navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false,
+        });
 
-      const onMedia = stream => {
-        const bufferSize = 4096;
-        const context = new AudioContext();
-        const source = context.createMediaStreamSource(stream);
-        const processor = context.createScriptProcessor(bufferSize, 1, 1);
+        const onMedia = stream => {
+          const bufferSize = 4096;
+          const context = new AudioContext();
+          const source = context.createMediaStreamSource(stream);
+          const processor = context.createScriptProcessor(bufferSize, 1, 1);
 
-        source.connect(processor);
-        processor.connect(context.destination);
+          source.connect(processor);
+          processor.connect(context.destination);
 
-        const storeAudio = [];
+          const storeAudio = [];
 
-        processor.onaudioprocess = evt => {
-          const channel = evt.inputBuffer.getChannelData(0);
-          const buffer = new Float32Array(bufferSize);
-          for (let i = 0; i < bufferSize; i += 1) {
-            buffer[i] = channel[i];
-          }
-          storeAudio.push(buffer);
+          processor.onaudioprocess = evt => {
+            const channel = evt.inputBuffer.getChannelData(0);
+            const buffer = new Float32Array(bufferSize);
+            for (let i = 0; i < bufferSize; i += 1) {
+              buffer[i] = channel[i];
+            }
+            storeAudio.push(buffer);
+          };
+
+          const result = new Promise(resolve => {
+            resolve({context, storeAudio, stream, bufferSize});
+          });
+          return result;
         };
 
-        const result = new Promise(resolve => {
-          resolve({context, storeAudio, stream, bufferSize});
-        });
-        return result;
-      };
-
-      return onMedia(await subscriptionMedia);
+        return onMedia(await subscriptionMedia);
+      }
+      return state.webrtc;
     });
     return newState;
   }
@@ -142,7 +145,10 @@ export class TalksState extends TalksRecord {
   }
 
   routing(state: any, action: any) {
-    const newState = state.set('routingDatas', action.payload);
+    const newState = state
+      .delete('wav')
+      .delete('routingDatas')
+      .set('routingDatas', action.payload);
     return newState;
   }
 }

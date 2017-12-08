@@ -7,7 +7,15 @@ type Props = {
   recordAudio: () => void,
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
-  talks: {wav: any, routingDatas: {question: string, choices: [], url: string}},
+  talks: {
+    wav: any,
+    routingDatas: {
+      question: string,
+      choices: [],
+      url: string,
+      is_clear: boolean,
+    },
+  },
 };
 
 function CustomFourChoiceComponent(props: Props) {
@@ -28,7 +36,7 @@ function CustomFourChoiceComponent(props: Props) {
     const {talks} = props;
     const propWAV = talks.wav;
     const apiURI = `http://localhost:8080${talks.routingDatas.url}`;
-    console.log(apiURI);
+
     if (propWAV !== null) {
       await props.routing(apiURI, propWAV);
     }
@@ -42,6 +50,7 @@ function CustomFourChoiceComponent(props: Props) {
           saveApi={() => handleClick('SAVE')}
           choiceTitle={props.talks.routingDatas.question}
           choices={props.talks.routingDatas.choices}
+          isClear={props.talks.routingDatas.is_clear}
         />
       </Grid>
     </div>
