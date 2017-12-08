@@ -9,9 +9,6 @@ type Props = {
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
   talks: {wav: any},
-  history: {},
-  location: {},
-  match: {},
 };
 
 function LandingComponent(props: Props) {
@@ -43,7 +40,7 @@ function LandingComponent(props: Props) {
           saveApi={() => handleClick('SAVE')}
           choiceTitle="モードを選択して下さい"
           choice1="ストーリー"
-          choice2="ラヴちゃんと会話する"
+          choice2="話す"
         />
       </Grid>
     </div>

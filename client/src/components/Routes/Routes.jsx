@@ -10,10 +10,11 @@ import {
   MediaContainer,
   RequestsContainer,
   QuestionsContainer,
+  CustomFourChoiceContainer,
 } from '../../containers';
 import {uri} from '../../config';
 
-import {ThreeChoice, FourChoice, Chat} from '../Templates';
+import {Chat} from '../Templates';
 
 export type Props = {
   location: {
@@ -31,37 +32,45 @@ function RoutesComponent() {
         <Route
           exact
           path={uri.routes.landing}
-          render={props => <LandingContainer location={props.location} />}
+          render={() => <LandingContainer />}
         />
         {/* stories */}
         <Route
+          exact
           path={uri.routes.stories}
-          render={props => <StoriesContainer location={props.location} />}
+          render={() => <StoriesContainer />}
         />
         {/* story_pattern */}
-        <Route exact path={uri.routes.story_pattern} render={() => <div />} />
+        <Route
+          path={uri.routes.story_pattern}
+          render={() => <CustomFourChoiceContainer />}
+        />
         {/* conversations */}
         <Route
+          exact
           path={uri.routes.conversations}
           render={() => <ConversationsContainer />}
         />
         {/* requests */}
         <Route
+          exact
           path={uri.routes.requests}
           render={() => <RequestsContainer />}
         />
         {/* questions */}
         <Route
+          exact
           path={uri.routes.questions}
           render={() => <QuestionsContainer />}
         />
         {/* media */}
-        <Route path={uri.routes.media} render={() => <MediaContainer />} />
+        <Route
+          exact
+          path={uri.routes.media}
+          render={() => <MediaContainer />}
+        />
         {/* chat */}
         <Route exact path="/chat" render={() => <Chat />} />
-
-        <Route exact path="/three" render={() => <ThreeChoice />} />
-        <Route exact path="/four" render={() => <FourChoice />} />
       </Switch>
     </div>
   );

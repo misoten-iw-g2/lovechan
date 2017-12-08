@@ -1,7 +1,7 @@
 /* @flow */
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Requests} from '../components/Pages';
+import {CustomFourChoice} from '../components/Pages';
 import {talksActions} from '../actions';
 
 const actions = talksActions.talks;
@@ -12,8 +12,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-function RequestsContainer() {
-  return connect(mapStateToProps, mapDispatchToProps)(Requests);
+function CustomFourChoiceContainer() {
+  return connect(mapStateToProps, mapDispatchToProps)(CustomFourChoice);
 }
 
-export default RequestsContainer();
+export default CustomFourChoiceContainer();

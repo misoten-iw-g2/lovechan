@@ -1,7 +1,6 @@
 /* @flow */
 import * as React from 'react';
 import Grid from 'react-css-grid';
-import {withRouter} from 'react-router';
 import {ThreeChoice} from '../Templates';
 
 type Props = {
@@ -27,7 +26,7 @@ function QuestionsComponent(props: Props) {
 }
 
 function Questions() {
-  return withRouter(QuestionsComponent);
+  return QuestionsComponent;
 }
 
 export default Questions();

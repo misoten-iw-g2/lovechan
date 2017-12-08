@@ -1,7 +1,6 @@
 /* @flow */
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
 import {Landing} from '../components/Pages';
 import {talksActions} from '../actions';
 

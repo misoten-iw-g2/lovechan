@@ -3,7 +3,6 @@ import * as React from 'react';
 import {Header} from 'semantic-ui-react';
 import classNames from 'classnames';
 import Grid from 'react-css-grid';
-import {withRouter} from 'react-router';
 import {MikeOff, MikeOn} from '../../Organisms';
 
 type Props = {
@@ -62,7 +61,7 @@ class TwoChoiceComponent extends React.Component<Props> {
 }
 
 function TwoChoice() {
-  return withRouter(TwoChoiceComponent);
+  return TwoChoiceComponent;
 }
 
 export default TwoChoice();

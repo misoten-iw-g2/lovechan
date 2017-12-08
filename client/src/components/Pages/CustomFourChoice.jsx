@@ -1,17 +1,24 @@
 /* @flow */
 import * as React from 'react';
 import Grid from 'react-css-grid';
-import {TwoChoice} from '../Templates';
-import {url} from '../../config';
+import {FourChoice} from '../Templates';
 
 type Props = {
   recordAudio: () => void,
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
-  talks: {wav: any},
+  talks: {
+    wav: any,
+    routingDatas: {
+      question: string,
+      choices: [],
+      url: string,
+      is_clear: boolean,
+    },
+  },
 };
 
-function StoriesComponent(props: Props) {
+function CustomFourChoiceComponent(props: Props) {
   const handleClick = async action => {
     switch (action) {
       case 'RECORD':
@@ -26,29 +33,32 @@ function StoriesComponent(props: Props) {
   };
 
   const fetchRouting = async () => {
-    const propWAV = props.talks.wav;
+    const {talks} = props;
+    const propWAV = talks.wav;
+    const apiURI = `http://localhost:8080${talks.routingDatas.url}`;
+
     if (propWAV !== null) {
-      await props.routing(url.apis.stories, propWAV);
+      await props.routing(apiURI, propWAV);
     }
   };
 
   return (
-    <div id="stories">
+    <div id="landing">
       <Grid width="100%" gap={0} onClick={() => fetchRouting()}>
-        <TwoChoice
+        <FourChoice
           recordApi={() => handleClick('RECORD')}
           saveApi={() => handleClick('SAVE')}
-          choiceTitle="どのストーリーで遊びますか？"
-          choice1="突然のエラー"
-          choice2="仕様変更"
+          choiceTitle={props.talks.routingDatas.question}
+          choices={props.talks.routingDatas.choices}
+          isClear={props.talks.routingDatas.is_clear}
         />
       </Grid>
     </div>
   );
 }
 
-function Stories() {
-  return StoriesComponent;
+function CustomFourChoice() {
+  return CustomFourChoiceComponent;
 }
 
-export default Stories();
+export default CustomFourChoice();
