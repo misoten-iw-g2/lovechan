@@ -5,6 +5,7 @@ import {uri} from '../config';
 function routing(store) {
   return next => action => {
     next(action);
+    console.log(action);
 
     const {type, payload} = action;
 
@@ -22,6 +23,8 @@ function routing(store) {
         }
       } else if (payload.next_page === '/api/stories') {
         store.dispatch(push(uri.routes.stories));
+      } else if (payload.next_page === '/api/conversations') {
+        store.dispatch(push(uri.routes.conversations));
       }
     }
   };
