@@ -81,5 +81,6 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 	res := app.RequesttypeFull{}
 	res = r.RequestToRequesttypeFull()
 	res.UserVoiceText = t
+	res.IsFinish = true
 	return ctx.OKFull(&res)
 }

@@ -19,11 +19,15 @@ var RequestType = MediaType("application/vnd.requestType+json", func() {
 			Example("こんにちは")
 			Default("")
 		})
+		Attribute("is_finish", Boolean, "is_finish", func() {
+			Example(true)
+		})
 	})
 	Required(
 		"id",
 		"request",
 		"user_voice_text",
+		"is_finish",
 	)
 	View("default", func() {
 		Attribute("id")
@@ -37,10 +41,12 @@ var RequestType = MediaType("application/vnd.requestType+json", func() {
 		Attribute("id")
 		Attribute("request")
 		Attribute("user_voice_text")
+		Attribute("is_finish")
 		Required(
 			"id",
 			"request",
 			"user_voice_text",
+			"is_finish",
 		)
 	})
 })

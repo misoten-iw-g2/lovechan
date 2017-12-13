@@ -57,23 +57,29 @@ var AnswerType = MediaType("application/vnd.answerType+json", func() {
 			Example("こんにちは")
 			Default("")
 		})
+		Attribute("is_finish", Boolean, "is_finish", func() {
+			Example(true)
+		})
 	})
 	Required(
 		"id",
 		"answer",
 		"score",
 		"user_voice_text",
+		"is_finish",
 	)
 	View("default", func() {
 		Attribute("id")
 		Attribute("answer")
 		Attribute("score")
 		Attribute("user_voice_text")
+		Attribute("is_finish")
 		Required(
 			"id",
 			"answer",
 			"score",
 			"user_voice_text",
+			"is_finish",
 		)
 	})
 })
