@@ -5,6 +5,8 @@ const TalksRecord = Record({
   webrtc: null,
   wav: null,
   routingDatas: [],
+  chatDatas: [],
+  chatRoutingDatas: [],
 });
 
 export class TalksState extends TalksRecord {
@@ -149,6 +151,14 @@ export class TalksState extends TalksRecord {
       .delete('wav')
       .delete('routingDatas')
       .set('routingDatas', action.payload);
+    return newState;
+  }
+
+  chatRouting(state: any, action: any) {
+    const newState = state
+      .delete('wav')
+      .delete('routingDatas')
+      .set('chatRoutingDatas', action.payload);
     return newState;
   }
 }

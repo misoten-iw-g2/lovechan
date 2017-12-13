@@ -15,6 +15,9 @@ export default handleActions(
     [`${talksActions.talks.routing}_${FULFILLED}`](state, action) {
       return state.routing(state, action);
     },
+    [`${talksActions.talks.chatRouting}_${FULFILLED}`](state, action) {
+      return state.chatRouting(state, action);
+    },
   },
   new TalksState()
 );

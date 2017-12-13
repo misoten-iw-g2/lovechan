@@ -45,5 +45,23 @@ export default createActions({
         throw e;
       }
     },
+    chatRouting: async apiUrl => {
+      try {
+        const fetchDatas = await fetch(apiUrl);
+        const fetchDatasJSON = await fetchDatas.json();
+
+        if (!fetchDatas.ok) {
+          const failedDatasRecord = new FailedResponseRecord(fetchDatasJSON);
+          throw Error(failedDatasRecord.get('detail'));
+        }
+        const successResponseRecord = new SuccessResponseRecord(fetchDatasJSON);
+        const payload = await successResponseRecord.toJS();
+
+        return payload;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
   },
 });
