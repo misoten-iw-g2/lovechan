@@ -15,6 +15,11 @@ type Props = {
       url: string,
       is_clear: boolean,
     },
+    chatRoutingDatas: {
+      choices: [],
+      question: string,
+      id: number,
+    },
   },
 };
 
@@ -35,10 +40,19 @@ function CustomFourChoiceComponent(props: Props) {
   const fetchRouting = async () => {
     const {talks} = props;
     const propWAV = talks.wav;
-    const apiURI = `http://localhost:8080${talks.routingDatas.url}`;
 
-    if (propWAV !== null) {
-      await props.routing(apiURI, propWAV);
+    if (talks.routingDatas.url !== undefined) {
+      const apiURI = `http://localhost:8080${talks.routingDatas.url}`;
+      if (propWAV !== null) {
+        await props.routing(apiURI, propWAV);
+      }
+    } else if (talks.chatRoutingDatas) {
+      await props.routing(
+        `http://localhost:8080/api/questions/${
+          props.talks.chatRoutingDatas.id
+        }/answers`,
+        propWAV
+      );
     }
   };
 
@@ -48,8 +62,14 @@ function CustomFourChoiceComponent(props: Props) {
         <FourChoice
           recordApi={() => handleClick('RECORD')}
           saveApi={() => handleClick('SAVE')}
-          choiceTitle={props.talks.routingDatas.question}
-          choices={props.talks.routingDatas.choices}
+          choiceTitle={
+            props.talks.routingDatas.question ||
+            props.talks.chatRoutingDatas.question
+          }
+          choices={
+            props.talks.routingDatas.choices ||
+            props.talks.chatRoutingDatas.choices
+          }
           isClear={props.talks.routingDatas.is_clear}
         />
       </Grid>

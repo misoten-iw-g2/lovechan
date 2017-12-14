@@ -53,19 +53,13 @@ function RoutesComponent() {
         <Route
           exact
           path={uri.routes.requests}
-          render={() => <RequestsContainer />}
+          render={() => <CustomFourChoiceContainer />}
         />
         {/* questions */}
         <Route
           exact
           path={uri.routes.questions}
           render={() => <QuestionsContainer />}
-        />
-        {/* media */}
-        <Route
-          exact
-          path={uri.routes.media}
-          render={() => <MediaContainer />}
         />
         {/* question_pattern */}
         <Route
