@@ -28,7 +28,6 @@ curl -F 'uploadfile=@./sampleVoice/request-ippatugei.wav' -X POST --header 'Cont
 		Response(OK, func() {
 			Media(media.RequestType, "full")
 		})
-		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})
 })

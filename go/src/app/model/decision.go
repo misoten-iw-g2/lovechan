@@ -32,7 +32,7 @@ func UserChoiceAnswer(choices []string, userAnswer string) (int, error) {
 	return topRateIndex, nil
 }
 
-var backword = []string{"戻りたい", "もどりたい"}
+var backword = []string{"戻りたい", "もどりたい", "戻る", "もどる"}
 
 // IsReturn 戻りたいというワードが入力されたか判定する
 func IsReturn(userAnswer string) (bool, float64) {
