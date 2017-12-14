@@ -9,7 +9,7 @@ function uri() {
         conversations: '/conversations',
         requests: '/requests',
         questions: '/questions',
-        media: '/media',
+        questions_pattern: '/questions/:pattern',
       },
     }
   );

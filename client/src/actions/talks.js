@@ -13,6 +13,7 @@ const SuccessResponseRecord = Record({
   url: '',
   next_page: '',
   user_voice_text: '',
+  is_finish: null,
 });
 
 const FailedResponseRecord = Record({
@@ -21,6 +22,13 @@ const FailedResponseRecord = Record({
   bad_request: '',
   status: '',
   detail: '',
+});
+
+const ChatRecord = Record({
+  answer_type: null,
+  choices: [],
+  id: null,
+  question: '',
 });
 
 export default createActions({
@@ -54,7 +62,7 @@ export default createActions({
           const failedDatasRecord = new FailedResponseRecord(fetchDatasJSON);
           throw Error(failedDatasRecord.get('detail'));
         }
-        const successResponseRecord = new SuccessResponseRecord(fetchDatasJSON);
+        const successResponseRecord = new ChatRecord(fetchDatasJSON);
         const payload = await successResponseRecord.toJS();
 
         return payload;

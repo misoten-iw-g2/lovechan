@@ -14,8 +14,6 @@ import {
 } from '../../containers';
 import {uri} from '../../config';
 
-import {Chat} from '../Templates';
-
 export type Props = {
   location: {
     key: string,
@@ -69,8 +67,11 @@ function RoutesComponent() {
           path={uri.routes.media}
           render={() => <MediaContainer />}
         />
-        {/* chat */}
-        <Route exact path="/chat" render={() => <Chat />} />
+        {/* question_pattern */}
+        <Route
+          path={uri.routes.questions_pattern}
+          render={() => <CustomFourChoiceContainer />}
+        />
       </Switch>
     </div>
   );

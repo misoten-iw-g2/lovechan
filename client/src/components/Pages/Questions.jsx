@@ -1,28 +1,71 @@
 /* @flow */
 import * as React from 'react';
 import Grid from 'react-css-grid';
-import {ThreeChoice} from '../Templates';
+import {Chat} from '../Templates';
+import {url} from '../../config';
 
 type Props = {
-  recordStart: () => void,
-  recordSave: () => void,
+  recordAudio: () => void,
+  saveAudio: () => void,
+  routing: (apiUrl: string, blob: any) => void,
+  chatRouting: (apiUrl: string) => void,
+  talks: {
+    wav: any,
+    chatRoutingDatas: {
+      question: string,
+      choices: [],
+      id: number,
+    },
+    chatData: [],
+  },
 };
 
-function QuestionsComponent(props: Props) {
-  return (
-    <div id="questions">
-      <Grid width="100%" gap={0}>
-        <ThreeChoice
-          choiceApi={props.recordStart}
-          postApi={props.recordSave}
-          choiceTitle="昨晩どんな夢を見ましたか？"
-          choice1="面白い"
-          choice2="見てない"
-          choice3="悪夢"
-        />
-      </Grid>
-    </div>
-  );
+class QuestionsComponent extends React.Component<Props> {
+  async componentDidMount() {
+    await this.props.chatRouting(url.apis.questions);
+    // console.log(this.props);
+  }
+
+  async handleClick(action: string) {
+    switch (action) {
+      case 'RECORD':
+        await this.props.recordAudio();
+        break;
+      case 'SAVE':
+        await this.props.saveAudio();
+        break;
+      default:
+        break;
+    }
+  }
+
+  async fetchRouting() {
+    const propWAV = this.props.talks.wav;
+    if (propWAV !== null) {
+      await this.props.routing(
+        `http://localhost:8080/api/questions/${
+          this.props.talks.chatRoutingDatas.id
+        }/answers`,
+        propWAV
+      );
+    }
+  }
+
+  render() {
+    return (
+      <div id="questions">
+        <Grid width="100%" gap={0} onClick={() => this.fetchRouting()}>
+          <Chat
+            recordApi={() => this.handleClick('RECORD')}
+            saveApi={() => this.handleClick('SAVE')}
+            choiceTitle="お話しましょう！"
+            firstQuestion={this.props.talks.chatRoutingDatas.question}
+            choices={this.props.talks.chatData}
+          />
+        </Grid>
+      </div>
+    );
+  }
 }
 
 function Questions() {
