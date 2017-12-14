@@ -64,8 +64,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
-		ctx.ResponseData.Header().Set("Location", "/")
-		return ctx.MovedPermanently()
+		return ctx.Accepted(model.NewRoutingType("/", t))
 	}
 	si := storyInfo{}
 	switch ctx.StoryPattern {
@@ -132,8 +131,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 	goa.LogInfo(ctx, "user_voice_text: t", "t", t)
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
-		ctx.ResponseData.Header().Set("Location", "/")
-		return ctx.MovedPermanently()
+		return ctx.Accepted(model.NewRoutingType("/", t))
 	}
 	storiesDisplay := []string{suddenlyPattern, changePattern}
 	stories := []string{"突然のエラー,とつぜんのエラー", "仕様変更,しようへんこう"}

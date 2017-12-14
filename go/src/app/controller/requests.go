@@ -64,8 +64,7 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
-		ctx.ResponseData.Header().Set("Location", "/conversations")
-		return ctx.MovedPermanently()
+		return ctx.Accepted(model.NewRoutingType("/conversations", t))
 	}
 	r, err := rDB.GetUserRequest(ctx, rs, t)
 	if err != nil {

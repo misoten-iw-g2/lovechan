@@ -1,6 +1,7 @@
 package model
 
 import (
+	"app/app"
 	"errors"
 	"strings"
 
@@ -47,4 +48,12 @@ func IsReturn(userAnswer string) (bool, float64) {
 		return false, topRate
 	}
 	return true, topRate
+}
+
+// NewRoutingType コンストラクタ
+func NewRoutingType(nextPage string, userVoiceText string) *app.Routingtype {
+	r := &app.Routingtype{}
+	r.NextPage = nextPage
+	r.UserVoiceText = userVoiceText
+	return r
 }

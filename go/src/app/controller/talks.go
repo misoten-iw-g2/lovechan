@@ -80,6 +80,10 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 	basePath := "/api"
 	switch ctx.CurrentPage {
 	case conversations:
+		isReturn, _ := model.IsReturn(t)
+		if isReturn {
+			return ctx.Accepted(model.NewRoutingType("/", t))
+		}
 		routings := []string{requests, questions}
 		routingChoices := []string{"何かお願いする,なにかおねがいする", "質問してもらう,しつもんしてもらう"}
 		i, err := model.UserChoiceAnswer(routingChoices, t)

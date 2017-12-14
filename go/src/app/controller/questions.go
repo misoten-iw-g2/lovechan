@@ -33,16 +33,15 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	qDB := model.NewQuestionsDB(c.db)
 	q, err := qDB.Get(ctx, ctx.ID)
 	if err != nil {
-		return goa.ErrInternal(err)
+		return ctx.InternalServerError(goa.ErrInternal(err))
 	}
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
 	if err != nil {
-		return goa.ErrBadRequest(err)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
-		ctx.ResponseData.Header().Set("Location", "/")
-		return ctx.MovedPermanently()
+		return ctx.Accepted(model.NewRoutingType("/conversations", t))
 	}
 	uaDB := model.NewUserAnswersDB(c.db)
 	ua := model.UserAnswers{
