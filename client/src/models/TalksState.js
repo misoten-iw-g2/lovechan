@@ -1,10 +1,13 @@
 /* @flow */
-import {Record} from 'immutable';
+import {Record, Stack} from 'immutable';
 
 const TalksRecord = Record({
   webrtc: null,
   wav: null,
   routingDatas: [],
+  chatDatas: [],
+  chatRoutingDatas: [],
+  chatData: [],
 });
 
 export class TalksState extends TalksRecord {
@@ -145,10 +148,39 @@ export class TalksState extends TalksRecord {
   }
 
   routing(state: any, action: any) {
+    console.log(state.chatData);
+
+    const chatDataStack = Stack();
     const newState = state
       .delete('wav')
       .delete('routingDatas')
-      .set('routingDatas', action.payload);
+      .set('routingDatas', action.payload)
+      .set(
+        'chatData',
+        chatDataStack
+          .push(
+            ...state.chatData,
+            action.payload.user_voice_text,
+            action.payload.answer
+          )
+          .toArray()
+      );
+    return newState;
+  }
+
+  chatRouting(state: any, action: any) {
+    console.log(state.chatData);
+    const chatDataStack = Stack(state.chatData);
+
+    const newState = state.withMutations(map => {
+      map
+        .delete('wav')
+        .delete('routingDatas')
+        .set('chatRoutingDatas', action.payload)
+        // questionとanswerをpushする。
+        .set('chatData', chatDataStack.push(action.payload.question).toArray());
+    });
+
     return newState;
   }
 }

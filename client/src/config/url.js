@@ -6,6 +6,7 @@ function url() {
         root: 'http://localhost:8080/api/talks/routings/root',
         stories: 'http://localhost:8080/api/stories',
         conversations: 'http://localhost:8080/api/talks/routings/conversations',
+        questions: 'http://localhost:8080/api/questions',
       },
     }
   );

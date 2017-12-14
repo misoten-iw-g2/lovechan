@@ -13,6 +13,7 @@ const SuccessResponseRecord = Record({
   url: '',
   next_page: '',
   user_voice_text: '',
+  is_finish: null,
 });
 
 const FailedResponseRecord = Record({
@@ -21,6 +22,13 @@ const FailedResponseRecord = Record({
   bad_request: '',
   status: '',
   detail: '',
+});
+
+const ChatRecord = Record({
+  answer_type: null,
+  choices: [],
+  id: null,
+  question: '',
 });
 
 export default createActions({
@@ -43,6 +51,24 @@ export default createActions({
       } catch (e) {
         console.log(e);
         throw e;
+      }
+    },
+    chatRouting: async apiUrl => {
+      try {
+        const fetchDatas = await fetch(apiUrl);
+        const fetchDatasJSON = await fetchDatas.json();
+
+        if (!fetchDatas.ok) {
+          const failedDatasRecord = new FailedResponseRecord(fetchDatasJSON);
+          throw Error(failedDatasRecord.get('detail'));
+        }
+        const successResponseRecord = new ChatRecord(fetchDatasJSON);
+        const payload = await successResponseRecord.toJS();
+
+        return payload;
+      } catch (error) {
+        console.log(error);
+        throw error;
       }
     },
   },

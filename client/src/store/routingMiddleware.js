@@ -5,8 +5,11 @@ import {uri} from '../config';
 function routing(store) {
   return next => action => {
     next(action);
+    const storeState = store.getState();
 
     const {type, payload} = action;
+    console.log(type);
+    console.log(storeState.router.location.pathname);
 
     if (type === 'talks/routing_FULFILLED') {
       const nextURL = `/stories/${payload.story_pattern}/${payload.next_step}`;
@@ -22,6 +25,30 @@ function routing(store) {
         }
       } else if (payload.next_page === '/api/stories') {
         store.dispatch(push(uri.routes.stories));
+      } else if (payload.next_page === '/api/conversations') {
+        store.dispatch(push(uri.routes.conversations));
+      } else if (payload.next_page === '/api/questions') {
+        store.dispatch(push(uri.routes.questions));
+      }
+    }
+
+    if (storeState.router.location.pathname === '/questions') {
+      if (payload) {
+        console.log('now /questions');
+        console.log(payload.choices);
+
+        const payloadChoices = payload.choices ? payload.choices : [];
+
+        if (payloadChoices.length !== 0) {
+          // TODO
+          const nextQuestionsURL = `/questions/${payload.id}`;
+          const matchQuestionsPattern = matchPath(nextQuestionsURL, {
+            path: uri.routes.questions_pattern,
+          });
+          if (matchQuestionsPattern) {
+            store.dispatch(push(nextQuestionsURL));
+          }
+        }
       }
     }
   };
