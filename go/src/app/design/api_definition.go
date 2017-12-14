@@ -6,6 +6,8 @@ import (
 	. "app/design/constant"
 	_ "app/design/resource"
 
+	"app/design/media"
+
 	. "github.com/goadesign/goa/design"
 	. "github.com/goadesign/goa/design/apidsl"
 )
@@ -31,9 +33,9 @@ var _ = API(REPO, func() {
 	}())
 	BasePath("/")
 	Trait(GeneralUserTrait, func() {
+		Response(Accepted, media.RoutingType)
 		Response(Unauthorized, ErrorMedia)
 		Response(NotFound)
-		Response(MovedPermanently)
 		Response(BadRequest, ErrorMedia)
 		Response(InternalServerError, ErrorMedia)
 	})
