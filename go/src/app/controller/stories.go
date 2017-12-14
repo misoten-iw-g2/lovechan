@@ -244,7 +244,7 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 			goa.LogError(ctx, "changePatternStory 4: err", "err", ErrMissChoice)
 			return storyInfo{}, ErrMissChoice
 		}
-		s.Question = "同期さんが詳しいようです。呼びますか？"
+		s.Question = "加藤さんが詳しいようです。呼びますか？"
 		s.Choices = cd3
 		s.NextStep = 4
 		s.Answer = cd3[0]
@@ -312,7 +312,7 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 		s.Question = "エラーコードを教えてください"
 		s.Choices = cd2
 		s.NextStep = 3
-		s.Answer = cd2[1]
+		s.Answer = cd2[0]
 		si.resp = s
 		si.videoFileName = "stories_suddenly_2.mp4"
 		si.voiceFileName = "stories_suddenly_2.wav"
@@ -323,11 +323,11 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 			goa.LogError(ctx, "suddenlyPatternStory 3: err", "err", err)
 			return storyInfo{}, err
 		}
-		if cd2[userChoices] != cd2[1] {
+		if cd2[userChoices] != cd2[0] {
 			goa.LogError(ctx, "suddenlyPatternStory 4: err", "err", ErrMissChoice)
 			return storyInfo{}, ErrMissChoice
 		}
-		s.Question = "担当者を呼びますか？"
+		s.Question = "加藤さんが詳しいようです。呼びますか？"
 		s.Choices = cd3
 		s.NextStep = 4
 		s.Answer = cd3[0]

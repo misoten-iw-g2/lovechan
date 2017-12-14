@@ -30,7 +30,6 @@ curl -F 'uploadfile=@./sampleVoice/questions-2-tanosii.wav' -X POST --header 'Co
 			})
 		})
 		Response(OK, media.AnswerType)
-		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})
 })

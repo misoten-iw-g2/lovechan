@@ -33,6 +33,7 @@ var _ = API(REPO, func() {
 	Trait(GeneralUserTrait, func() {
 		Response(Unauthorized, ErrorMedia)
 		Response(NotFound)
+		Response(MovedPermanently)
 		Response(BadRequest, ErrorMedia)
 		Response(InternalServerError, ErrorMedia)
 	})

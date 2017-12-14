@@ -30,7 +30,6 @@ curl -F 'uploadfile=@./sampleVoice/story-selectpattern-hint-2.wav' -X POST --hea
 		})
 		Response(OK)
 		Response(UnprocessableEntity, ErrorMedia)
-		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})
 	Action("SelectStory", func() {
@@ -43,7 +42,6 @@ curl -F 'uploadfile=@./sampleVoice/story-select-err.wav' -X POST --header 'Conte
 		)
 		Response(OK)
 		Response(UnprocessableEntity, ErrorMedia)
-		Response(MovedPermanently)
 		UseTrait(GeneralUserTrait)
 	})
 })
