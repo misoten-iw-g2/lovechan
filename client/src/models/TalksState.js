@@ -154,6 +154,7 @@ export class TalksState extends TalksRecord {
     const newState = state
       .delete('wav')
       .delete('routingDatas')
+      .delete('chatData')
       .set('routingDatas', action.payload)
       .set(
         'chatData',
@@ -176,6 +177,7 @@ export class TalksState extends TalksRecord {
       map
         .delete('wav')
         .delete('routingDatas')
+        .delete('chatData')
         .set('chatRoutingDatas', action.payload)
         // questionとanswerをpushする。
         .set('chatData', chatDataStack.push(action.payload.question).toArray());
