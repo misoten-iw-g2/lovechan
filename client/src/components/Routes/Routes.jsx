@@ -53,7 +53,7 @@ function RoutesComponent() {
         <Route
           exact
           path={uri.routes.requests}
-          render={() => <CustomFourChoiceContainer />}
+          render={() => <RequestsContainer />}
         />
         {/* questions */}
         <Route
