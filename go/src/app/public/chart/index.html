@@ -62,7 +62,7 @@
 
     $.ajax({
       type: "GET",
-      url: "http://localhost:8080/api/analytic/user_answer",
+      url: "http://"+location.hostname+":8080/api/analytic/user_answer",
       dataType: "json"
     }).done(function (resp) {
       labels = [];
@@ -167,7 +167,7 @@
 
     $.ajax({
       type: "GET",
-      url: "http://localhost:8080/api/analytic/graph/pie",
+      url: "http://http://"+location.hostname+":8080/api/analytic/graph/pie",
       dataType: "json"
     }).done(function (resp) {
       labels = [];
