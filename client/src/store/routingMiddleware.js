@@ -29,16 +29,26 @@ function routing(store) {
         store.dispatch(push(uri.routes.questions));
       } else if (payload.next_page === '/api/requests') {
         store.dispatch(push(uri.routes.requests));
-      } else if (payload.is_finish) {
+      } else if (
+        payload.is_finish &&
+        storeState.router.location.pathname === '/questions'
+      ) {
+        setTimeout(() => {
+          console.log('====================================');
+          console.log('3000');
+          console.log('====================================');
+          store.dispatch(push(uri.routes.conversations));
+        }, 3000);
+      } else if (
+        payload.is_finish &&
+        storeState.router.location.pathname !== '/questions'
+      ) {
         store.dispatch(push(uri.routes.conversations));
       }
     }
 
     if (storeState.router.location.pathname === '/questions') {
       if (payload) {
-        console.log('now /questions');
-        console.log(payload);
-
         const payloadChoices = payload.choices ? payload.choices : [];
 
         if (payloadChoices.length !== 0) {
