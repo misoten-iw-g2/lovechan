@@ -152,9 +152,10 @@ export class TalksState extends TalksRecord {
 
     const chatDataStack = Stack();
     const newState = state
+      .delete('chatData')
       .delete('wav')
       .delete('routingDatas')
-      .delete('chatData')
+
       .set('routingDatas', action.payload)
       .set(
         'chatData',
@@ -173,11 +174,10 @@ export class TalksState extends TalksRecord {
     console.log(state.chatData);
     const chatDataStack = Stack(state.chatData);
 
-    const newState = state.withMutations(map => {
+    const newState = state.delete('chatData').withMutations(map => {
       map
         .delete('wav')
         .delete('routingDatas')
-        .delete('chatData')
         .set('chatRoutingDatas', action.payload)
         // questionとanswerをpushする。
         .set('chatData', chatDataStack.push(action.payload.question).toArray());
