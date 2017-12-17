@@ -34,6 +34,7 @@ var _ = API(REPO, func() {
 	BasePath("/")
 	Trait(GeneralUserTrait, func() {
 		Response(Accepted, media.RoutingType)
+		Response(NoContent)
 		Response(Unauthorized, ErrorMedia)
 		Response(NotFound)
 		Response(BadRequest, ErrorMedia)

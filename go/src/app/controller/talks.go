@@ -3,6 +3,7 @@ package controller
 import (
 	"app/app"
 	"app/model"
+	"app/mywebsocket"
 	"fmt"
 
 	"github.com/goadesign/goa"
@@ -12,11 +13,15 @@ import (
 // TalksController implements the talks resource.
 type TalksController struct {
 	*goa.Controller
+	ws *mywebsocket.Server
 }
 
 // NewTalksController creates a talks controller.
-func NewTalksController(service *goa.Service) *TalksController {
-	return &TalksController{Controller: service.NewController("TalksController")}
+func NewTalksController(service *goa.Service, ws *mywebsocket.Server) *TalksController {
+	return &TalksController{
+		Controller: service.NewController("TalksController"),
+		ws:         ws,
+	}
 }
 
 // Select runs the select action.
@@ -92,6 +97,13 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 		}
 		res.NextPage = fmt.Sprintf("%s/%s", basePath, routings[i])
 	case root:
+		// もしラヴちゃんを起こすアクションの場合は、ルーティングを変更しない
+		wakeupVideo, isWakeup := wakeupTalk(t)
+		if isWakeup {
+			c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, wakeupVideo)
+			res.UserVoiceText = t
+			return ctx.OK(&res)
+		}
 		routings := []string{conversations, stories}
 		routingChoices := []string{"話す,はなす", "ストーリー,すとーりー"}
 		i, err := model.UserChoiceAnswer(routingChoices, t)
@@ -104,4 +116,22 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 
 	// TalksController_ShowRouting: end_implement
 	return ctx.OK(&res)
+}
+
+var wakeupTalks = []mywebsocket.VideoChange{
+	{VideoFileName: "wakeup-1.mp4", VoiceFileName: "wakeup-1.wav"},
+	{VideoFileName: "wakeup-2.mp4", VoiceFileName: "wakeup-2.wav"},
+	{VideoFileName: "wakeup-3.mp4", VoiceFileName: "wakeup-3.wav"},
+}
+
+// ラブちゃんとしているのは、SpeechAPIがおそらくラヴちゃんと変換しないため
+var wakeupWords = []string{"ラブちゃん起きて,ラブちゃんおきて", "いま寝てたでしょ,いまねてたでしょ", "審査だからちゃんとして,しんさだからちゃんとして"}
+
+// WakeupTalk 戻りたいというワードが入力されたか判定する
+func wakeupTalk(userAnswer string) (mywebsocket.VideoChange, bool) {
+	i, err := model.UserChoiceAnswer(wakeupWords, userAnswer)
+	if err != nil {
+		return mywebsocket.VideoChange{}, false
+	}
+	return wakeupTalks[i], true
 }
