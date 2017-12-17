@@ -18,6 +18,8 @@ const (
 const (
 	// WsVideoChange action type
 	WsVideoChange = "videoChange"
+	// WsVideoChangeStory action type
+	WsVideoChangeStory = "videoChangeStory"
 	// WsPieChange action type
 	WsPieChange = "pieChange"
 	// WsUserAnswerChange action type

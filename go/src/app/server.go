@@ -42,7 +42,7 @@ func NewServer(s *goa.Service) *Server {
 
 func (s *Server) mountController() {
 	// Mount "talks" controller
-	talks := controller.NewTalksController(s.service)
+	talks := controller.NewTalksController(s.service, s.ws)
 	app.MountTalksController(s.service, talks)
 	// Mount "stories" controller
 	story := controller.NewStoriesController(s.service, s.ws)
