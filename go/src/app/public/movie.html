@@ -109,14 +109,14 @@
       if (mp4Array.length === 1) {
         // TODO ランダムに並び替える
         var repeatArray = [];
-        repeatArray.push("repeat_2.mp4");
-        repeatArray.push("repeat_3.mp4");
-        repeatArray.push("repeat_4.mp4");
-        repeatArray.push("repeat_2.mp4");
-        repeatArray.push("repeat_3.mp4");
-        repeatArray.push("repeat_4.mp4");
+        repeatArray.push("repeat-2.mp4");
+        repeatArray.push("repeat-3.mp4");
+        repeatArray.push("repeat-4.mp4");
+        repeatArray.push("repeat-2.mp4");
+        repeatArray.push("repeat-3.mp4");
+        repeatArray.push("repeat-4.mp4");
         mp4Array.push.apply(mp4Array, (shuffle(repeatArray)));
-        repeatArray.push("repeat_1.mp4");
+        repeatArray.push("repeat-1.mp4");
       }
       console.log(mp4Array);
       loadVideo(mp4Array);
@@ -150,7 +150,7 @@
 </script>
 <audio id="audio" src="" autoplay></audio>
 <p>音声出るよ（本番は消してね）</p>
-<video src="video/repeat_1.mp4" class="video" autoplay muted></video>
+<video src="video/repeat-1.mp4" class="video" autoplay muted></video>
 <div id="videoWrapper">
 </div>
 </body>
