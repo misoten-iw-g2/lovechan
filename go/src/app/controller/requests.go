@@ -43,6 +43,7 @@ func (c *RequestsController) List(ctx *app.ListRequestsContext) error {
 		VideoFileName: "requests_question.mp4",
 		VoiceFileName: "requests_question.wav",
 	}
+	c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 	// RequestsController_List: end_implement
 	return ctx.OK(ar)
@@ -74,6 +75,7 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 		VideoFileName: r.VideoFileName,
 		VoiceFileName: r.VoiceFileName,
 	}
+	c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 
 	// RequestsController_Request: end_implement

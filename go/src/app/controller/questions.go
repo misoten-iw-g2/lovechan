@@ -80,6 +80,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 			VoiceFileName: r.VoiceFileName,
 		}
 	}
+	c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 	res.UserVoiceText = t
 	res.IsFinish = true
@@ -101,6 +102,7 @@ func (c *QuestionsController) Questions(ctx *app.QuestionsQuestionsContext) erro
 		VideoFileName: q.VideoFileName,
 		VoiceFileName: q.VoiceFileName,
 	}
+	c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 	// QuestionsController_Questions: end_implement
 	res := &app.Questiontype{}

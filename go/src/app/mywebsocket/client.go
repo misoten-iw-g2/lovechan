@@ -13,6 +13,8 @@ const (
 	WsUserAnswerChannel = "user_answer"
 	// WsPieChannel channnel name
 	WsPieChannel = "pie"
+	// WsSoundChannel channnel name
+	WsSoundChannel = "sound"
 )
 
 const (
@@ -24,6 +26,8 @@ const (
 	WsPieChange = "pieChange"
 	// WsUserAnswerChange action type
 	WsUserAnswerChange = "userAnswerChange"
+	// WsSelectionSound action type
+	WsSelectionSound = "selectionSound"
 )
 
 // VideoChange ws用構造体

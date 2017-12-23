@@ -113,6 +113,7 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 		res.NextPage = fmt.Sprintf("%s/%s", basePath, routings[i])
 	}
 	res.UserVoiceText = t
+	c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 
 	// TalksController_ShowRouting: end_implement
 	return ctx.OK(&res)

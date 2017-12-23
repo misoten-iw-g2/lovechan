@@ -13,7 +13,7 @@ var _ = Resource("ws", func() {
 		Description("websocket配信")
 		Params(func() {
 			Param("channel", String, "channel", func() {
-				Enum("movie", "pie", "user_answer")
+				Enum("movie", "pie", "user_answer", "sound")
 			})
 			Required("channel")
 		})

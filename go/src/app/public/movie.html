@@ -75,7 +75,6 @@
           id: 'video' + index,
           Class: 'video',
           src: 'video/' + val
-//          muted: true
         }).appendTo($(tgtDiv)).hide();
 
         // 最後でなければ入る
@@ -146,9 +145,24 @@
         }
       };
     };
+
+    var c2 = new WebSocket('ws://'+location.hostname+':8080/api/ws?channel=sound');
+    c2.onopen = function () {
+      c2.onmessage = function (response) {
+        console.log(response.data);
+        var data = $.parseJSON(response.data);
+        try {
+          console.log(data);
+          $('#selectSoundAudio').attr('src', 'voice/select_sound.mp3').load();
+        } catch (e) {
+          console.log(e)
+        }
+      };
+    };
   });
 </script>
 <audio id="audio" src="" autoplay></audio>
+<audio id="selectSoundAudio" src="" autoplay></audio>
 <p>音声出るよ（本番は消してね）</p>
 <video src="video/repeat-1.mp4" class="video" autoplay muted></video>
 <div id="videoWrapper">

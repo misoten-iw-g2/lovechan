@@ -121,6 +121,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 	if res.IsClear {
 		videoAction = mywebsocket.WsVideoChange
 	}
+	c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 	c.ws.Send(mywebsocket.WsMovieChannel, videoAction, v)
 	return ctx.OK(&res)
 }
@@ -198,6 +199,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 	if res.IsClear {
 		videoAction = mywebsocket.WsVideoChange
 	}
+	c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 	c.ws.Send(mywebsocket.WsMovieChannel, videoAction, v)
 
 	// StoriesController_SelectStory: end_implement
