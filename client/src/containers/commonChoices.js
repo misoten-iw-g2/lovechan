@@ -1,7 +1,7 @@
 /* @flow */
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Media} from '../components/Media';
+import {CommonChoices} from '../components/Pages';
 import {talksActions} from '../actions';
 
 const actions = talksActions.talks;
@@ -12,8 +12,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(Object.assign({}, actions), dispatch);
 
-function MediaContainer() {
-  return connect(mapStateToProps, mapDispatchToProps)(Media);
+function CommonChoicesContainer() {
+  return connect(mapStateToProps, mapDispatchToProps)(CommonChoices);
 }
 
-export default MediaContainer();
+export default CommonChoicesContainer();

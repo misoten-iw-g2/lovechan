@@ -7,10 +7,10 @@ import {
   LandingContainer,
   StoriesContainer,
   ConversationsContainer,
-  MediaContainer,
   RequestsContainer,
   QuestionsContainer,
   CustomFourChoiceContainer,
+  CommonChoicesContainer,
 } from '../../containers';
 import {uri} from '../../config';
 
@@ -22,7 +22,7 @@ export type Props = {
   match: {},
 };
 
-function RoutesComponent() {
+function Routes() {
   return (
     <div id="routes">
       <Switch>
@@ -41,7 +41,7 @@ function RoutesComponent() {
         {/* story_pattern */}
         <Route
           path={uri.routes.story_pattern}
-          render={() => <CustomFourChoiceContainer />}
+          render={() => <CommonChoicesContainer />}
         />
         {/* conversations */}
         <Route
@@ -64,15 +64,11 @@ function RoutesComponent() {
         {/* question_pattern */}
         <Route
           path={uri.routes.questions_pattern}
-          render={() => <CustomFourChoiceContainer />}
+          render={() => <CommonChoicesContainer />}
         />
       </Switch>
     </div>
   );
 }
 
-function Routes() {
-  return RoutesComponent;
-}
-
-export default Routes();
+export default Routes;

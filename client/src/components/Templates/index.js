@@ -1,2 +1,3 @@
 export * from './Choice';
-export * from './Chat';
+export {default as Chat} from './Chat';
+export {default as Choices} from './Choices';

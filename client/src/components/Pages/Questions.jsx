@@ -1,6 +1,15 @@
-/* @flow */
+// @flow
 import * as React from 'react';
-import Grid from 'react-css-grid';
+import {
+  compose,
+  withProps,
+  withState,
+  withHandlers,
+  shouldUpdate,
+  lifecycle,
+  type HOC,
+} from 'recompose';
+import classNames from 'classnames';
 import {Chat} from '../Templates';
 import {url} from '../../config';
 
@@ -8,68 +17,55 @@ type Props = {
   recordAudio: () => void,
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
-  chatRouting: (apiUrl: string) => void,
-  talks: {
-    wav: any,
-    chatRoutingDatas: {
-      question: string,
-      choices: [],
-      id: number,
-    },
-    chatData: [],
-  },
+  talks: {wav: any},
 };
 
-class QuestionsComponent extends React.Component<Props> {
-  async componentDidMount() {
-    await this.props.chatRouting(url.apis.questions);
-    // console.log(this.props);
-  }
+type EnhancedComponentProps = {
+  choiceTitle: string,
+  choices: string,
+  apiUrl: string,
+};
 
-  async handleClick(action: string) {
-    switch (action) {
-      case 'RECORD':
-        await this.props.recordAudio();
-        break;
-      case 'SAVE':
-        await this.props.saveAudio();
-        break;
-      default:
-        break;
-    }
-  }
+const enhance: HOC<*, EnhancedComponentProps> = compose(
+  withProps({
+    choiceTitle: 'お話しましょう！',
+    choices: null,
+    apiUrl: null,
+  }),
+  withState('recording', 'recordingState', false),
+  withHandlers({
+    setRecording: ({recordingState}) => () => recordingState(true),
+    clearRecording: ({recordingState}) => () => recordingState(false),
+    getApiUrl: ({talks}) => () =>
+      `http://localhost:8080/api/questions/${
+        talks.chatRoutingDatas.id
+      }/answers`,
+    getChoices: ({talks}) => () => talks.chatData,
+    getChoicesTitle: ({talks}) => () =>
+      talks.routingDatas.question || talks.chatRoutingDatas.question,
+    getIsClear: ({talks}) => () => talks.routingDatas.is_clear,
+  }),
+  lifecycle({
+    componentDidMount() {
+      console.log('mounted');
+      this.props.chatRouting(url.apis.questions);
+    },
+  }),
+  shouldUpdate(
+    (props, nextProps) =>
+      nextProps.talks.wav !== props.talks.wav ||
+      nextProps.talks.chatData !== props.talks.chatData
+  )
+);
 
-  async fetchRouting() {
-    const propWAV = this.props.talks.wav;
-    if (propWAV !== null) {
-      await this.props.routing(
-        `http://localhost:8080/api/questions/${
-          this.props.talks.chatRoutingDatas.id
-        }/answers`,
-        propWAV
-      );
-    }
-  }
+const EnhancedChat = enhance(Chat);
 
-  render() {
-    return (
-      <div id="questions">
-        <Grid width="100%" gap={0} onClick={() => this.fetchRouting()}>
-          <Chat
-            recordApi={() => this.handleClick('RECORD')}
-            saveApi={() => this.handleClick('SAVE')}
-            choiceTitle="お話しましょう！"
-            firstQuestion={this.props.talks.chatRoutingDatas.question}
-            choices={this.props.talks.chatData}
-          />
-        </Grid>
-      </div>
-    );
-  }
+function Questions(props: Props) {
+  return (
+    <div className={classNames('questions')}>
+      <EnhancedChat {...props} />
+    </div>
+  );
 }
 
-function Questions() {
-  return QuestionsComponent;
-}
-
-export default Questions();
+export default Questions;

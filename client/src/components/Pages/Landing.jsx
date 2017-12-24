@@ -1,7 +1,17 @@
-/* @flow */
+// @flow
 import * as React from 'react';
-import Grid from 'react-css-grid';
-import {TwoChoice} from '../Templates';
+import {
+  compose,
+  defaultProps,
+  withProps,
+  withState,
+  withHandlers,
+  shouldUpdate,
+  lifecycle,
+  type HOC,
+} from 'recompose';
+import classNames from 'classnames';
+import {Choices} from '../Templates';
 import {url} from '../../config';
 
 type Props = {
@@ -11,44 +21,49 @@ type Props = {
   talks: {wav: any},
 };
 
-function LandingComponent(props: Props) {
-  const handleClick = async action => {
-    switch (action) {
-      case 'RECORD':
-        await props.recordAudio();
-        break;
-      case 'SAVE':
-        await props.saveAudio();
-        break;
-      default:
-        break;
-    }
-  };
+type EnhancedComponentProps = {
+  choiceTitle: string,
+  choices: string,
+  apiUrl: string,
+};
 
-  const fetchRouting = async () => {
-    const propWAV = props.talks.wav;
-    if (propWAV !== null) {
-      await props.routing(url.apis.root, propWAV);
-    }
-  };
+const enhance: HOC<*, EnhancedComponentProps> = compose(
+  defaultProps({
+    choiceTitle: '',
+    choices: [],
+    apiUrl: '',
+  }),
+  withProps({
+    choiceTitle: 'モードを選択して下さい',
+    choices: ['ストーリー', '話す'],
+    apiUrl: url.apis.root,
+  }),
+  withState('recording', 'recordingState', false),
+  withHandlers({
+    setRecording: ({recordingState}) => () => recordingState(true),
+    clearRecording: ({recordingState}) => () => recordingState(false),
+    getChoicesTitle: ({talks}) => () =>
+      talks.routingDatas.question || talks.chatRoutingDatas.question,
+    getChoices: ({talks}) => () =>
+      talks.routingDatas.choices || talks.chatRoutingDatas.choices,
+    getIsClear: ({talks}) => () => talks.routingDatas.is_clear,
+  }),
+  lifecycle({
+    componentDidMount() {
+      console.log('mounted');
+    },
+  }),
+  shouldUpdate((props, nextProps) => nextProps.talks.wav !== props.talks.wav)
+);
 
+const EnhancedChoices = enhance(Choices);
+
+function Landing(props: Props) {
   return (
-    <div id="landing">
-      <Grid width="100%" gap={0} onClick={() => fetchRouting()}>
-        <TwoChoice
-          recordApi={() => handleClick('RECORD')}
-          saveApi={() => handleClick('SAVE')}
-          choiceTitle="モードを選択して下さい"
-          choice1="ストーリー"
-          choice2="話す"
-        />
-      </Grid>
+    <div className={classNames('landing')}>
+      <EnhancedChoices {...props} />
     </div>
   );
 }
 
-function Landing() {
-  return LandingComponent;
-}
-
-export default Landing();
+export default Landing;

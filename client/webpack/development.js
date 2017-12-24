@@ -13,37 +13,25 @@ const {
   appCss,
   semanticCss,
   semanticOverrideCss,
-  appHtml,
+  appHtml
 } = require('./config/paths');
-const {
-  protocol,
-  devServerHost,
-  devServerPort,
-  raw,
-  stringified,
-} = require('./config/env');
+const {protocol, devServerHost, devServerPort, raw, stringified} = require('./config/env');
 
 const postcssLoaderOptions = {
   ident: 'postcss',
   plugins: () => [
     require('postcss-flexbugs-fixes'),
     autoprefixer({
-      browsers: [
-        '> 1% in JP',
-        'not Chrome 49',
-        'last 2 Edge versions',
-        'last 2 iOS versions',
-      ],
-      flexbox: 'no-2009',
-    }),
-  ],
+      browsers: ['> 1% in JP', 'not Chrome 49', 'last 2 Edge versions', 'last 2 iOS versions'],
+      flexbox: 'no-2009'
+    })
+  ]
 };
 
 const sassLoaderOptions = {sourceMap: true};
 
 module.exports = {
   entry: [
-    require.resolve('@webpack-utils/polyfills'),
     // activate HMR for React
     'react-hot-loader/patch',
     // bundle the client for webpack-dev-server
@@ -55,7 +43,7 @@ module.exports = {
     semanticCss,
     semanticOverrideCss,
     appCss,
-    appIndex,
+    appIndex
   ],
   devtool: 'cheap-module-source-map',
   devServer: {
@@ -65,7 +53,7 @@ module.exports = {
     contentBase: appSrc,
     watchContentBase: false,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': '*'
     },
     historyApiFallback: {disableDotRule: true},
     https: protocol === 'https',
@@ -75,23 +63,23 @@ module.exports = {
     inline: true,
     port: devServerPort,
     watchOptions: {
-      ignored: /node_modules/,
+      ignored: /node_modules/
     },
-    publicPath,
+    publicPath
   },
   output: {
     path: appBuild,
     pathinfo: true,
     filename: 'static/js/bundle.js',
     chunkFilename: 'static/js/[name].chunk.js',
-    publicPath,
+    publicPath
   },
   resolve: {
     modules: ['node_modules', appNodeModules].concat(
       // It is guaranteed to exist because we tweak it in `env.js`
-      process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
+      process.env.NODE_PATH.split(path.delimiter).filter(Boolean)
     ),
-    extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx'],
+    extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx']
   },
   module: {
     strictExportPresence: true,
@@ -103,7 +91,7 @@ module.exports = {
            */
           {
             test: /\.html/,
-            loader: require.resolve('html-loader'),
+            loader: require.resolve('html-loader')
           },
           /**
            * Assets resolve
@@ -113,8 +101,8 @@ module.exports = {
             loader: require.resolve('url-loader'),
             options: {
               limit: 10000,
-              name: 'static/media/[name].[hash:8].[ext]',
-            },
+              name: 'static/media/[name].[hash:8].[ext]'
+            }
           },
           /**
            * Babel
@@ -124,8 +112,8 @@ module.exports = {
             include: appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              cacheDirectory: true,
-            },
+              cacheDirectory: true
+            }
           },
           /**
            * CSS Modules resolve
@@ -136,18 +124,18 @@ module.exports = {
               require.resolve('style-loader'),
               {
                 loader: require.resolve('css-loader'),
-                options: {importLoaders: 3},
+                options: {importLoaders: 3}
               },
               require.resolve('resolve-url-loader'),
               {
                 loader: require.resolve('sass-loader'),
-                options: sassLoaderOptions,
+                options: sassLoaderOptions
               },
               {
                 loader: require.resolve('postcss-loader'),
-                options: postcssLoaderOptions,
-              },
-            ],
+                options: postcssLoaderOptions
+              }
+            ]
           },
           /**
            * Raw CSS resolve
@@ -159,13 +147,13 @@ module.exports = {
               require.resolve('resolve-url-loader'),
               {
                 loader: require.resolve('sass-loader'),
-                options: sassLoaderOptions,
+                options: sassLoaderOptions
               },
               {
                 loader: require.resolve('postcss-loader'),
-                options: postcssLoaderOptions,
-              },
-            ],
+                options: postcssLoaderOptions
+              }
+            ]
           },
           /**
            * File resolve
@@ -174,37 +162,37 @@ module.exports = {
             exclude: [/\.js$/, /\.html$/, /\.json$/],
             loader: require.resolve('file-loader'),
             options: {
-              name: 'static/media/[name].[hash:8].[ext]',
-            },
-          },
-        ],
-      },
-    ],
+              name: 'static/media/[name].[hash:8].[ext]'
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     new webpack.LoaderOptionsPlugin({
-      debug: true,
+      debug: true
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new InterpolateHtmlPlugin(raw),
     new HtmlWebpackPlugin({
       inject: true,
-      template: appHtml,
+      template: appHtml
     }),
     new webpack.DefinePlugin(stringified),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new CaseSensitivePathsPlugin(),
+    new CaseSensitivePathsPlugin()
   ],
   node: {
     dgram: 'empty',
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    child_process: 'empty',
+    child_process: 'empty'
   },
   stats: 'detailed',
   performance: {
-    hints: false,
-  },
+    hints: false
+  }
 };
