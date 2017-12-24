@@ -7,6 +7,7 @@ function url() {
         stories: 'http://localhost:8080/api/stories',
         conversations: 'http://localhost:8080/api/talks/routings/conversations',
         questions: 'http://localhost:8080/api/questions',
+        requests: 'http://localhost:8080/api/requests',
       },
     }
   );
