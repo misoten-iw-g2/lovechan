@@ -36,6 +36,11 @@ const enhance: HOC<*, EnhancedComponentProps> = compose(
   withHandlers({
     setRecording: ({recordingState}) => () => recordingState(true),
     clearRecording: ({recordingState}) => () => recordingState(false),
+    getChoicesTitle: ({talks}) => () =>
+      talks.routingDatas.question || talks.chatRoutingDatas.question,
+    getChoices: ({talks}) => () =>
+      talks.routingDatas.choices || talks.chatRoutingDatas.choices,
+    getIsClear: ({talks}) => () => talks.routingDatas.is_clear,
   }),
   lifecycle({
     componentDidMount() {

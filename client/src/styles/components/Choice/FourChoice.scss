@@ -1,7 +1,7 @@
 #four_choice {
-  background-color: #434343;
   width: 100%;
   height: calc(100vh);
+  background-color: #434343;
 
   @media screen and (max-height: 1080px) {
     overflow-y: hidden;
@@ -9,38 +9,38 @@
 
   .grid {
     &-header {
-      grid-template-rows: 9vw;
-      grid-template-areas: 'h1';
       padding-bottom: 4vw;
+      grid-template-areas: 'h1';
+      grid-template-rows: 9vw;
     }
 
     &-btn {
-      grid-template-rows: 20vw;
       padding: 0 2vw;
       grid-template-areas: 'div div div div';
+      grid-template-rows: 20vw;
     }
 
     &-mike {
-      grid-template-rows: 20vw;
       grid-template-areas: 'div';
+      grid-template-rows: 20vw;
     }
   }
 
   .app_header {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     color: #fff;
     font-size: 3vw;
     line-height: 3vw;
   }
 
   .app_btn {
-    background-color: #666;
-    border-radius: calc(1vw);
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #666;
+    border-radius: calc(1vw);
 
     &-voice_choiced {
       background-color: #e276aa;
@@ -49,19 +49,19 @@
     & > p {
       padding: 0 calc(0.6vw);
       color: #fff;
+      font-size: calc(2.3vw);
       font-weight: bold;
       white-space: pre-wrap;
-      font-size: calc(2.3vw);
     }
   }
 
   .app_mike {
     position: fixed;
     bottom: 0;
-    padding-bottom: 2vw;
+    display: flex;
     width: 100%;
     height: 20vw;
-    display: flex;
     justify-content: center;
+    padding-bottom: 2vw;
   }
 }

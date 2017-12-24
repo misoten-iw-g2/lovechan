@@ -11,7 +11,6 @@ import {
 } from 'recompose';
 import classNames from 'classnames';
 import {Choices} from '../Templates';
-import {url} from '../../config';
 
 type Props = {
   recordAudio: () => void,
@@ -28,18 +27,22 @@ type EnhancedComponentProps = {
 
 const enhance: HOC<*, EnhancedComponentProps> = compose(
   withProps({
-    choiceTitle: 'ラヴちゃんとしたいことを選んで下さい',
-    choices: ['何かお願いする', '質問してもらう'],
-    apiUrl: url.apis.conversations,
+    choiceTitle: '',
+    choices: [],
+    apiUrl: '',
   }),
   withState('recording', 'recordingState', false),
   withHandlers({
     setRecording: ({recordingState}) => () => recordingState(true),
     clearRecording: ({recordingState}) => () => recordingState(false),
+    getApiUrl: ({talks}) => () =>
+      `http://localhost:8080/api/questions/${
+        talks.chatRoutingDatas.id
+      }/answers`,
     getChoicesTitle: ({talks}) => () =>
-      talks.routingDatas.question || talks.chatRoutingDatas.question,
+      talks.routingDatas.question || talks.chatRoutingDatas.question || '',
     getChoices: ({talks}) => () =>
-      talks.routingDatas.choices || talks.chatRoutingDatas.choices,
+      talks.routingDatas.choices || talks.chatRoutingDatas.choices || [],
     getIsClear: ({talks}) => () => talks.routingDatas.is_clear,
   }),
   lifecycle({
@@ -47,17 +50,24 @@ const enhance: HOC<*, EnhancedComponentProps> = compose(
       console.log('mounted');
     },
   }),
-  shouldUpdate((props, nextProps) => nextProps.talks.wav !== props.talks.wav)
+  shouldUpdate(
+    (props, nextProps) =>
+      nextProps.talks.wav !== props.talks.wav ||
+      nextProps.routingDatas.question !== props.routingDatas.question ||
+      nextProps.routingDatas.choices !== props.routingDatas.choices ||
+      nextProps.talks.routingDatas.is_clear !==
+        props.talks.routingDatas.is_clear
+  )
 );
 
 const EnhancedChoices = enhance(Choices);
 
-function Conversations(props: Props) {
+function CommonChoices(props: Props) {
   return (
-    <div className={classNames('conversations')}>
+    <div className={classNames('common_choices')}>
       <EnhancedChoices {...props} />
     </div>
   );
 }
 
-export default Conversations;
+export default CommonChoices;

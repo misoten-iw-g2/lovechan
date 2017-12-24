@@ -2,6 +2,7 @@
 import * as React from 'react';
 import {
   compose,
+  defaultProps,
   withProps,
   withState,
   withHandlers,
@@ -27,6 +28,11 @@ type EnhancedComponentProps = {
 };
 
 const enhance: HOC<*, EnhancedComponentProps> = compose(
+  defaultProps({
+    choiceTitle: '',
+    choices: [],
+    apiUrl: '',
+  }),
   withProps({
     choiceTitle: 'モードを選択して下さい',
     choices: ['ストーリー', '話す'],
@@ -36,6 +42,11 @@ const enhance: HOC<*, EnhancedComponentProps> = compose(
   withHandlers({
     setRecording: ({recordingState}) => () => recordingState(true),
     clearRecording: ({recordingState}) => () => recordingState(false),
+    getChoicesTitle: ({talks}) => () =>
+      talks.routingDatas.question || talks.chatRoutingDatas.question,
+    getChoices: ({talks}) => () =>
+      talks.routingDatas.choices || talks.chatRoutingDatas.choices,
+    getIsClear: ({talks}) => () => talks.routingDatas.is_clear,
   }),
   lifecycle({
     componentDidMount() {

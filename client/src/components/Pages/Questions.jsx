@@ -41,6 +41,9 @@ const enhance: HOC<*, EnhancedComponentProps> = compose(
         talks.chatRoutingDatas.id
       }/answers`,
     getChoices: ({talks}) => () => talks.chatData,
+    getChoicesTitle: ({talks}) => () =>
+      talks.routingDatas.question || talks.chatRoutingDatas.question,
+    getIsClear: ({talks}) => () => talks.routingDatas.is_clear,
   }),
   lifecycle({
     componentDidMount() {

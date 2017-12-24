@@ -18,6 +18,9 @@ type Props = {
   talks: {
     wav: any,
   },
+  getChoicesTitle: () => string,
+  getChoices: () => string,
+  getIsClear: () => boolean,
 };
 
 function Choices(props: Props) {
@@ -42,10 +45,18 @@ function Choices(props: Props) {
     routing,
     apiUrl,
     talks,
+    getChoices,
+    getIsClear,
+    getChoicesTitle,
   } = props;
 
-  const mapChoicesRender = !isClear ? (
-    choices.map(item => (
+  const organizedChoicesTitle =
+    choiceTitle.length !== 0 ? choiceTitle : getChoicesTitle();
+  const organizedChoices: any = choices.length !== 0 ? choices : getChoices();
+  const organizedIsClear = isClear || getIsClear();
+
+  const mapChoicesRender = !organizedIsClear ? (
+    organizedChoices.map(item => (
       <React.Fragment key={uuidv4()}>
         <p className={classNames('btn_item')}>{item}</p>
       </React.Fragment>
@@ -63,11 +74,11 @@ function Choices(props: Props) {
     <div className="choices">
       <Grid width="100%" gap={0} className={classNames('grid_header')}>
         <Header as="h1" className={classNames('app_header')}>
-          {choiceTitle}
+          <span>{organizedChoicesTitle}</span>
         </Header>
       </Grid>
 
-      {choices.length < 3 ? (
+      {organizedChoices.length < 3 ? (
         <Grid
           width="100%"
           gap={0}
@@ -77,11 +88,7 @@ function Choices(props: Props) {
           {mapChoicesRender}
         </Grid>
       ) : (
-        <Grid
-          width="calc(20vw)"
-          gap="calc(2vw)"
-          className={classNames('grid-btn')}
-        >
+        <Grid width={400} gap={60} className={classNames('grid_btn_more')}>
           {mapChoicesRender}
         </Grid>
       )}

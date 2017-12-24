@@ -39,6 +39,32 @@
     }
   }
 
+  .grid_btn_more {
+    padding: 0 70px;
+    grid-auto-rows: 425px;
+    grid-column-gap: 60px;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+
+    // &-voice_choiced {
+    //   background-color: #e276aa;
+    // }
+
+    .btn_item {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      margin: 0;
+      background-color: #666;
+      border-radius: calc(1vw);
+      color: #fff;
+      font-size: 70px;
+      font-weight: bold;
+      line-height: 70px;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+  }
+
   .grid_mike {
     grid-auto-rows: 230px;
 
