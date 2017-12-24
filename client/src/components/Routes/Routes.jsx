@@ -7,7 +7,6 @@ import {
   LandingContainer,
   StoriesContainer,
   ConversationsContainer,
-  MediaContainer,
   RequestsContainer,
   QuestionsContainer,
   CustomFourChoiceContainer,

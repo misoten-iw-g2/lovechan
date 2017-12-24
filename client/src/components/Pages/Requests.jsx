@@ -1,69 +1,58 @@
-/* @flow */
+// @flow
 import * as React from 'react';
-import Grid from 'react-css-grid';
-import {TwoChoice} from '../Templates';
+import {
+  compose,
+  withProps,
+  withState,
+  withHandlers,
+  shouldUpdate,
+  lifecycle,
+  type HOC,
+} from 'recompose';
+import classNames from 'classnames';
+import {Choices} from '../Templates';
+import {url} from '../../config';
 
 type Props = {
   recordAudio: () => void,
   saveAudio: () => void,
   routing: (apiUrl: string, blob: any) => void,
-  talks: {
-    wav: any,
-    routingDatas: {
-      question: string,
-      choices: [],
-      url: string,
-      is_clear: boolean,
-    },
-    chatRoutingDatas: {
-      choices: [],
-      question: string,
-      id: number,
-    },
-  },
+  talks: {wav: any},
 };
 
-function RequestsComponent(props: Props) {
-  const handleClick = async action => {
-    switch (action) {
-      case 'RECORD':
-        await props.recordAudio();
-        break;
-      case 'SAVE':
-        await props.saveAudio();
-        break;
-      default:
-        break;
-    }
-  };
+type EnhancedComponentProps = {
+  choiceTitle: string,
+  choices: string,
+  apiUrl: string,
+};
 
-  const fetchRouting = async () => {
-    const {talks} = props;
-    const propWAV = talks.wav;
+const enhance: HOC<*, EnhancedComponentProps> = compose(
+  withProps({
+    choiceTitle: '何をしてほしいですか？',
+    choices: ['踊って', '一発芸して'],
+    apiUrl: url.apis.requests,
+  }),
+  withState('recording', 'recordingState', false),
+  withHandlers({
+    setRecording: ({recordingState}) => () => recordingState(true),
+    clearRecording: ({recordingState}) => () => recordingState(false),
+  }),
+  lifecycle({
+    componentDidMount() {
+      console.log('mounted');
+    },
+  }),
+  shouldUpdate((props, nextProps) => nextProps.talks.wav !== props.talks.wav)
+);
 
-    const apiURI = `http://localhost:8080/api/requests`;
-    if (propWAV !== null) {
-      await props.routing(apiURI, propWAV);
-    }
-  };
+const EnhancedChoices = enhance(Choices);
 
+function Requests(props: Props) {
   return (
-    <div id="requests">
-      <Grid width="100%" gap={0} onClick={() => fetchRouting()}>
-        <TwoChoice
-          recordApi={() => handleClick('RECORD')}
-          saveApi={() => handleClick('SAVE')}
-          choiceTitle="何をしてほしいですか？"
-          choice1="踊って"
-          choice2="一発芸して"
-        />
-      </Grid>
+    <div className={classNames('requests')}>
+      <EnhancedChoices {...props} />
     </div>
   );
 }
 
-function Requests() {
-  return RequestsComponent;
-}
-
-export default Requests();
+export default Requests;

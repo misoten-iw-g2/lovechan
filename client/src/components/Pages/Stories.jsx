@@ -1,7 +1,16 @@
-/* @flow */
+// @flow
 import * as React from 'react';
-import Grid from 'react-css-grid';
-import {TwoChoice} from '../Templates';
+import {
+  compose,
+  withProps,
+  withState,
+  withHandlers,
+  shouldUpdate,
+  lifecycle,
+  type HOC,
+} from 'recompose';
+import classNames from 'classnames';
+import {Choices} from '../Templates';
 import {url} from '../../config';
 
 type Props = {
@@ -11,44 +20,39 @@ type Props = {
   talks: {wav: any},
 };
 
-function StoriesComponent(props: Props) {
-  const handleClick = async action => {
-    switch (action) {
-      case 'RECORD':
-        await props.recordAudio();
-        break;
-      case 'SAVE':
-        await props.saveAudio();
-        break;
-      default:
-        break;
-    }
-  };
+type EnhancedComponentProps = {
+  choiceTitle: string,
+  choices: string,
+  apiUrl: string,
+};
 
-  const fetchRouting = async () => {
-    const propWAV = props.talks.wav;
-    if (propWAV !== null) {
-      await props.routing(url.apis.stories, propWAV);
-    }
-  };
+const enhance: HOC<*, EnhancedComponentProps> = compose(
+  withProps({
+    choiceTitle: 'どのストーリーで遊びますか？',
+    choices: ['突然のエラー', '仕様変更'],
+    apiUrl: url.apis.stories,
+  }),
+  withState('recording', 'recordingState', false),
+  withHandlers({
+    setRecording: ({recordingState}) => () => recordingState(true),
+    clearRecording: ({recordingState}) => () => recordingState(false),
+  }),
+  lifecycle({
+    componentDidMount() {
+      console.log('mounted');
+    },
+  }),
+  shouldUpdate((props, nextProps) => nextProps.talks.wav !== props.talks.wav)
+);
 
+const EnhancedChoices = enhance(Choices);
+
+function Stories(props: Props) {
   return (
-    <div id="stories">
-      <Grid width="100%" gap={0} onClick={() => fetchRouting()}>
-        <TwoChoice
-          recordApi={() => handleClick('RECORD')}
-          saveApi={() => handleClick('SAVE')}
-          choiceTitle="どのストーリーで遊びますか？"
-          choice1="突然のエラー"
-          choice2="仕様変更"
-        />
-      </Grid>
+    <div className={classNames('stories')}>
+      <EnhancedChoices {...props} />
     </div>
   );
 }
 
-function Stories() {
-  return StoriesComponent;
-}
-
-export default Stories();
+export default Stories;

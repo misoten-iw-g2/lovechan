@@ -1,0 +1,61 @@
+.chat {
+  min-height: calc(100vh);
+  background-color: #434343;
+
+  .grid_header {
+    grid-auto-rows: 200px;
+
+    .app_header {
+      align-self: center;
+      color: #fff;
+      font-size: 40px;
+      justify-self: center;
+      line-height: 40px;
+    }
+  }
+
+  .grid_content {
+    grid-row-gap: 50px;
+    grid-template-columns: repeat(16, 1fr);
+
+    // &-voice_choiced {
+    //   background-color: #e276aa;
+    // }
+
+    .btn_item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 25px 50px;
+      margin: 0;
+      background-color: #666;
+      border-radius: calc(1vw);
+      color: #fff;
+      font-size: 50px;
+      line-height: 50px;
+      white-space: pre-wrap;
+    }
+
+    .btn_item:nth-child(odd) {
+      grid-column: span 6/16;
+    }
+
+    .btn_item:nth-child(even) {
+      grid-column: span 6/8;
+    }
+  }
+
+  .grid_mike {
+    position: fixed;
+    bottom: 0;
+    grid-auto-rows: 230px;
+    grid-template-columns: 100vw;
+
+    .app_mike {
+      width: auto;
+      height: 170px;
+      align-self: center;
+      justify-self: center;
+    }
+  }
+}

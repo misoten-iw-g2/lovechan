@@ -1,7 +1,16 @@
-/* @flow */
+// @flow
 import * as React from 'react';
-import Grid from 'react-css-grid';
-import {TwoChoice} from '../Templates';
+import {
+  compose,
+  withProps,
+  withState,
+  withHandlers,
+  shouldUpdate,
+  lifecycle,
+  type HOC,
+} from 'recompose';
+import classNames from 'classnames';
+import {Choices} from '../Templates';
 import {url} from '../../config';
 
 type Props = {
@@ -11,44 +20,39 @@ type Props = {
   talks: {wav: any},
 };
 
-function ConversationsComponent(props: Props) {
-  const handleClick = async action => {
-    switch (action) {
-      case 'RECORD':
-        await props.recordAudio();
-        break;
-      case 'SAVE':
-        await props.saveAudio();
-        break;
-      default:
-        break;
-    }
-  };
+type EnhancedComponentProps = {
+  choiceTitle: string,
+  choices: string,
+  apiUrl: string,
+};
 
-  const fetchRouting = async () => {
-    const propWAV = props.talks.wav;
-    if (propWAV !== null) {
-      await props.routing(url.apis.conversations, propWAV);
-    }
-  };
+const enhance: HOC<*, EnhancedComponentProps> = compose(
+  withProps({
+    choiceTitle: 'ラヴちゃんとしたいことを選んで下さい',
+    choices: ['何かお願いする', '質問してもらう'],
+    apiUrl: url.apis.conversations,
+  }),
+  withState('recording', 'recordingState', false),
+  withHandlers({
+    setRecording: ({recordingState}) => () => recordingState(true),
+    clearRecording: ({recordingState}) => () => recordingState(false),
+  }),
+  lifecycle({
+    componentDidMount() {
+      console.log('mounted');
+    },
+  }),
+  shouldUpdate((props, nextProps) => nextProps.talks.wav !== props.talks.wav)
+);
 
+const EnhancedChoices = enhance(Choices);
+
+function Conversations(props: Props) {
   return (
-    <div id="conversations">
-      <Grid width="100%" gap={0} onClick={() => fetchRouting()}>
-        <TwoChoice
-          recordApi={() => handleClick('RECORD')}
-          saveApi={() => handleClick('SAVE')}
-          choiceTitle="ラブちゃんとしたいことを選んで下さい"
-          choice1="何かお願いする"
-          choice2="質問してもらう"
-        />
-      </Grid>
+    <div className={classNames('conversations')}>
+      <EnhancedChoices {...props} />
     </div>
   );
 }
 
-function Conversations() {
-  return ConversationsComponent;
-}
-
-export default Conversations();
+export default Conversations;
