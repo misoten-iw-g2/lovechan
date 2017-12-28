@@ -38,10 +38,7 @@ const enhance: HOC<*, EnhancedComponentProps> = compose(
     choices: ['ストーリー', '話す'],
     apiUrl: url.apis.root,
   }),
-  withState('recording', 'recordingState', false),
   withHandlers({
-    setRecording: ({recordingState}) => () => recordingState(true),
-    clearRecording: ({recordingState}) => () => recordingState(false),
     getChoicesTitle: ({talks}) => () =>
       talks.routingDatas.question || talks.chatRoutingDatas.question,
     getChoices: ({talks}) => () =>

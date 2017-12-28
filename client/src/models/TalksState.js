@@ -8,11 +8,12 @@ const TalksRecord = Record({
   chatDatas: [],
   chatRoutingDatas: [],
   chatData: [],
+  recording: false,
 });
 
 export class TalksState extends TalksRecord {
   recordAudio(state: any, _action: any) {
-    const newState = state.update('webrtc', async () => {
+    const newState = state.set('recording', true).update('webrtc', async () => {
       const {navigator, AudioContext} = window;
 
       if (state.webrtc !== null) {
@@ -55,8 +56,11 @@ export class TalksState extends TalksRecord {
   }
 
   saveAudio(state: any, _action: any) {
-    const newState = state.update('wav', async () => {
+    const newState = state.set('recording', false).update('wav', async () => {
       const {context, storeAudio, stream, bufferSize} = await state.webrtc;
+
+      stream.getTracks().forEach(track => track.stop());
+
       const audioBuffer = () => {
         const buffer = context.createBuffer(
           1,
@@ -71,9 +75,6 @@ export class TalksState extends TalksRecord {
         }
         return buffer;
       };
-
-      // mike
-      stream.getAudioTracks()[0].stop();
 
       if (!context.state === 'closed') {
         const src = context.createBufferSource();
@@ -148,12 +149,8 @@ export class TalksState extends TalksRecord {
   }
 
   routing(state: any, action: any) {
-    console.log(state.chatData);
-
     const chatDataStack = Stack();
     const newState = state
-      .delete('chatData')
-      .delete('wav')
       .delete('routingDatas')
 
       .set('routingDatas', action.payload)
@@ -171,7 +168,6 @@ export class TalksState extends TalksRecord {
   }
 
   chatRouting(state: any, action: any) {
-    console.log(state.chatData);
     const chatDataStack = Stack(state.chatData);
 
     const newState = state.delete('chatData').withMutations(map => {

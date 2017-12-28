@@ -24,22 +24,12 @@ type Props = {
 };
 
 function Choices(props: Props) {
-  window.navigator.mediaDevices
-    .getUserMedia({
-      audio: true,
-    })
-    .then(stream => {
-      const tracks = stream.getTracks();
-      tracks.forEach(track => {
-        track.stop();
-      });
-    });
+  console.log(props);
 
   const {
     choiceTitle,
     choices,
     isClear,
-    recording,
     recordAudio,
     saveAudio,
     routing,
@@ -66,12 +56,22 @@ function Choices(props: Props) {
   );
 
   const runApi = async () => {
+    await recordAudio();
+    await new Promise(resolve => setTimeout(resolve, 5000));
     await saveAudio();
-    await routing(apiUrl, talks.wav);
+    routing(apiUrl, talks.wav);
   };
 
   return (
-    <div className="choices">
+    <div
+      className="choices"
+      onClick={() => runApi()}
+      onKeyPress={() => {}}
+      onKeyDown={() => {}}
+      onKeyUp={() => {}}
+      role="button"
+      tabIndex="0"
+    >
       <Grid width="100%" gap={0} className={classNames('grid_header')}>
         <Header as="h1" className={classNames('app_header')}>
           <span>{organizedChoicesTitle}</span>
@@ -79,12 +79,7 @@ function Choices(props: Props) {
       </Grid>
 
       {organizedChoices.length < 3 ? (
-        <Grid
-          width="100%"
-          gap={0}
-          className={classNames('grid_btn_two')}
-          onClick={() => runApi()}
-        >
+        <Grid width="100%" gap={0} className={classNames('grid_btn_two')}>
           {mapChoicesRender}
         </Grid>
       ) : (
@@ -93,28 +88,34 @@ function Choices(props: Props) {
         </Grid>
       )}
 
-      <Grid
-        width="100%"
-        gap={0}
-        className={classNames('grid_mike')}
-        onClick={() => recordAudio()}
-      >
-        <MikeOff
+      <Grid width="100%" gap={0} className={classNames('grid_mike')}>
+        <div
           className={classNames({
             app_mike: true,
-            visible: !recording,
-            hide: recording,
+            visible: !talks.recording,
+            hide: talks.recording,
           })}
-          fill="#fff"
-        />
-        <MikeOn
+        >
+          <MikeOff
+            className={classNames({
+              app_mike: true,
+            })}
+            fill="#fff"
+          />
+        </div>
+        <div
           className={classNames({
             app_mike: true,
-            visible: recording,
-            hide: !recording,
+            visible: talks.recording,
+            hide: !talks.recording,
           })}
-          fill="#fff"
-        />
+        >
+          <MikeOn
+            className={classNames({
+              app_mike: true,
+            })}
+          />
+        </div>
       </Grid>
     </div>
   );
