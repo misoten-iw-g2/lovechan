@@ -75,4 +75,12 @@
       justify-self: center;
     }
   }
+
+  .visible {
+    display: block !important;
+  }
+
+  .hide {
+    display: none !important;
+  }
 }
