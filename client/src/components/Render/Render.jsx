@@ -24,16 +24,13 @@ function main() {
     );
   };
 
-  try {
-    mainRender(Routes);
-    if (module.hot) {
-      module.hot.accept('../Routes', () => {
-        const hotRoutes = require('../Routes/Routes');
-        mainRender(hotRoutes);
-      });
-    }
-  } catch (e) {
-    console.error(e);
+  mainRender(Routes);
+
+  if (module.hot) {
+    module.hot.accept('../Routes', () => {
+      const hotRoutes = require('../Routes').default;
+      mainRender(hotRoutes);
+    });
   }
 }
 
