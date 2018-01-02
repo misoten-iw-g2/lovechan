@@ -1,5 +1,4 @@
 /* @flow */
-/* eslint-disable max-len */
 import * as React from 'react';
 import {Image} from 'semantic-ui-react';
 import mikegif from './mike_on.gif';
