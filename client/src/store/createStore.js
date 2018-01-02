@@ -1,11 +1,10 @@
 /* @flow */
-/* eslint no-underscore-dangle: off */
 import {createStore, applyMiddleware, compose} from 'redux';
 import {instrument, persistState} from 'redux-devtools';
 import promiseMiddleware from 'redux-promise-middleware';
 import thunkMiddleware from 'redux-thunk';
 import {routerMiddleware} from 'react-router-redux';
-import {reducers} from '../reducers';
+import {rootReducer} from '../reducers';
 import {routingMiddleware} from './routingMiddleware';
 import {history} from '../config';
 
@@ -16,17 +15,20 @@ const middlewares = [
   routingMiddleware(),
 ];
 
-let enhancer;
-if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-  enhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(
-    applyMiddleware(...middlewares)
-  );
-} else {
-  enhancer = compose(
-    applyMiddleware(...middlewares),
-    instrument(),
-    persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
-  );
-}
+const enhancer = compose(
+  applyMiddleware(...middlewares),
+  instrument(),
+  persistState(window.location.href.match(/[?&]debug_session=([^&#]+)\b/))
+);
 
-export default createStore(reducers, enhancer);
+export default function configureStore(initialState: any) {
+  const store = createStore(rootReducer, initialState, enhancer);
+
+  if (module.hot) {
+    module.hot.accept('../reducers', () =>
+      store.replaceReducer(require('../reducers').default)
+    );
+  }
+
+  return store;
+}
