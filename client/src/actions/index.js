@@ -1,1 +1,1 @@
-export {default as talksActions, default} from './talks';
+export {default as talksAction, default} from './talks';
