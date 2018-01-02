@@ -1,1 +1,1 @@
-export {default as reducers, default} from './combineReducers';
+export {default as rootReducer, default} from './combineReducers';
