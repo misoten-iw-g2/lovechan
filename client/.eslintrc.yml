@@ -1,28 +1,15 @@
 parser: 'babel-eslint'
 
 extends:
-  - airbnb
-  - plugin:import/errors
-  - plugin:import/warnings
+  - fbjs
   - prettier
   - prettier/flowtype
   - prettier/react
 
 plugins:
-  - flowtype
-  - react
   - prettier
 
-env:
-  browser: true
-  node: true
-
 rules:
-  no-unused-vars:
-    - 2
-    -
-      argsIgnorePattern: ^_
-      varsIgnorePattern: ^_
   prettier/prettier:
     - error
     -
@@ -39,5 +26,3 @@ rules:
   no-confusing-arrow: error
   no-mixed-operators: error
   no-unexpected-multiline: error
-  global-require: off
-  class-methods-use-this: off
