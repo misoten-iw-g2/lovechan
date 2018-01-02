@@ -1,22 +1,46 @@
 /* @flow */
 import {createActions} from 'redux-actions';
-import {Record} from 'immutable';
+import {Record, type RecordFactory, type RecordOf} from 'immutable';
 import {postWAV} from './apis/postWAV';
 
-const SuccessResponseRecord = Record({
+type Response = {
+  id?: string,
+  answer?: string,
+  answer_type?: string,
+  choices?: [],
+  is_clear?: boolean,
+  next_step?: boolean,
+  question?: string,
+  story_pattern?: string,
+  url?: string,
+  next_page?: string,
+  user_voice_text?: string,
+  is_finish?: boolean,
+  question?: string,
+};
+
+type Failed = {
+  id: string,
+  code: string,
+  bad_request: string,
+  status: string,
+  detail: string,
+};
+
+const SuccessResponseRecord: RecordFactory<Response> = Record({
   answer: '',
   choices: [],
-  is_clear: null,
-  next_step: null,
+  is_clear: false,
+  next_step: false,
   question: '',
   story_pattern: '',
   url: '',
   next_page: '',
   user_voice_text: '',
-  is_finish: null,
+  is_finish: false,
 });
 
-const FailedResponseRecord = Record({
+const FailedResponseRecord: RecordFactory<Failed> = Record({
   id: '',
   code: '',
   bad_request: '',
@@ -24,10 +48,10 @@ const FailedResponseRecord = Record({
   detail: '',
 });
 
-const ChatRecord = Record({
-  answer_type: null,
+const ChatRecord: RecordFactory<Response> = Record({
+  answer_type: '',
   choices: [],
-  id: null,
+  id: '',
   question: '',
 });
 
@@ -37,37 +61,39 @@ export default createActions({
     saveAudio: null,
     routing: async (apiUrl, blob) => {
       try {
-        const postWAVResponse = await postWAV(apiUrl, blob);
-        const responseJSON = await postWAVResponse.json();
+        const response = await postWAV(apiUrl, blob);
+        const responseJson = await response.json();
 
-        if (!postWAVResponse.ok) {
-          const failedDatasRecord = new FailedResponseRecord(responseJSON);
-          throw Error(failedDatasRecord.get('detail'));
+        if (!response.ok) {
+          const failedRecord = new FailedResponseRecord(responseJson);
+          throw Error(failedRecord.get('detail'));
         }
-        const successResponseRecord = new SuccessResponseRecord(responseJSON);
-        const payload = await successResponseRecord.toJS();
+
+        const responseRecord: RecordOf<Response> = new SuccessResponseRecord(
+          responseJson
+        );
+        const payload = await responseRecord.toJS();
 
         return payload;
       } catch (e) {
-        console.log(e);
         throw e;
       }
     },
     chatRouting: async apiUrl => {
       try {
-        const fetchDatas = await fetch(apiUrl);
-        const fetchDatasJSON = await fetchDatas.json();
+        const response = await fetch(apiUrl);
+        const responseJson = await response.json();
 
-        if (!fetchDatas.ok) {
-          const failedDatasRecord = new FailedResponseRecord(fetchDatasJSON);
-          throw Error(failedDatasRecord.get('detail'));
+        if (!response.ok) {
+          const failedRecord = new FailedResponseRecord(responseJson);
+          throw Error(failedRecord.get('detail'));
         }
-        const successResponseRecord = new ChatRecord(fetchDatasJSON);
-        const payload = await successResponseRecord.toJS();
+
+        const responseRecord: RecordOf<Response> = new ChatRecord(responseJson);
+        const payload = await responseRecord.toJS();
 
         return payload;
       } catch (error) {
-        console.log(error);
         throw error;
       }
     },
