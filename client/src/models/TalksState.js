@@ -1,186 +1,179 @@
 /* @flow */
-import {Record, Stack} from 'immutable';
+import {Record, Stack, type RecordFactory, type RecordOf} from 'immutable';
 
-const TalksRecord = Record({
+type Talks = {
+  webrtc: any,
+  wav: any,
+  routingData: any,
+  chatData: any,
+  chatRoutingData: any,
+  recording: boolean,
+  audioContext: any,
+  requestDevice: any,
+  audioStream: any,
+  recBuffer: [],
+  recLength: number,
+  mergedBuffers: any,
+};
+
+const TalksRecord: RecordFactory<Talks> = Record({
   webrtc: null,
   wav: null,
-  routingDatas: [],
-  chatDatas: [],
-  chatRoutingDatas: [],
-  chatData: [],
+  routingData: null,
+  chatData: null,
+  chatRoutingData: null,
   recording: false,
+  audioContext: null,
+  requestDevice: null,
+  audioStream: null,
+  recBuffer: [],
+  recLength: 0,
+  mergedBuffers: null,
 });
 
-export class TalksState extends TalksRecord {
-  recordAudio(state: any, _action: any) {
-    const newState = state.set('recording', true).update('webrtc', async () => {
-      const {navigator, AudioContext} = window;
+export default class TalksState extends TalksRecord {
+  recordAudio(state: RecordOf<Talks>, action: {}) {
+    /**
+     * record flag TRUE
+     */
+    state.set('recording', true);
 
-      if (state.webrtc !== null) {
-        const subscriptionMedia = navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: false,
+    if (typeof state.get('audioContext') === 'undefined') {
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      state.set('audioContext', new AudioContext());
+    }
+
+    state.update('requestDevice', () => {
+      return window.navigator.mediaDevices
+        .getUserMedia({audio: true})
+        .then(stream => {
+          state.set('audioStream', stream);
         });
-
-        const onMedia = stream => {
-          const bufferSize = 4096;
-          const context = new AudioContext();
-          const source = context.createMediaStreamSource(stream);
-          const processor = context.createScriptProcessor(bufferSize, 1, 1);
-
-          source.connect(processor);
-          processor.connect(context.destination);
-
-          const storeAudio = [];
-
-          processor.onaudioprocess = evt => {
-            const channel = evt.inputBuffer.getChannelData(0);
-            const buffer = new Float32Array(bufferSize);
-            for (let i = 0; i < bufferSize; i += 1) {
-              buffer[i] = channel[i];
-            }
-            storeAudio.push(buffer);
-          };
-
-          const result = new Promise(resolve => {
-            resolve({context, storeAudio, stream, bufferSize});
-          });
-          return result;
-        };
-
-        return onMedia(await subscriptionMedia);
-      }
-      return state.webrtc;
-    });
-    return newState;
-  }
-
-  saveAudio(state: any, _action: any) {
-    const newState = state.set('recording', false).update('wav', async () => {
-      const {context, storeAudio, stream, bufferSize} = await state.webrtc;
-
-      stream.getTracks().forEach(track => track.stop());
-
-      const audioBuffer = () => {
-        const buffer = context.createBuffer(
-          1,
-          storeAudio.length * bufferSize,
-          context.sampleRate
-        );
-        const channel = buffer.getChannelData(0);
-        for (let i = 0; i < storeAudio.length; i += 1) {
-          for (let j = 0; j < bufferSize; j += 1) {
-            channel[i * bufferSize + j] = storeAudio[i][j];
-          }
-        }
-        return buffer;
-      };
-
-      if (!context.state === 'closed') {
-        const src = context.createBufferSource();
-        src.buffer = audioBuffer();
-        src.connect(context.destination);
-      }
-
-      // CAUTION
-      const exportWAV = (audioData, sampleRate) => {
-        const encodeWAV = samples => {
-          const buffer = new ArrayBuffer(44 + samples.length * 2);
-          const view = new DataView(buffer);
-          const writeString = (offset, string) => {
-            for (let i = 0; i < string.length; i += 1) {
-              view.setUint8(offset + i, string.charCodeAt(i));
-            }
-          };
-          const floatTo16BitPCM = (output, offset, input) => {
-            for (let i = 0; i < input.length; i += 1, offset += 2) {
-              const s = Math.max(-1, Math.min(1, input[i]));
-              output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
-            }
-          };
-          writeString(0, 'RIFF'); // RIFFヘッダ
-          view.setUint32(4, 32 + samples.length * 2, true); // これ以降のファイルサイズ
-          writeString(8, 'WAVE'); // WAVEヘッダ
-          writeString(12, 'fmt '); // fmtチャンク
-          view.setUint32(16, 16, true); // fmtチャンクのバイト数
-          view.setUint16(20, 1, true); // フォーマットID
-          view.setUint16(22, 1, true); // チャンネル数
-          view.setUint32(24, sampleRate, true); // サンプリングレート
-          view.setUint32(28, sampleRate * 2, true); // データ速度
-          view.setUint16(32, 2, true); // ブロックサイズ
-          view.setUint16(34, 16, true); // サンプルあたりのビット数
-          writeString(36, 'data'); // dataチャンク
-          view.setUint32(40, samples.length * 2, true); // 波形データのバイト数
-          floatTo16BitPCM(view, 44, samples); // 波形データ
-          return view;
-        };
-        const mergeBuffers = () => {
-          let sampleLength = 0;
-          for (let i = 0; i < audioData.length; i += 1) {
-            sampleLength += audioData[i].length;
-          }
-          const samples = new Float32Array(sampleLength);
-          let sampleIdx = 0;
-          for (let i = 0; i < audioData.length; i += 1) {
-            for (let j = 0; j < audioData[i].length; j += 1) {
-              samples[sampleIdx] = audioData[i][j];
-              sampleIdx += 1;
-            }
-          }
-          return samples;
-        };
-        const dataview = encodeWAV(mergeBuffers());
-        const audioBlob = new Blob([dataview], {type: 'audio/wav'});
-        return audioBlob;
-      };
-      // CAUTION
-
-      if (!context.state === 'closed') {
-        const result = context.close().then(() => {
-          const blob = exportWAV(storeAudio, context.sampleRate);
-          return blob;
-        });
-        return result;
-      }
-      const blob = exportWAV(storeAudio, context.sampleRate);
-      return blob;
-    });
-    return newState;
-  }
-
-  routing(state: any, action: any) {
-    const chatDataStack = Stack();
-    const newState = state
-      .delete('routingDatas')
-
-      .set('routingDatas', action.payload)
-      .set(
-        'chatData',
-        chatDataStack
-          .push(
-            ...state.chatData,
-            action.payload.user_voice_text,
-            action.payload.answer
-          )
-          .toArray()
-      );
-    return newState;
-  }
-
-  chatRouting(state: any, action: any) {
-    const chatDataStack = Stack(state.chatData);
-
-    const newState = state.delete('chatData').withMutations(map => {
-      map
-        .delete('wav')
-        .delete('routingDatas')
-        .set('chatRoutingDatas', action.payload)
-        // questionとanswerをpushする。
-        .set('chatData', chatDataStack.push(action.payload.question).toArray());
     });
 
-    return newState;
+    const node = state
+      .get('audioContext')
+      .createMediaStreamSource(state.get('audioStream'))
+      .context.createScriptProcessor(4096, 1, 1);
+    node.connect(state.get('audioContext'));
+
+    /**
+     * Audio Record
+     */
+    let recBuffer = [];
+    let recLength = 0;
+
+    node.onaudioprocess = audioProcessingEvent => {
+      if (!state.get('recording')) {
+        // if not recoding, exit onaudioprocess
+        return;
+      }
+
+      recBuffer.push(audioProcessingEvent.inputBuffer.getChannelData(0));
+      recLength += audioProcessingEvent.inputBuffer.getChannelData(0).length;
+    };
+
+    state.update('mergedBuffers', mergeBuffers => {
+      const result = new Float32Array(recLength);
+      let offset = 0;
+      for (let i = 0; i < recBuffer.length; i++) {
+        result.set(recBuffer[i], offset);
+        offset += recBuffer[i].length;
+      }
+      return result;
+    });
+
+    return state;
+  }
+
+  saveAudio(state: RecordOf<Talks>, action: {}) {
+    /**
+     * record flag FALSE
+     */
+    state.set('recording', false);
+
+    const floatTo16BitPCM = (output, offset, input) => {
+      for (var i = 0; i < input.length; i++, offset += 2) {
+        var s = Math.max(-1, Math.min(1, input[i]));
+        output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+      }
+    };
+    const writeString = (view, offset, string) => {
+      for (var i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    };
+    const encodeWAV = samples => {
+      /* eslint-disable no-mixed-operators */
+      const recordSampleRate = 44100;
+      const buffer = new ArrayBuffer(44 + samples.length * 2);
+      const view = new DataView(buffer);
+
+      writeString(view, 0, 'RIFF');
+      view.setUint32(4, 32 + samples.length * 2, true);
+      writeString(view, 8, 'WAVE');
+      writeString(view, 12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, recordSampleRate, true);
+      view.setUint32(28, recordSampleRate * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeString(view, 36, 'data');
+      view.setUint32(40, samples.length * 2, true);
+      floatTo16BitPCM(view, 44, samples);
+
+      return view;
+      /* eslint-enable no-mixed-operators */
+    };
+
+    const newWav = encodeWAV(state.get('mergedBuffers'));
+    state.set('wav', newWav);
+
+    return state;
+  }
+
+  routing(
+    state: RecordOf<Talks>,
+    action: {payload: {user_voice_text: string, answer: string}}
+  ) {
+    /**
+     * clearing routingData
+     */
+    state.delete('routingData');
+
+    /**
+     * Setter Data for Components
+     */
+    state.set('routingData', action.payload);
+
+    /**
+     * Setter ChatData for Chat Component
+     */
+    state.update('chatData', chatData => {
+      const chatStack = Stack();
+      return chatStack
+        .push(
+          ...chatData,
+          action.payload.user_voice_text,
+          action.payload.answer
+        )
+        .toArray();
+    });
+
+    return state;
+  }
+
+  chatRouting(state: RecordOf<Talks>, action: {payload: {question: string}}) {
+    /**
+     * clearing chatData
+     */
+    // state.delete('chatData');
+    state.delete('wav');
+    state.delete('routingData');
+    state.set('chatRoutingData', action.payload);
+    const chatStack = Stack(state.chatData);
+    state.set('chatData', chatStack.push(action.payload.question).toArray());
   }
 }
-
-export default TalksState;
