@@ -22,12 +22,16 @@ var RequestType = MediaType("application/vnd.requestType+json", func() {
 		Attribute("is_finish", Boolean, "is_finish", func() {
 			Example(true)
 		})
+		Attribute("next_page", String, "ページ名", func() {
+			Example("/stories")
+		})
 	})
 	Required(
 		"id",
 		"request",
 		"user_voice_text",
 		"is_finish",
+		"next_page",
 	)
 	View("default", func() {
 		Attribute("id")
@@ -42,11 +46,13 @@ var RequestType = MediaType("application/vnd.requestType+json", func() {
 		Attribute("request")
 		Attribute("user_voice_text")
 		Attribute("is_finish")
+		Attribute("next_page")
 		Required(
 			"id",
 			"request",
 			"user_voice_text",
 			"is_finish",
+			"next_page",
 		)
 	})
 })

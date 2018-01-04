@@ -83,5 +83,6 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 	res = r.RequestToRequesttypeFull()
 	res.UserVoiceText = t
 	res.IsFinish = true
+	res.NextPage = "/conversations"
 	return ctx.OKFull(&res)
 }
