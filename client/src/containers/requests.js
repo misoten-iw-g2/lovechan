@@ -2,9 +2,9 @@
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Requests} from '../components/Pages';
-import {talksActions} from '../actions';
+import {talksAction} from '../actions';
 
-const actions = talksActions.talks;
+const actions = talksAction.talks;
 
 const mapStateToProps = state => ({
   talks: state.talks.toJS(),

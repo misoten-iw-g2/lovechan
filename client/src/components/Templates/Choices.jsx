@@ -1,4 +1,4 @@
-// @flow
+/* @flow */
 import * as React from 'react';
 import uuidv4 from 'uuid/v4';
 import {Header} from 'semantic-ui-react';
@@ -17,15 +17,11 @@ type Props = {
   apiUrl: string,
   talks: {
     wav: any,
+    recording: boolean,
   },
-  getChoicesTitle: () => string,
-  getChoices: () => string,
-  getIsClear: () => boolean,
 };
 
 function Choices(props: Props) {
-  console.log(props);
-
   const {
     choiceTitle,
     choices,
@@ -35,18 +31,10 @@ function Choices(props: Props) {
     routing,
     apiUrl,
     talks,
-    getChoices,
-    getIsClear,
-    getChoicesTitle,
   } = props;
 
-  const organizedChoicesTitle =
-    choiceTitle.length !== 0 ? choiceTitle : getChoicesTitle();
-  const organizedChoices: any = choices.length !== 0 ? choices : getChoices();
-  const organizedIsClear = isClear || getIsClear();
-
-  const mapChoicesRender = !organizedIsClear ? (
-    organizedChoices.map(item => (
+  const mapChoicesRender = !isClear ? (
+    choices.map(item => (
       <React.Fragment key={uuidv4()}>
         <p className={classNames('btn_item')}>{item}</p>
       </React.Fragment>
@@ -56,9 +44,12 @@ function Choices(props: Props) {
   );
 
   const runApi = async () => {
+    await console.log('before');
     await recordAudio();
     await new Promise(resolve => setTimeout(resolve, 5000));
+    await console.log('after');
     await saveAudio();
+
     routing(apiUrl, talks.wav);
   };
 
@@ -74,11 +65,11 @@ function Choices(props: Props) {
     >
       <Grid width="100%" gap={0} className={classNames('grid_header')}>
         <Header as="h1" className={classNames('app_header')}>
-          <span>{organizedChoicesTitle}</span>
+          <span>{choiceTitle}</span>
         </Header>
       </Grid>
 
-      {organizedChoices.length < 3 ? (
+      {choices.length < 3 ? (
         <Grid width="100%" gap={0} className={classNames('grid_btn_two')}>
           {mapChoicesRender}
         </Grid>

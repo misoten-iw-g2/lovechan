@@ -9,8 +9,8 @@ function routing(store) {
 
     const {type, payload} = action;
 
-    console.log(type);
-    console.log(payload);
+    // console.log(type);
+    // console.log(payload);
 
     if (type === 'talks/routing_FULFILLED') {
       const nextURL = `/stories/${payload.story_pattern}/${payload.next_step}`;
