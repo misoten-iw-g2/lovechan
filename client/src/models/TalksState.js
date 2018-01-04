@@ -71,12 +71,16 @@ export default class TalksState extends TalksRecord {
       /**
        * Create Node
        */
+      const streamSource = mutableState
+        .get('audioContext')
+        .createMediaStreamSource(await mutableState.get('audioStream'));
+
       const node = mutableState
         .get('audioContext')
         .createMediaStreamSource(await mutableState.get('audioStream'))
         .context.createScriptProcessor(4096, 1, 1);
 
-      node.connect(mutableState.get('audioContext').destination);
+      streamSource.connect(node);
 
       /**
        * Audio Record
@@ -100,6 +104,8 @@ export default class TalksState extends TalksRecord {
             audioProcessingEvent.inputBuffer.getChannelData(0).length
         );
       };
+
+      node.connect(mutableState.get('audioContext').destination);
     });
   }
 
