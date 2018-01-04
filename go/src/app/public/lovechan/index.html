@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Audio API を使用した録音、及びWAVファイル出力のデモ - iroha Soft</title>
+    <style type='text/css'>
+        ul {
+            list-style: none;
+        }
+
+        #recordingslist audio {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/lovechan/asset/css/reset.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/lovechan/asset/css/cmn_layout.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/lovechan/asset/css/style.css" media="all">
+    <script src="/lovechan/asset/js/jquery.js"></script>
+    <script src="/lovechan/asset/js/jquery.matchHeight-min.js"></script>
+    <script src="/lovechan/asset/recorder.js"></script>
+    <script>
+      $(function () {
+        // TODO 音声録音を連続して行われないようにする
+
+        var $content = $("#content");
+        var $body = $("body");
+        var $mic = $("#mic");
+        var $mainTitle = $("#mainTitle");
+
+        const rConversations = "/conversations";
+        const rStories = "/stories";
+        const rRequests = "/requests";
+        const rQuestions = "/questions";
+        const rRoot = "/";
+
+        // 現在リクエストするべきURL情報
+        var apiUrl = "";
+        var requestMethod = function () {
+        };
+
+        // 現在の描画するべき画面を決定する
+        // 選択肢がその時に決まる画面には第二引数の値を渡す
+        function determineScreen(routing, args) {
+          switch (routing) {
+            case rConversations:
+              viewConversations();
+              break;
+            case rStories:
+              viewStoriesSelect();
+              break;
+            case rRequests:
+              viewRequests();
+              break;
+            case rQuestions:
+              viewQuestions(args);
+              break;
+            case rRoot:
+              viewRoot();
+              break;
+            default:
+              if (args.url !== "") {
+                viewStories(args);
+                return
+              }
+              viewRoot();
+          }
+        }
+
+        // 画面描画の初期処理
+        function viewInit(pattern, title, url) {
+          $content.empty();
+          $body.removeClass();
+          $body.addClass(pattern);
+          $mainTitle.text(title);
+          apiUrl = url;
+        }
+
+        function viewRoot() {
+          viewInit("patternA", "ラヴちゃんとしたいことを選んでね", "/api/talks/routings/root");
+          requestMethod = requestGet;
+          $content.append('<ul class="answerList">' +
+            '<li>ストーリー</li>' +
+            '<li>話す</li>' +
+            '</ul>');
+        }
+
+        function viewConversations() {
+          viewInit("patternA", "ラヴちゃんとしたいことを選んでね", "/api/talks/routings/conversations");
+          requestMethod = requestGet;
+          $content.append('<ul class="answerList">' +
+            '<li>何かお願いする</li>' +
+            '<li>質問してもらう</li>' +
+            '</ul>');
+        }
+
+        function viewStoriesSelect() {
+          // リクエスト投げて質問取って来る
+          requestMethod = requestPost;
+          viewInit("patternA", "書き換える", "/api/stories");
+          $content.append('<ul class="answerList">' +
+            '<li>仕様変更</li>' +
+            '<li>突然のエラー</li>' +
+            '</ul>');
+        }
+
+        function viewStories(story) {
+          // リクエスト投げて質問取って来る
+          var s = new mStory(story);
+          requestMethod = requestPost;
+          // クリアしていたら最初の画面へ戻る
+          if (s.isClear) {
+            viewRoot();
+            return;
+          }
+          viewInit("patternB", s.question, s.url);
+          // 選択肢解答パターン
+          var c = "";
+          $.each(s.choices, function (index, val) {
+            c += '<li>' + val + '</li>';
+          });
+          $content.append('<ul class="answerList">' + c + '</ul>');
+        }
+
+        function viewRequests() {
+          requestMethod = requestPost;
+          viewInit("patternB", "ラヴちゃんにしてほしいことを選んでね", "/api/requests");
+          $content.append('<ul class="answerList">' +
+            '<li>踊って</li>' +
+            '<li>歌って</li>' +
+            '<li>一発芸</li>' +
+            '</ul>');
+        }
+
+        function viewQuestions() {
+          // リクエスト投げて質問取って来る
+          $.ajax({
+            type: 'GET',
+            url: "/api/questions",
+            processData: false,
+            contentType: false
+          }).done(function (data) {
+            // 画面描画
+            var q = new mQuestion(data);
+            if (q.choices.length === 0) {
+              viewInit("patternD", "自由に解答してください", "/api/questions");
+              // 自由回答パターン
+              $content.append('<ul class="answerList">' +
+                '<li>' + q.question + '</li>' +
+                '</ul>');
+            } else {
+              viewInit("patternB", data.question, "/api/questions");
+              // 選択肢解答パターン
+              var c = "";
+              $.each(q.choices, function (index, val) {
+                c += '<li>' + val + '</li>';
+              });
+              $content.append('<ul class="answerList">' + c + '</ul>');
+            }
+            apiUrl = "/api/questions/" + q.id + "/answers";
+          });
+        }
+
+        //-----------------------------
+        // モデル
+        //-----------------------------
+
+        var mRouting = function (data) {
+          this.nextPage = data.next_page;
+          this.userVoiceText = data.user_voice_text;
+        };
+
+        var mRequest = function (data) {
+          this.id = data.id;
+          this.isFinish = data.isFinish;
+          this.request = data.request;
+          this.userVoiceText = data.user_voice_text;
+        };
+
+        var mQuestion = function (data) {
+          this.id = data.id;
+          this.answerType = data.answer_type;
+          this.choices = data.choices;
+          this.question = data.question;
+        };
+
+        var mStory = function (data) {
+          this.answer = data.answer;
+          this.choices = data.choices;
+          this.isClear = data.is_clear;
+          this.nextStep = data.next_step;
+          this.question = data.question;
+          this.storyPattern = data.story_pattern;
+          this.url = data.url;
+          this.userVoiceText = data.user_voice_text;
+        };
+
+        //-----------------------------
+        // 音声周り
+        //-----------------------------
+        function __log(e, data) {
+          console.log(e + " " + (data || '') + '\n');
+        }
+
+        var audio_context;
+        var recorder;
+
+        function startUserMedia(stream) {
+          var input = audio_context.createMediaStreamSource(stream);
+          __log('Media stream created.');
+
+          recorder = new Recorder(input);
+          __log('Recorder initialised.');
+        }
+
+        var recording = false;
+        $body.click(function () {
+          if (recording) return;
+          recording = true;
+          $("#mic > img").attr("src", "/lovechan/asset/img/mic_on.gif");
+          startRecording();
+        });
+
+        function routingAction(data, status, xhr) {
+          console.log(data);
+          determineScreen(data.next_page, data);
+        }
+
+        function startRecording() {
+          recorder && recorder.record();
+          __log('Recording...');
+
+          setTimeout(function () {
+            stopRecording()
+          }, 5000);
+        }
+
+        function stopRecording() {
+          recorder && recorder.stop();
+          __log('Stopped recording.');
+          requestMethod();
+          setTimeout(function () {
+            recording = false;
+            $("#mic > img").attr("src", "/lovechan/asset/img/mic_off.png");
+          }, 1000);
+          recorder.clear();
+        }
+
+        const uploadfile = "uploadfile";
+        var requestPost = function () {
+          recorder && recorder.exportWAV(function (blob) {
+            var fd = new FormData();
+            fd.append(uploadfile, blob);
+            $.ajax({
+              type: 'POST',
+              url: apiUrl,
+              data: fd,
+              processData: false,
+              contentType: false
+            }).done(function (data, status, xhr) {
+              routingAction(data, status, xhr);
+            });
+          });
+        };
+
+        var requestGet = function () {
+          recorder && recorder.exportWAV(function (blob) {
+            var fd = new FormData();
+            fd.append(uploadfile, blob);
+            $.ajax({
+              type: 'POST',
+              url: apiUrl,
+              data: fd,
+              processData: false,
+              contentType: false
+            }).done(function (data, status, xhr) {
+              routingAction(data, status, xhr);
+            });
+          });
+        };
+
+        window.onload = function init() {
+          try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+            window.URL = window.URL || window.webkitURL;
+
+            audio_context = new AudioContext;
+            __log('Audio context set up.');
+            __log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+          }
+          catch (e) {
+            alert('No web audio support in this browser!');
+          }
+
+          navigator.getUserMedia({audio: true}, startUserMedia, function (e) {
+            __log('No live audio input: ' + e);
+          });
+        };
+        //-------------------
+        // 初期処理
+        //-------------------
+        viewRoot();
+
+        //-------------------
+        // 波線
+        //-------------------
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        var canvas = document.querySelector('canvas');
+        var context = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        navigator.getUserMedia(
+          {audio : true},
+          function(stream){
+            document.getElementById('wave').src = URL.createObjectURL(stream);
+            var audioContext = new AudioContext();
+            var analyser = audioContext.createAnalyser();
+            var timeDomain = new Float32Array(analyser.frequencyBinCount);
+            var frequency = new Uint8Array(analyser.frequencyBinCount);
+            audioContext.createMediaStreamSource(stream).connect(analyser);
+            (function animation(){
+              analyser.getFloatTimeDomainData(timeDomain);
+              analyser.getByteFrequencyData(frequency);
+              context.clearRect(0, 0, canvas.width, canvas.height);
+              context.stroke();
+              context.strokeStyle = '#E070AA';
+              context.beginPath();
+              context.moveTo(0, canvas.height/2 + timeDomain[0]*canvas.height/2);
+              for(var i=0; i<timeDomain.length; i++){
+                context.lineTo(
+                  i*canvas.width/timeDomain.length,
+                  canvas.height/2 + timeDomain[i]*canvas.height/2
+                );
+              }
+              context.stroke();
+              requestAnimationFrame(animation);
+            })();
+          },
+          console.log
+        );
+      });
+    </script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<header id="header">
+    <h1 id="mainTitle">ラヴちゃんとしたいことを選んでください</h1>
+</header>
+
+<div id="content">
+    <ul class="answerList">
+        <li class="isChoice">何かお願いする</li>
+        <li>質問してもらう</li>
+    </ul>
+</div>
+
+<audio muted id="wave"></audio>
+<footer id="footer">
+    <p id="mic"><img src="/lovechan/asset/img/mic_off.png" width="200" height="200"></p>
+</footer>
+
+</body>
+</html>

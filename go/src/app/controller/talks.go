@@ -82,7 +82,7 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 	goa.LogInfo(ctx, "score", "score", t)
 
 	res := app.Routingtype{}
-	basePath := "/api"
+	basePath := ""
 	switch ctx.CurrentPage {
 	case conversations:
 		isReturn, _ := model.IsReturn(t)

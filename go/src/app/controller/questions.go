@@ -84,6 +84,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 	res.UserVoiceText = t
 	res.IsFinish = true
+	res.NextPage = "/conversations"
 	// QuestionsController_Answers: end_implement
 	return ctx.OK(&res)
 }
