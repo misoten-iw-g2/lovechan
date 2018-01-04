@@ -26,7 +26,7 @@
   name = "github.com/deadcheat/goacors"
 
 [[constraint]]
-  version = "v1.3.0"
+  revision = "4cfe9e5eb207f854100aac4a3e8eaf9c0aada4b1"
   name = "github.com/goadesign/goa"
 
 [[constraint]]
