@@ -2,6 +2,7 @@
 import * as React from 'react';
 import {Route} from 'react-router-dom';
 import {Switch} from 'react-router';
+import {Landing} from '../Pages';
 import {
   LandingContainer,
   StoriesContainer,
@@ -16,7 +17,7 @@ function Routes() {
   return (
     <div id="routes">
       <Switch>
-        <Route exact path={uri.routes.landing} component={LandingContainer} />
+        <Route exact path={uri.routes.landing} component={Landing} />
         <Route exact path={uri.routes.stories} component={StoriesContainer} />
         <Route
           path={uri.routes.story_pattern}

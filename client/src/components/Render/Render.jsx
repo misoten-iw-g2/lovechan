@@ -14,7 +14,7 @@ function main() {
     const {document} = window;
     render(
       <AppContainer>
-        <Provider store={store}>
+        <Provider store={store()}>
           <ConnectedRouter history={history}>
             <ComponentRoutes />
           </ConnectedRouter>
