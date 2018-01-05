@@ -98,7 +98,7 @@
         function viewStoriesSelect() {
           // リクエスト投げて質問取って来る
           requestMethod = requestPost;
-          viewInit("patternA", "書き換える", "/api/stories");
+          viewInit("patternA", "遊びたいストーリーを選んでください", "/api/stories");
           $content.append('<ul class="answerList">' +
             '<li>仕様変更</li>' +
             '<li>突然のエラー</li>' +
@@ -233,7 +233,7 @@
 
           setTimeout(function () {
             stopRecording()
-          }, 5000);
+          }, 4000);
         }
 
         function stopRecording() {

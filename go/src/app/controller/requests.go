@@ -61,15 +61,28 @@ func (c *RequestsController) Request(ctx *app.RequestRequestsContext) error {
 	}
 	t, err := model.GetTextByVoice(ctx, ctx.Request, "uploadfile")
 	if err != nil {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
+		v := mywebsocket.VideoChange{
+			VideoFileName: "once_again.mp4",
+			VoiceFileName: "once_again.wav",
+		}
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChangeStory, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		return ctx.Accepted(model.NewRoutingType("/conversations", t))
 	}
 	r, err := rDB.GetUserRequest(ctx, rs, t)
 	if err != nil {
-		return ctx.InternalServerError(goa.ErrInternal(err))
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
+		v := mywebsocket.VideoChange{
+			VideoFileName: "once_again.mp4",
+			VoiceFileName: "once_again.wav",
+		}
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChangeStory, v)
+		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	v := mywebsocket.VideoChange{
 		VideoFileName: r.VideoFileName,

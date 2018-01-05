@@ -41,6 +41,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		return ctx.Accepted(model.NewRoutingType("/conversations", t))
 	}
 	uaDB := model.NewUserAnswersDB(c.db)
@@ -56,6 +57,12 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 		faDB := model.NewFreeAnswersDB(c.db)
 		r, err := faDB.GetFreeAnswerReplay(ctx, ctx.ID, t)
 		if err != nil {
+			c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
+			v = mywebsocket.VideoChange{
+				VideoFileName: "once_again.mp4",
+				VoiceFileName: "once_again.wav",
+			}
+			c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, v)
 			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res = r.FreeAnswerToAnswertype()
@@ -67,6 +74,7 @@ func (c *QuestionsController) Answers(ctx *app.AnswersQuestionsContext) error {
 		caDB := model.NewChoiceAnswersDB(c.db)
 		r, err := caDB.GetChoiceAnswerReplay(ctx, ctx.ID, t)
 		if err != nil {
+			c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 			v = mywebsocket.VideoChange{
 				VideoFileName: "once_again.mp4",
 				VoiceFileName: "once_again.wav",

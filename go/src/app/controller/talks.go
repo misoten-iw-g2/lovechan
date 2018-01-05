@@ -87,12 +87,19 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 	case conversations:
 		isReturn, _ := model.IsReturn(t)
 		if isReturn {
+			c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 			return ctx.Accepted(model.NewRoutingType("/", t))
 		}
 		routings := []string{requests, questions}
 		routingChoices := []string{"何かお願いする,なにかおねがいする", "質問してもらう,しつもんしてもらう"}
 		i, err := model.UserChoiceAnswer(routingChoices, t)
 		if err != nil {
+			c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
+			v := mywebsocket.VideoChange{
+				VideoFileName: "once_again.mp4",
+				VoiceFileName: "once_again.wav",
+			}
+			c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChangeStory, v)
 			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res.NextPage = fmt.Sprintf("%s/%s", basePath, routings[i])
@@ -101,13 +108,21 @@ func (c *TalksController) ShowRouting(ctx *app.ShowRoutingTalksContext) error {
 		wakeupVideo, isWakeup := wakeupTalk(t)
 		if isWakeup {
 			c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChange, wakeupVideo)
+			c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 			res.UserVoiceText = t
+			res.NextPage = "/"
 			return ctx.OK(&res)
 		}
 		routings := []string{conversations, stories}
 		routingChoices := []string{"話す,はなす", "ストーリー,すとーりー"}
 		i, err := model.UserChoiceAnswer(routingChoices, t)
 		if err != nil {
+			c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
+			v := mywebsocket.VideoChange{
+				VideoFileName: "once_again.mp4",
+				VoiceFileName: "once_again.wav",
+			}
+			c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChangeStory, v)
 			return ctx.BadRequest(goa.ErrBadRequest(err))
 		}
 		res.NextPage = fmt.Sprintf("%s/%s", basePath, routings[i])

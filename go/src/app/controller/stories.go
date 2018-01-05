@@ -64,6 +64,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 	}
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		return ctx.Accepted(model.NewRoutingType("/", t))
 	}
 	si := storyInfo{}
@@ -76,6 +77,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 	goa.LogInfo(ctx, "request now: now", "now", now)
 	goa.LogInfo(ctx, "request user_answer: user_answer", "user_answer", t)
 	if err != nil && err == model.ErrNotFoundChoice {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "once_again.mp4",
 			VoiceFileName: "once_again.wav",
@@ -84,6 +86,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrNotFoundStep {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
@@ -92,6 +95,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrMissChoice {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
@@ -100,6 +104,7 @@ func (c *StoriesController) PlayStory(ctx *app.PlayStoryStoriesContext) error {
 		return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
 	}
 	if err != nil {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
@@ -138,12 +143,19 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 	goa.LogInfo(ctx, "user_voice_text: t", "t", t)
 	isReturn, _ := model.IsReturn(t)
 	if isReturn {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		return ctx.Accepted(model.NewRoutingType("/", t))
 	}
 	storiesDisplay := []string{suddenlyPattern, changePattern}
 	stories := []string{"突然のエラー,とつぜんのエラー", "仕様変更,しようへんこう"}
 	i, err := model.UserChoiceAnswer(stories, t)
 	if err != nil {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
+		v := mywebsocket.VideoChange{
+			VideoFileName: "once_again.mp4",
+			VoiceFileName: "once_again.wav",
+		}
+		c.ws.Send(mywebsocket.WsMovieChannel, mywebsocket.WsVideoChangeStory, v)
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	si := storyInfo{}
@@ -154,6 +166,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 		si, err = changePatternStory(ctx, t, 1)
 	}
 	if err != nil && err == model.ErrNotFoundChoice {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "once_again.mp4",
 			VoiceFileName: "once_again.wav",
@@ -162,6 +175,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrNotFoundStep {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
@@ -170,6 +184,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 		return ctx.BadRequest(goa.ErrBadRequest(err))
 	}
 	if err != nil && err == ErrMissChoice {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
@@ -178,6 +193,7 @@ func (c *StoriesController) SelectStory(ctx *app.SelectStoryStoriesContext) erro
 		return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
 	}
 	if err != nil {
+		c.ws.Send(mywebsocket.WsSoundChannel, mywebsocket.WsSelectionSound, mywebsocket.VideoChange{})
 		v := mywebsocket.VideoChange{
 			VideoFileName: "stories_question.mp4",
 			VoiceFileName: "stories_question.wav",
@@ -209,9 +225,9 @@ func changePatternStory(ctx context.Context, t string, now int) (storyInfo, erro
 	s := app.Storytype{}
 	si := storyInfo{}
 	s.StoryPattern = changePattern
-	cd1 := []string{"詳しい人へのアポ", "勝手に壊れた", "画面が映らない", "ネットに繋がらない"}
+	cd1 := []string{"詳しい人へアポ", "勝手に<br>壊れた", "画面が<br>映らない", "ネットに<br>繋がらない"}
 	c1 := []string{
-		"詳しい人へのアポ,くわしいひとへのあぽ",
+		"詳しい人へアポ,くわしいひとへあぽ",
 		"勝手に壊れた,かってにこわれた",
 		"画面が映らない,がめんがうつらない",
 		"ネットに繋がらない,ねっとにつならがない",
@@ -291,7 +307,7 @@ func suddenlyPatternStory(ctx context.Context, t string, now int) (storyInfo, er
 	s.StoryPattern = suddenlyPattern
 
 	// ストーリーに使う選択肢
-	cd1 := []string{"エラーが出てる", "勝手に壊れた", "画面が映らない", "ネットに繋がらない"}
+	cd1 := []string{"エラーが<br>出てる", "勝手に<br>壊れた", "画面が<br>映らない", "ネットに<br>繋がらない"}
 	c1 := []string{
 		"エラーが出てる,えらーがでてる",
 		"勝手に壊れた,かってにこわれた",
