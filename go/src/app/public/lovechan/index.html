@@ -233,7 +233,7 @@
 
           setTimeout(function () {
             stopRecording()
-          }, 4000);
+          }, 2500);
         }
 
         function stopRecording() {
@@ -328,6 +328,7 @@
               context.stroke();
               context.strokeStyle = '#E070AA';
               context.beginPath();
+              context.lineWidth = 5;
               context.moveTo(0, canvas.height/2 + timeDomain[0]*canvas.height/2);
               for(var i=0; i<timeDomain.length; i++){
                 context.lineTo(
