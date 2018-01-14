@@ -18,6 +18,7 @@
 </head>
 <body>
 <div class="container">
+    <button id="love">p</button>
     <h1 class="page-header">ユーザー分析</h1>
     <div class="panel panel-default">
         <div class="panel-heading"><h2 class="panel-title">感情遷移図</h2></div>
@@ -137,6 +138,23 @@
       }
     };
 
+    $('#love').on('click', function(){
+      var JSONdata = {
+        text: "プレゼンうまくいかなかったな"
+      };
+      $.ajax({
+        type: "POST",
+        contentType: 'application/json',
+        url: "http://"+location.hostname+":8080/api/talks/routings/root",
+        data : JSON.stringify(JSONdata),
+        dataType: "json"
+      }).done(function (resp) {
+        console.log(resp)
+      }).fail(function (resp) {
+        console.log(resp)
+      });
+    });
+
     window.onload = function () {
       var ctx = document.getElementById('chart').getContext('2d');
       window.myBar = new Chart(ctx, config);
@@ -167,7 +185,7 @@
 
     $.ajax({
       type: "GET",
-      url: "http://http://"+location.hostname+":8080/api/analytic/graph/pie",
+      url: "http://"+location.hostname+":8080/api/analytic/graph/pie",
       dataType: "json"
     }).done(function (resp) {
       labels = [];

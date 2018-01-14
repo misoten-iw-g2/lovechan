@@ -138,10 +138,16 @@ var wakeupTalks = []mywebsocket.VideoChange{
 	{VideoFileName: "wakeup-1.mp4", VoiceFileName: "wakeup-1.wav"},
 	{VideoFileName: "wakeup-2.mp4", VoiceFileName: "wakeup-2.wav"},
 	{VideoFileName: "wakeup-3.mp4", VoiceFileName: "wakeup-3.wav"},
+	{VideoFileName: "love.mp4", VoiceFileName: "love.wav"},
 }
 
 // ラブちゃんとしているのは、SpeechAPIがおそらくラヴちゃんと変換しないため
-var wakeupWords = []string{"ラブちゃん起きて,ラブちゃんおきて", "いま寝てたでしょ,いまねてたでしょ", "審査だからちゃんとして,しんさだからちゃんとして"}
+var wakeupWords = []string{
+	"ラブちゃん起きて,ラブちゃんおきて",
+	"いま寝てたでしょ,いまねてたでしょ",
+	"審査だからちゃんとして,しんさだからちゃんとして",
+	"プレゼンうまくいかなかったな,プレゼンうまくいかなかったな",
+}
 
 // WakeupTalk 戻りたいというワードが入力されたか判定する
 func wakeupTalk(userAnswer string) (mywebsocket.VideoChange, bool) {
